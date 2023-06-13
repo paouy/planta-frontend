@@ -7,43 +7,39 @@ const columns = [
     key: 'name',
     label: 'Name'
   }, {
-    key: 'type',
-    label: 'Type'
+    key: 'operationName',
+    label: 'Operation'
   }
 ]
 
 const data = ref([
   {
     id: 1,
-    name: 'Corrugating',
-    type: 'BATCH',
-    position: 1
+    name: 'Corrugating 1',
+    operationName: 'Corrugating'
   }, {
     id: 2,
-    name: 'Printing',
-    type: 'JOB',
-    position: 2,
-    selectable: false
+    name: 'Printing 1',
+    operationName: 'Printing'
   }, {
     id: 3,
-    name: 'Creasing',
-    type: 'JOB',
-    position: 3
+    name: 'Creasing 1',
+    operationName: 'Creasing'
   }
 ])
 </script>
 
 <template>
   <CfDataTable
-    title="Production Operations"
-    description="Configure your production operations."
+    title="Workstations"
+    description="Configure your workstations."
     :columns="columns"
     :item-actions="['Edit', 'Remove']"
     :data="data"
     @action="data => lol = data"
   >
     <template #action>
-      <CfFilledButton>Add operation</CfFilledButton>
+      <CfFilledButton>Add workstation</CfFilledButton>
     </template>
   </CfDataTable>
 </template>

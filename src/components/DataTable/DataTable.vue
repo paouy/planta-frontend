@@ -239,7 +239,6 @@ const onSort = (key) => {
   border: 1px solid var(--cf-gray-7);
   border-radius: 0.3125rem;
   margin: 1rem 0;
-  overflow: hidden;
 
   header {
     display: grid;

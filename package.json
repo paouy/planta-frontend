@@ -12,6 +12,7 @@
     "@vueuse/integrations": "^10.1.2",
     "destyle.css": "^4.0.0",
     "fuse.js": "^6.6.2",
+    "redaxios": "^0.5.1",
     "vue": "^3.3.2",
     "vue-router": "^4.2.0"
   },

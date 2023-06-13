@@ -98,7 +98,9 @@ const computedValue = computed({
 
   label {
     order: 1;
+    color: var(--cf-gray-3);
     font-size: 0.875rem;
+    font-weight: 600;
     width: 100%;
 
     ~ div:last-child {

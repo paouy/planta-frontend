@@ -3,12 +3,15 @@ import { ref, onMounted } from 'vue'
 import { getOperations } from '../../operation/api/index.js'
 import { getWorkstations } from '../../workstation/api/index.js'
 import { CfAppView, CfHeader } from '../../../components/index.js'
+
 import OperationsList from '../../operation/components/OperationsList.vue'
 import AddOperation from '../../operation/components/AddOperation.vue'
 import RemoveOperation from '../../operation/components/RemoveOperation.vue'
 import UpdateOperation from '../../operation/components/UpdateOperation.vue'
+
 import WorkstationsList from '../../workstation/components/WorkstationsList.vue'
 import AddWorkstation from '../../workstation/components/AddWorkstation.vue'
+import RemoveWorkstation from '../../workstation/components/RemoveWorkstation.vue'
 
 const operations = ref([])
 const operation = ref(null)
@@ -16,12 +19,12 @@ const showAddOperation = ref(false)
 const showRemoveOperation = ref(false)
 const showUpdateOperation = ref(false)
 
-const onOperationListRemove = (data) => {
+const onOperationsListRemove = (data) => {
   operation.value = data
   showRemoveOperation.value = true
 }
 
-const onOperationListUpdate = (data) => {
+const onOperationsListUpdate = (data) => {
   operation.value = data
   showUpdateOperation.value = true
 }
@@ -48,10 +51,19 @@ const onUpdateOperation = (operation) => {
 const workstations = ref([])
 const workstation = ref(null)
 const showAddWorkstation = ref(false)
+const showRemoveWorkstation = ref(false)
+
+const onWorkstaionsListRemove = (data) => {
+  workstation.value = data
+  showRemoveWorkstation.value = true
+}
 
 const onAddWorkstation = (workstation) => {
-  workstations.value = [...workstations.value, workstation]
-    .sort((a, b) => a.name - b.name)
+  workstations.value.push(workstation)
+}
+
+const onRemoveWorkstation = (workstationIndex) => {
+  workstations.value.splice(workstationIndex, 1)
 }
 
 onMounted(async () => {
@@ -77,8 +89,8 @@ onMounted(async () => {
     <OperationsList
       :data="operations"
       @add="showAddOperation = true"
-      @remove="onOperationListRemove"
-      @edit="onOperationListUpdate"
+      @remove="onOperationsListRemove"
+      @edit="onOperationsListUpdate"
     />
     <AddOperation
       @success="onAddOperation"
@@ -101,11 +113,18 @@ onMounted(async () => {
     <WorkstationsList
       :data="workstations"
       @add="showAddWorkstation = true"
+      @remove="onWorkstaionsListRemove"
     />
     <AddWorkstation
       @success="onAddWorkstation"
       @cancel="showAddWorkstation = false"
       v-if="showAddWorkstation"
+    />
+    <RemoveWorkstation
+      :data="workstation"
+      @success="onRemoveWorkstation"
+      @cancel="showRemoveWorkstation = false, operation = null"
+      v-if="showRemoveWorkstation"
     />
   </CfAppView>
 

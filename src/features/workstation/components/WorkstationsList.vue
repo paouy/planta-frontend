@@ -1,7 +1,7 @@
 <script setup>
 import { CfDataTable, CfFilledButton } from '../../../components'
 
-const emit = defineEmits(['add', 'remove'])
+const emit = defineEmits(['add', 'remove', 'edit'])
 
 const props = defineProps({ data: Array })
 

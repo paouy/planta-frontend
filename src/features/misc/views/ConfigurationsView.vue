@@ -12,6 +12,7 @@ import UpdateOperation from '../../operation/components/UpdateOperation.vue'
 import WorkstationsList from '../../workstation/components/WorkstationsList.vue'
 import AddWorkstation from '../../workstation/components/AddWorkstation.vue'
 import RemoveWorkstation from '../../workstation/components/RemoveWorkstation.vue'
+import UpdateWorkstation from '../../workstation/components/UpdateWorkstation.vue'
 
 const operations = ref([])
 const operation = ref(null)
@@ -52,10 +53,16 @@ const workstations = ref([])
 const workstation = ref(null)
 const showAddWorkstation = ref(false)
 const showRemoveWorkstation = ref(false)
+const showUpdateWorkstation = ref(false)
 
 const onWorkstaionsListRemove = (data) => {
   workstation.value = data
   showRemoveWorkstation.value = true
+}
+
+const onWorkstationsListUpdate = (data) => {
+  workstation.value = data
+  showUpdateWorkstation.value = true
 }
 
 const onAddWorkstation = (workstation) => {
@@ -64,6 +71,13 @@ const onAddWorkstation = (workstation) => {
 
 const onRemoveWorkstation = (workstationIndex) => {
   workstations.value.splice(workstationIndex, 1)
+}
+
+const onUpdateWorkstation = (workstation) => {
+  const workstationIndex = workstations.value
+    .findIndex(({ id }) => id === workstation.id)
+
+  Object.assign(workstations.value[workstationIndex], workstation)
 }
 
 onMounted(async () => {
@@ -114,6 +128,7 @@ onMounted(async () => {
       :data="workstations"
       @add="showAddWorkstation = true"
       @remove="onWorkstaionsListRemove"
+      @edit="onWorkstationsListUpdate"
     />
     <AddWorkstation
       @success="onAddWorkstation"
@@ -123,8 +138,14 @@ onMounted(async () => {
     <RemoveWorkstation
       :data="workstation"
       @success="onRemoveWorkstation"
-      @cancel="showRemoveWorkstation = false, operation = null"
+      @cancel="showRemoveWorkstation = false, workstation = null"
       v-if="showRemoveWorkstation"
+    />
+    <UpdateWorkstation
+      :data="workstation"
+      @success="onUpdateWorkstation"
+      @cancel="showUpdateWorkstation = false, workstation = null"
+      v-if="showUpdateWorkstation"
     />
   </CfAppView>
 

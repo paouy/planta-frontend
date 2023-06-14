@@ -4,7 +4,7 @@ import { computed } from 'vue'
 const emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({
-  modelValue: [Number, String],
+  modelValue: [Number, String, Object],
   type: String,
   label: String,
   placeholder: String,

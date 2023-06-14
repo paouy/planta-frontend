@@ -1,6 +1,9 @@
 <script setup>
-import { ref } from 'vue'
 import { CfDataTable, CfFilledButton } from '../../../components'
+
+const emit = defineEmits(['add', 'remove'])
+
+const props = defineProps({ data: Array })
 
 const columns = [
   {
@@ -12,21 +15,9 @@ const columns = [
   }
 ]
 
-const data = ref([
-  {
-    id: 1,
-    name: 'Corrugating 1',
-    operationName: 'Corrugating'
-  }, {
-    id: 2,
-    name: 'Printing 1',
-    operationName: 'Printing'
-  }, {
-    id: 3,
-    name: 'Creasing 1',
-    operationName: 'Creasing'
-  }
-])
+const onAction = ({ action, item }) => {
+  emit(action.toLowerCase(), item)
+}
 </script>
 
 <template>
@@ -35,11 +26,13 @@ const data = ref([
     description="Configure your workstations."
     :columns="columns"
     :item-actions="['Edit', 'Remove']"
-    :data="data"
-    @action="data => lol = data"
+    :data="props.data"
+    @action="onAction"
   >
     <template #action>
-      <CfFilledButton>Add workstation</CfFilledButton>
+      <CfFilledButton @click="emit('add')">
+        Add operation
+      </CfFilledButton>
     </template>
   </CfDataTable>
 </template>

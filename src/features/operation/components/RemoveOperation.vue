@@ -28,7 +28,7 @@ const onClick = async () => {
 <template>
   <CfDialog title="Remove operation" @close="emit('cancel')">
     <template #body>
-      <p>Are you sure you want to remove {{ props.data?.name }} from your production operations?</p>
+      <p>Are you sure you want to remove <b>{{ props.data?.name }}</b> as an operation?</p>
     </template>
     <template #footer>
       <CfFilledButton

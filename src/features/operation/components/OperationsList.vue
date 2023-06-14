@@ -16,9 +16,7 @@ const columns = [
 ]
 
 const onAction = ({ action, item }) => {
-  if (action === 'Remove') {
-    emit('remove', item)
-  }
+  emit(action.toLowerCase(), item)
 }
 </script>
 

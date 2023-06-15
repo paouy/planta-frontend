@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const props = defineProps({
-  to: String,
+  to: [String, Object],
   href: String,
   icon: String,
   parent: Boolean

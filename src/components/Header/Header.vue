@@ -41,6 +41,10 @@ const props = defineProps({
 
     &:first-child {
       font-weight: 600;
+
+      ~ div {
+        grid-row: 2;
+      }
     }
   }
 

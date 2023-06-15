@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue'
 import { getOperations } from '../../operation/api/index.js'
 import { getWorkstations } from '../../workstation/api/index.js'
+import { getEquipments } from '../../equipment/api/index.js'
+
 import { CfAppView, CfHeader } from '../../../components/index.js'
 
 import OperationsList from '../../operation/components/OperationsList.vue'
@@ -13,6 +15,11 @@ import WorkstationsList from '../../workstation/components/WorkstationsList.vue'
 import AddWorkstation from '../../workstation/components/AddWorkstation.vue'
 import RemoveWorkstation from '../../workstation/components/RemoveWorkstation.vue'
 import UpdateWorkstation from '../../workstation/components/UpdateWorkstation.vue'
+
+import EquipmentsList from '../../equipment/components/EquipmentsList.vue'
+import AddEquipment from '../../equipment/components/AddEquipment.vue'
+import RemoveEquipment from '../../equipment/components/RemoveEquipment.vue'
+import UpdateEquipment from '../../equipment/components/UpdateEquipment.vue'
 
 const operations = ref([])
 const operation = ref(null)
@@ -80,17 +87,52 @@ const onUpdateWorkstation = (workstation) => {
   Object.assign(workstations.value[workstationIndex], workstation)
 }
 
+const equipments = ref([])
+const equipment = ref(null)
+const showAddEquipment = ref(false)
+const showRemoveEquipment = ref(false)
+const showUpdateEquipment = ref(false)
+
+const onEquipmentsListRemove = (data) => {
+  equipment.value = data
+  showRemoveEquipment.value = true
+}
+
+const onEquipmentsListUpdate = (data) => {
+  equipment.value = data
+  showUpdateEquipment.value = true
+}
+
+const onAddEquipment = (equipment) => {
+  equipments.value.push(equipment)
+}
+
+const onRemoveEquipment = (equipmentIndex) => {
+  equipments.value.splice(equipmentIndex, 1)
+}
+
+const onUpdateEquipment = (equipment) => {
+  const equipmentIndex = equipments.value
+    .findIndex(({ id }) => id === equipment.id)
+
+  Object.assign(equipments.value[equipmentIndex], equipment)
+}
+
 onMounted(async () => {
   const [
     operationsFromApi,
-    workstationsFromApi
+    workstationsFromApi,
+    equipmentsFromApi
   ] = await Promise.all([
     getOperations(),
-    getWorkstations()
+    getWorkstations(),
+    getEquipments()
   ])
 
   operations.value = operationsFromApi
   workstations.value = workstationsFromApi
+  equipments.value = equipmentsFromApi
+
 })
 </script>
 
@@ -147,7 +189,29 @@ onMounted(async () => {
       @cancel="showUpdateWorkstation = false, workstation = null"
       v-if="showUpdateWorkstation"
     />
-  </CfAppView>
 
-  
+    <EquipmentsList
+      :data="equipments"
+      @add="showAddEquipment = true"
+      @remove="onEquipmentsListRemove"
+      @edit="onEquipmentsListUpdate"
+    />
+    <AddEquipment
+      @success="onAddEquipment"
+      @cancel="showAddEquipment = false"
+      v-if="showAddEquipment"
+    />
+    <RemoveEquipment
+      :data="equipment"
+      @success="onRemoveEquipment"
+      @cancel="showRemoveEquipment = false, equipment = null"
+      v-if="showRemoveEquipment"
+    />
+    <UpdateEquipment
+      :data="equipment"
+      @success="onUpdateEquipment"
+      @cancel="showUpdateEquipment = false, equipment = null"
+      v-if="showUpdateEquipment"
+    />
+  </CfAppView>
 </template>

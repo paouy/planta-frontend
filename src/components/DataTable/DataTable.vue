@@ -5,7 +5,7 @@ import Field from '../Field/Field.vue'
 
 const slots = useSlots()
 
-const emit = defineEmits(['update:selection', 'action'])
+const emit = defineEmits(['update:selection', 'item-action'])
 
 const props = defineProps({
   title: String,
@@ -122,7 +122,7 @@ const onSort = (key) => {
 
 <template>
   <div class="cf-data-table">
-    <header>
+    <header v-if="props.title || props.description || props.searchable || slots.action">
       <div class="cf-data-table-title" v-if="props.title">
         {{ props.title }}
       </div>
@@ -195,7 +195,7 @@ const onSort = (key) => {
             <div v-if="props.itemActions.length > 1">
               <button
                 v-for="action in props.itemActions"
-                @click="emit('action', { action, item })"
+                @click="emit('item-action', { action, item })"
               >
                 {{ action }}
               </button>
@@ -222,7 +222,7 @@ const onSort = (key) => {
             <div v-if="props.itemActions.length > 1">
               <button
                 v-for="action in props.itemActions"
-                @click="emit('action', { action, item })"
+                @click="emit('item-action', { action, item })"
               >
                 {{ action }}
               </button>
@@ -301,6 +301,10 @@ const onSort = (key) => {
   }
 
   tbody {
+    &:empty {
+      height: 1rem;
+    }
+
     tr {
       border-top: 1px solid var(--cf-gray-8);
     }

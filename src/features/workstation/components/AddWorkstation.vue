@@ -1,13 +1,14 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
 import { addWorkstation } from '../api/index.js'
 import { getOperations } from '../../operation/api/index.js'
+import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
 const operationOptions = ref([])
+
 const workstation = ref({
   name: '',
   operationId: ''
@@ -34,13 +35,18 @@ const onSubmit = async () => {
 
 onBeforeMount(async () => {
   const operations = await getOperations()
-  operationOptions.value =
-    operations.map(operation => ({ label: operation.name, value: operation.id}))
+
+  operationOptions.value = operations
+    .map(operation => ({ label: operation.name, value: operation.id}))
 })
 </script>
 
 <template>
-  <CfDialog title="Add workstation" @close="emit('cancel')">
+  <CfDialog
+    title="Add workstation"
+    @close="emit('cancel')"
+    v-if="operationOptions.length"
+  >
     <template #body>
       <form id="addWorkstation" @submit.prevent="onSubmit">
         <CfField

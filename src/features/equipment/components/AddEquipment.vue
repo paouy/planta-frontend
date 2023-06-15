@@ -1,13 +1,14 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
-import { CfDialog, CfField, CfChoiceList, CfFilledButton } from '../../../components/index.js'
 import { addEquipment } from '../api/index.js'
 import { getOperations } from '../../operation/api/index.js'
+import { CfDialog, CfField, CfChoiceList, CfFilledButton } from '../../../components/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
 const operationChoices = ref([])
+
 const equipment = ref({
   name: '',
   operationIds: []
@@ -43,13 +44,18 @@ const onSubmit = async () => {
 
 onBeforeMount(async () => {
   const operations = await getOperations()
-  operationChoices.value =
-    operations.map(operation => ({ label: operation.name, value: operation.id }))
+
+  operationChoices.value = operations
+    .map(operation => ({ label: operation.name, value: operation.id }))
 })
 </script>
 
 <template>
-  <CfDialog title="Add equipment" @close="emit('cancel')">
+  <CfDialog
+    title="Add equipment"
+    @close="emit('cancel')"
+    v-if="operationChoices.length"
+  >
     <template #body>
       <form id="addEquipment" @submit.prevent="onSubmit">
         <CfField

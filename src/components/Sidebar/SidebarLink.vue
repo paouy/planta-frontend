@@ -93,7 +93,7 @@ const rootElement = computed(() => {
     }
   }
 
-  &.router-link-exact-active {
+  &.router-link-active {
     border-color: var(--cf-blue-8);
     background: var(--cf-blue-9);
 
@@ -117,7 +117,7 @@ const rootElement = computed(() => {
   margin-left: 1.875rem;
 
   &:hover,
-  &:has(.router-link-exact-active) {
+  &:has(.router-link-active) {
     display: block;
   }
 
@@ -137,7 +137,7 @@ const rootElement = computed(() => {
     }
 
     .cf-sidebar-link-group {
-      &:has(.router-link-exact-active) {
+      &:has(.router-link-active) {
         > button {
           border-color: var(--cf-blue-8);
           background: var(--cf-blue-9);

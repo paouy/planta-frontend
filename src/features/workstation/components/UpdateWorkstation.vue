@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
 import { updateWorkstation } from '../api/index.js'
 import { getOperations } from '../../operation/api/index.js'
+import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -10,10 +10,11 @@ const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
 const operationOptions = ref([])
+
 const workstation = ref({
-  id: props.data.id,
-  name: props.data.name,
-  operationId: props.data.operationId
+  id: '',
+  name: '',
+  operationId: ''
 })
 
 const onSubmit = async () => {
@@ -33,13 +34,24 @@ const onSubmit = async () => {
 
 onBeforeMount(async () => {
   const operations = await getOperations()
-  operationOptions.value =
-    operations.map(operation => ({ label: operation.name, value: operation.id}))
+
+  operationOptions.value = operations
+    .map(operation => ({ label: operation.name, value: operation.id}))
+
+  workstation.value = {
+    id: props.data.id,
+    name: props.data.name,
+    operationId: props.data.operationId
+  }
 })
 </script>
 
 <template>
-  <CfDialog title="Update workstation" @close="emit('cancel')">
+  <CfDialog
+    title="Edit workstation"
+    @close="emit('cancel')"
+    v-if="operationOptions.length"  
+  >
     <template #body>
       <form id="updateWorkstation" @submit.prevent="onSubmit">
         <CfField

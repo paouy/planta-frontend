@@ -51,10 +51,6 @@ const props = defineProps({ data: Array })
         }
       }
     }
-
-    span {
-      font-weight: 600;
-    }
   }
 }
 </style>

@@ -1,15 +1,34 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ConfigurationsView from '../features/misc/views/ConfigurationsView.vue'
+import EquipmentsView from '../features/equipment/views/EquipmentsView.vue'
+import OperationsView from '../features/operation/views/OperationsView.vue'
+import WorkstationsView from '../features/workstation/views/WorkstationsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/settings/configurations',
-      name: 'Configurations',
-      component: ConfigurationsView
-    },
-    {
+      children: [
+        {
+          path: '',
+          name: 'Configurations',
+          component: ConfigurationsView
+        }, {
+          path: 'operations',
+          name: 'Operations',
+          component: OperationsView
+        }, {
+          path: 'workstations',
+          name: 'Workstations',
+          component: WorkstationsView
+        }, {
+          path: 'equipment',
+          name: 'Equipment',
+          component: EquipmentsView
+        }
+      ]
+    }, {
       path: '/production/orders',
       name: 'ProductionOrders',
       component: ConfigurationsView

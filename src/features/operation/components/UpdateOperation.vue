@@ -37,7 +37,7 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <CfDialog title="Update operation" @close="emit('cancel')">
+  <CfDialog title="Edit operation" @close="emit('cancel')">
     <template #body>
       <form id="updateOperation" @submit.prevent="onSubmit">
         <CfField

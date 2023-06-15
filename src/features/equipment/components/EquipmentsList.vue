@@ -1,7 +1,7 @@
 <script setup>
-import { CfDataTable, CfFilledButton } from '../../../components'
+import { CfDataTable } from '../../../components'
 
-const emit = defineEmits(['add', 'remove', 'edit'])
+const emit = defineEmits(['action'])
 
 const props = defineProps({ data: Array })
 
@@ -14,27 +14,16 @@ const columns = [
     label: 'Operations'
   }
 ]
-
-const onAction = ({ action, item }) => {
-  emit(action.toLowerCase(), item)
-}
 </script>
 
 <template>
   <CfDataTable
-    title="Equipment"
-    description="Configure your equipment."
     :columns="columns"
     :item-actions="['Edit', 'Remove']"
     :data="props.data"
     custom-template
-    @action="onAction"
+    @item-action="$event => emit('action', $event)"
   >
-    <template #action>
-      <CfFilledButton @click="emit('add')">
-        Add equipment
-      </CfFilledButton>
-    </template>
     <template v-slot="{ item }">
       <td>{{ item.name }}</td>
       <td>{{ item.operations.map(({ name }) => name).join(', ') }}</td>

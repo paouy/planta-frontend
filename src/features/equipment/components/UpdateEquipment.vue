@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onBeforeMount } from 'vue'
-import { CfDialog, CfField, CfChoiceList, CfFilledButton } from '../../../components/index.js'
 import { updateEquipment } from '../api/index.js'
 import { getOperations } from '../../operation/api/index.js'
+import { CfDialog, CfField, CfChoiceList, CfFilledButton } from '../../../components/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -10,10 +10,11 @@ const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
 const operationChoices = ref([])
+
 const equipment = ref({
-  id: props.data.id,
-  name: props.data.name,
-  operationIds: props.data.operations.map(({ id }) => id)
+  id: '',
+  name: '',
+  operationIds: ''
 })
 
 const onSubmit = async () => {
@@ -50,13 +51,24 @@ const onSubmit = async () => {
 
 onBeforeMount(async () => {
   const operations = await getOperations()
-  operationChoices.value =
-    operations.map(operation => ({ label: operation.name, value: operation.id }))
+
+  operationChoices.value = operations
+    .map(operation => ({ label: operation.name, value: operation.id }))
+
+  equipment.value = {
+    id: props.data.id,
+    name: props.data.name,
+    operationIds: props.data.operations.map(({ id }) => id)
+  }
 })
 </script>
 
 <template>
-  <CfDialog title="Update equipment" @close="emit('cancel')">
+  <CfDialog
+    title="Edit equipment"
+    @close="emit('cancel')"
+    v-if="operationChoices.length"
+  >
     <template #body>
       <form id="updateEquipment" @submit.prevent="onSubmit">
         <CfField

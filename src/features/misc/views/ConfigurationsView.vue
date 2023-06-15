@@ -40,7 +40,7 @@ import { CfAppView, CfHeader, CfActionCard, CfFilledButton } from '../../../comp
     </CfActionCard>
     <CfActionCard title="Inventory Collections">
       <template #body>
-        <p>Configure the collections that group your inventory materials and products.</p>
+        <p>Configure the collections that group your materials and products.</p>
       </template>
       <template #action>
         <CfFilledButton :to="{ name: 'Collections' }">

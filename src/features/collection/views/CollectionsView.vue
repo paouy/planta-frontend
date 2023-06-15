@@ -58,7 +58,7 @@ onMounted(async () => collections.value = await getCollections())
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfHeader title="Inventory Collections" description="Configure the collections that group your inventory materials and products.">
+    <CfHeader title="Inventory Collections" description="Configure the collections that group your materials and products.">
       <template #actions>
         <CfFilledButton @click="showAddCollection = true">
           Add collection

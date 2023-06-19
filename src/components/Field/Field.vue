@@ -165,12 +165,7 @@ const computedValue = computed({
     }
 
     &:disabled {
-      opacity: 0.5;
-      cursor: default;
-
-      ~ * {
-        opacity: 0.5;
-      }
+      cursor: not-allowed;
     }
   }
 
@@ -194,7 +189,6 @@ const computedValue = computed({
 
 [inert] .cf-field,
 [disabled] .cf-field {
-  opacity: 0.5;
-  cursor: default;
+  cursor: not-allowed;
 }
 </style>

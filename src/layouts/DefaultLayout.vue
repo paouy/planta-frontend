@@ -16,13 +16,18 @@ import { CfDefaultLayout, CfSidebarLink } from '../components/index.js'
           <CfSidebarLink href="#">Floor</CfSidebarLink>
         </template>
       </CfSidebarLink>
-      <CfSidebarLink icon="category" href="#">Inventory</CfSidebarLink>
+      <CfSidebarLink icon="category" parent>Inventory
+        <template #children>
+          <CfSidebarLink href="#">Products</CfSidebarLink>
+          <CfSidebarLink :to="{ name: 'Materials' }">Materials</CfSidebarLink>
+        </template>
+      </CfSidebarLink>
       <CfSidebarLink icon="monitoring" href="#">Reports</CfSidebarLink>
       <hr>
       <CfSidebarLink icon="settings" parent>Settings
         <template #children>
           <CfSidebarLink href="#">Users</CfSidebarLink>
-          <CfSidebarLink to="/settings/configurations">Configurations</CfSidebarLink>
+          <CfSidebarLink :to="{ name: 'Configurations' }">Configurations</CfSidebarLink>
         </template>
       </CfSidebarLink>
     </template>

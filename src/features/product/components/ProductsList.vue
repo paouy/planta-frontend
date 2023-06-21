@@ -7,6 +7,10 @@ const props = defineProps({ data: Array })
 
 const columns = [
   {
+    key: 'sku',
+    label: 'SKU',
+    width: '12%'
+  }, {
     key: 'name',
     label: 'Name'
   }, {
@@ -34,6 +38,7 @@ const columns = [
     @item-action="$event => emit('action', $event)"
   >
     <template v-slot="{item}">
+      <td>{{ item.sku }}</td>
       <td>{{ item.name }}</td>
       <td>{{ item.collectionName }}</td>
       <td>{{ `${item.qtyAvailable} ${item.uom}` }}</td>

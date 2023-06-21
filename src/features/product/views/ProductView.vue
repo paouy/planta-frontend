@@ -1,9 +1,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { getProduct } from '../api/index.js'
 import { getProductMaterials } from '../../productMaterial/api/index.js'
-import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfOutlinedButton, CfHeader, CfSummaryList } from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfOutlinedButton, CfHeader, CfSummaryList, CfActionCard } from '../../../components/index.js'
 import UpdateProduct from '../components/UpdateProduct.vue'
+import RemoveProduct from '../components/RemoveProduct.vue'
 import ProductMaterialsList from '../../productMaterial/components/ProductMaterialsList.vue'
 import AddProductMaterial from '../../productMaterial/components/AddProductMaterial.vue'
 import UpdateProductMaterial from '../../productMaterial/components/UpdateProductMaterial.vue'
@@ -13,7 +15,10 @@ const breadcrumbs = [{ name: 'Products', path: '/inventory/products' }]
 
 const props = defineProps({ productId: String })
 
+const router = useRouter()
+
 const showUpdateProduct = ref(false)
+const showRemoveProduct = ref(false)
 const product = ref({
   id: '',
   name: '',
@@ -95,13 +100,11 @@ onMounted(async () => {
         </CfOutlinedButton>
       </template>
     </CfAppViewHeader>
-    <CfHeader title="Product Details"/>
+
+    <CfHeader title="Product details"/>
     <CfSummaryList :data="productSummary"/>
 
-    <CfHeader
-      title="Product Materials"
-      subtitle="Materials required to produce a single unit of the product."
-    >
+    <CfHeader title="Product materials" subtitle="Materials required to produce a single unit of the product.">
       <template #action>
         <CfOutlinedButton @click="showAddProductMaterial = true">
           Add material
@@ -112,31 +115,50 @@ onMounted(async () => {
       :data="productMaterials"
       @action="onProductMaterialsListAction"
     />
-    <AddProductMaterial
-      :product-id="product.id"
-      :product-materials="productMaterials"
-      @success="onAddProductMaterialSuccess"
-      @cancel="showAddProductMaterial = false"
-      v-if="showAddProductMaterial"
-    />
-    <UpdateProductMaterial
-      :data="productMaterial"
-      @success="onUpdateProductMaterialSuccess"
-      @cancel="showUpdateProductMaterial = false"
-      v-if="showUpdateProductMaterial"
-    />
-    <RemoveProductMaterial
-      :data="productMaterial"
-      @success="onRemoveProductMaterialSuccess"
-      @cancel="showRemoveProductMaterial = false"
-      v-if="showRemoveProductMaterial"
-    />
 
-    <UpdateProduct
-      :data="product"
-      @success="updatedProduct => product = updatedProduct"
-      @cancel="showUpdateProduct = false"
-      v-if="showUpdateProduct"
-    />
+    <CfHeader title="Remove product"/>
+    <CfActionCard simple>
+      <template #body>
+        Removing this product is permanent. You will no longer be able to make orders for this product.
+      </template>
+      <template #action>
+        <CfOutlinedButton color="red" @click="showRemoveProduct = true">
+          Remove
+        </CfOutlinedButton>
+      </template>
+    </CfActionCard>
   </CfAppView>
+
+  <UpdateProduct
+    :data="product"
+    @success="updatedProduct => product = updatedProduct"
+    @cancel="showUpdateProduct = false"
+    v-if="showUpdateProduct"
+  />
+  <RemoveProduct
+    :data="product"
+    @success="router.push({ name: 'Products' })"
+    @cancel="showRemoveProduct = false"
+    v-if="showRemoveProduct"
+  />
+
+  <AddProductMaterial
+    :product-id="product.id"
+    :product-materials="productMaterials"
+    @success="onAddProductMaterialSuccess"
+    @cancel="showAddProductMaterial = false"
+    v-if="showAddProductMaterial"
+  />
+  <UpdateProductMaterial
+    :data="productMaterial"
+    @success="onUpdateProductMaterialSuccess"
+    @cancel="showUpdateProductMaterial = false"
+    v-if="showUpdateProductMaterial"
+  />
+  <RemoveProductMaterial
+    :data="productMaterial"
+    @success="onRemoveProductMaterialSuccess"
+    @cancel="showRemoveProductMaterial = false"
+    v-if="showRemoveProductMaterial"
+  />
 </template>

@@ -33,23 +33,25 @@ const sortKey = ref('')
 const sortOrder = ref('asc')
 const searchText = ref('')
 
-let fuseResults
+const data = computed(() => {
+  if (props.searchable) {
+    const { results } = useFuse(searchText, props.data, {
+      fuseOptions: {
+        keys: props.columns.map(({ key }) => key),
+        minMatchCharLength: 3,
+        threshold: 0.4
+      },
+      matchAllWhenSearchEmpty: true
+    })
 
-if (props.searchable) {
-  fuseResults = useFuse(searchText, props.data, {
-    fuseOptions: {
-      keys: props.columns.map(({ key }) => key),
-      minMatchCharLength: 3,
-      threshold: 0.4
-    },
-    matchAllWhenSearchEmpty: true
-  }).results
-}
+    return results.value
+  } else {
+    return props.data
+  }
+})
 
 const computedData = computed(() => {
-  const data = fuseResults?.value ?? props.data
-
-  return data
+  return data.value
     .map(result => result.item || result)
     .sort((a, b) => {
       const aValue = a[sortKey.value]

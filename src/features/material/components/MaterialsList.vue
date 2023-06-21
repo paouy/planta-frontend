@@ -25,6 +25,7 @@ const columns = [
 <template>
   <CfDataTable
     custom-template
+    searchable
     :columns="columns"
     :data="props.data"
     :item-actions="['Adjust', 'Edit', 'Remove']"

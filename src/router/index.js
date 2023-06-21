@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import ProductsView from '../features/product/views/ProductsView.vue'
+import ProductView from '../features/product/views/ProductView.vue'
 import MaterialsView from '../features/material/views/MaterialsView.vue'
 import ConfigurationsView from '../features/misc/views/ConfigurationsView.vue'
 import OperationsView from '../features/operation/views/OperationsView.vue'
@@ -13,6 +15,20 @@ const router = createRouter({
       path: '/inventory',
       children: [
         {
+          path: 'products',
+          children: [
+            {
+              path: '',
+              name: 'Products',
+              component: ProductsView
+            }, {
+              path: ':productId',
+              name: 'Product',
+              component: ProductView,
+              props: true
+            }
+          ]
+        }, {
           path: 'materials',
           name: 'Materials',
           component: MaterialsView

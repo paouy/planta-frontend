@@ -1,10 +1,10 @@
 <script setup>
-import { CfAppView, CfHeader, CfActionCard, CfFilledButton } from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfActionCard, CfFilledButton } from '../../../components/index.js'
 </script>
 
 <template>
   <CfAppView>
-    <CfHeader
+    <CfAppViewHeader
       surtitle="Settings"
       title="Configurations"
     />

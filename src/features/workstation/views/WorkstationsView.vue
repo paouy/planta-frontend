@@ -4,7 +4,7 @@ import { getWorkstations } from '../api/index.js'
 import {
   CfAppView,
   CfBreadcrumbs,
-  CfHeader,
+  CfAppViewHeader,
   CfFilledButton
 } from '../../../components/index.js'
 import WorkstationsList from '../components/WorkstationsList.vue'
@@ -58,13 +58,13 @@ onMounted(async () => workstations.value = await getWorkstations())
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfHeader title="Workstations" description="Configure the workstations in your facility.">
+    <CfAppViewHeader title="Workstations" description="Configure the workstations in your facility.">
       <template #actions>
         <CfFilledButton @click="showAddWorkstation = true">
           Add workstation
         </CfFilledButton>
       </template>
-    </CfHeader>
+    </CfAppViewHeader>
     <WorkstationsList
       :data="workstations"
       @action="onWorkstationsListAction"

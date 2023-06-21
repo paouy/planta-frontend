@@ -4,7 +4,7 @@ import { getEquipments } from '../api/index.js'
 import {
   CfAppView,
   CfBreadcrumbs,
-  CfHeader,
+  CfAppViewHeader,
   CfFilledButton
 } from '../../../components/index.js'
 import EquipmentsList from '../components/EquipmentsList.vue'
@@ -58,13 +58,13 @@ onMounted(async () => equipments.value = await getEquipments())
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfHeader title="Equipment" description="Configure the equipment used in your production.">
+    <CfAppViewHeader title="Equipment" description="Configure the equipment used in your production.">
       <template #actions>
         <CfFilledButton @click="showAddEquipment = true">
           Add equipment
         </CfFilledButton>
       </template>
-    </CfHeader>
+    </CfAppViewHeader>
     <EquipmentsList
       :data="equipments"
       @action="onEquipmentsListAction"

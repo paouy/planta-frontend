@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { incrementMaterial } from '../api/index.js'
+import { incrementProduct } from '../api/index.js'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -19,7 +19,7 @@ const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    await incrementMaterial({
+    await incrementProduct({
       id: props.data.id,
       value: qtyIncrement.value
     })
@@ -43,11 +43,11 @@ const onSubmit = async () => {
     @close="emit('cancel')"
   >
     <template #body>
-      <form id="incrementMaterial" @submit.prevent="onSubmit">
+      <form id="incrementProduct" @submit.prevent="onSubmit">
         <CfField
           v-model="props.data.name"
           type="text"
-          label="Material"
+          label="Product"
           disabled
         />
         <CfField
@@ -76,7 +76,7 @@ const onSubmit = async () => {
     <template #footer>
       <CfFilledButton
         type="submit"
-        form="incrementMaterial"
+        form="incrementProduct"
         :loading="isLoading"
       >Save</CfFilledButton>
       <CfFilledButton
@@ -89,7 +89,7 @@ const onSubmit = async () => {
 </template>
 
 <style lang="scss">
-#incrementMaterial {
+#incrementProduct {
   display: grid;
   gap: 1rem;
 }

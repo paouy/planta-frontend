@@ -3,6 +3,7 @@ import ActionCard from './ActionCard/ActionCard.vue'
 import AppBar from './AppBar/AppBar.vue'
 import AppBarLink from './AppBar/AppBarLink.vue'
 import AppView from './AppView/AppView.vue'
+import AppViewHeader from './AppViewHeader/AppViewHeader.vue'
 import Banner from './Banner/Banner.vue'
 import Breadcrumbs from './Breadcrumbs/Breadcrumbs.vue'
 import FilledButton from './Button/FilledButton.vue'
@@ -23,6 +24,7 @@ import Progress from './Progress/Progress.vue'
 import Sidebar from './Sidebar/Sidebar.vue'
 import SidebarLink from './Sidebar/SidebarLink.vue'
 import Spinner from './Spinner/Spinner.vue'
+import SummaryList from './SummaryList/SummaryList.vue'
 import Switch from './Switch/Switch.vue'
 import TabNavigation from './TabNavigation/TabNavigation.vue'
 import Tag from './Tag/Tag.vue'
@@ -33,6 +35,7 @@ export {
   AppBar as CfAppBar,
   AppBarLink as CfAppBarLink,
   AppView as CfAppView,
+  AppViewHeader as CfAppViewHeader,
   Banner as CfBanner,
   Breadcrumbs as CfBreadcrumbs,
   FilledButton as CfFilledButton,
@@ -53,6 +56,7 @@ export {
   Sidebar as CfSidebar,
   SidebarLink as CfSidebarLink,
   Spinner as CfSpinner,
+  SummaryList as CfSummaryList,
   Switch as CfSwitch,
   TabNavigation as CfTabNavigation,
   Tag as CfTag,

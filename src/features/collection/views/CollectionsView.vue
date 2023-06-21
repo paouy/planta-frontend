@@ -4,7 +4,7 @@ import { getCollections } from '../api/index.js'
 import {
   CfAppView,
   CfBreadcrumbs,
-  CfHeader,
+  CfAppViewHeader,
   CfFilledButton
 } from '../../../components/index.js'
 import CollectionsList from '../components/CollectionsList.vue'
@@ -58,13 +58,13 @@ onMounted(async () => collections.value = await getCollections())
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfHeader title="Inventory Collections" description="Configure the collections that group your materials and products.">
+    <CfAppViewHeader title="Inventory Collections" description="Configure the collections that group your materials and products.">
       <template #actions>
         <CfFilledButton @click="showAddCollection = true">
           Add collection
         </CfFilledButton>
       </template>
-    </CfHeader>
+    </CfAppViewHeader>
     <CollectionsList
       :data="collections"
       @action="onCollectionsListAction"

@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import { getMaterials } from '../api/index.js'
 import {
   CfAppView,
-  CfHeader,
+  CfAppViewHeader,
   CfOutlinedButton
 } from '../../../components/index.js'
 import MaterialsList from '../components/MaterialsList.vue'
@@ -58,13 +58,13 @@ onMounted(async () => materials.value = await getMaterials())
 
 <template>
   <CfAppView>
-    <CfHeader surtitle="Inventory" title="Materials">
+    <CfAppViewHeader surtitle="Inventory" title="Materials">
       <template #actions>
         <CfOutlinedButton @click="showAddMaterial = true">
           Add material
         </CfOutlinedButton>
       </template>
-    </CfHeader>
+    </CfAppViewHeader>
     <MaterialsList
       :data="materials"
       @action="onMaterialsListAction"

@@ -1,58 +1,36 @@
 <script setup>
-import { useSlots } from 'vue'
-
-const slots = useSlots()
-
 const props = defineProps({
+  size: {
+    type: String,
+    default: 'h4'
+  },
   surtitle: String,
-  title: String,
-  description: String
+  subtitle: String
 })
 </script>
 
 <template>
-  <header class="cf-header">
-    <p v-if="props.surtitle">{{ props.surtitle }}</p>
-    <h1 v-if="props.title">{{ props.title }}</h1>
-    <p v-if="props.description">{{ props.description }}</p>
-    <div class="cf-header-actions" v-if="slots.actions">
-      <slot name="actions"></slot>
-    </div>
-  </header>
+  <div class="cf-header">
+    <p v-if="props.surtitle">
+      {{ props.surtitle }}
+    </p>
+    <component :is="props.size">
+      <slot></slot>
+    </component>
+    <p v-if="props.subtitle">
+      {{ props.subtitle }}
+    </p>
+  </div>
 </template>
 
 <style lang="scss">
 .cf-header {
-  display: grid;
-  grid-template-columns: 1fr fit-content(100%);
-  align-items: center;
-  margin-bottom: 1rem;
+  * {
+    margin-bottom: 0.5rem;
 
-  h1 {
-    font-size: 2rem;
-    font-weight: 600;
-    line-height: 1.25;
-  }
-
-  p {
-    grid-column: span 2;
-    color: var(--cf-gray-3);
-    margin-top: 0.125rem;
-
-    &:first-child {
-      font-weight: 600;
-
-      ~ div {
-        grid-row: 2;
-      }
+    &:not(p) {
+      font-weight: bold;
     }
-  }
-
-  &-actions {
-    display: flex;
-    gap: 1rem;
-    grid-row: 1;
-    grid-column: 2;
   }
 }
 </style>

@@ -4,7 +4,7 @@ import { getOperations } from '../api/index.js'
 import {
   CfAppView,
   CfBreadcrumbs,
-  CfHeader,
+  CfAppViewHeader,
   CfFilledButton
 } from '../../../components/index.js'
 import OperationsList from '../components/OperationsList.vue'
@@ -62,13 +62,13 @@ onMounted(async () => operations.value = await getOperations())
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfHeader title="Operations" description="Configure the operations in your production.">
+    <CfAppViewHeader title="Operations" description="Configure the operations in your production.">
       <template #actions>
         <CfFilledButton @click="showAddOperation = true">
           Add operation
         </CfFilledButton>
       </template>
-    </CfHeader>
+    </CfAppViewHeader>
     <OperationsList
       :data="operations"
       @action="onOperationsListAction"

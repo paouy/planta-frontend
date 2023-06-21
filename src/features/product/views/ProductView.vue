@@ -6,6 +6,8 @@ import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfOutlinedButton, CfHeader, 
 import UpdateProduct from '../components/UpdateProduct.vue'
 import ProductMaterialsList from '../../productMaterial/components/ProductMaterialsList.vue'
 import AddProductMaterial from '../../productMaterial/components/AddProductMaterial.vue'
+import UpdateProductMaterial from '../../productMaterial/components/UpdateProductMaterial.vue'
+import RemoveProductMaterial from '../../productMaterial/components/RemoveProductMaterial.vue'
 
 const breadcrumbs = [{ name: 'Products', path: '/inventory/products' }]
 
@@ -45,8 +47,31 @@ const showAddProductMaterial = ref(false)
 const showUpdateProductMaterial = ref(false)
 const showRemoveProductMaterial = ref(false)
 
+const onProductMaterialsListAction = ({ action, item }) => {
+  if (action === 'Edit') {
+    showUpdateProductMaterial.value = true
+  }
+  
+  if (action === 'Remove') {
+    showRemoveProductMaterial.value = true
+  }
+
+  productMaterial.value = item
+}
+
 const onAddProductMaterialSuccess = (addedMaterial) => {
   productMaterials.value.push(addedMaterial)
+}
+
+const onUpdateProductMaterialSuccess = (updatedMaterial) => {
+  const materialIndex = productMaterials.value
+    .findIndex(({ id }) => id === updatedMaterial.id)
+
+  productMaterials.value[materialIndex] = updatedMaterial
+}
+
+const onRemoveProductMaterialSuccess = (materialIndex) => {
+  productMaterials.value.splice(materialIndex, 1)
 }
 
 onMounted(async () => {
@@ -83,13 +108,28 @@ onMounted(async () => {
         </CfOutlinedButton>
       </template>
     </CfHeader>
-    <ProductMaterialsList :data="productMaterials"/>
+    <ProductMaterialsList
+      :data="productMaterials"
+      @action="onProductMaterialsListAction"
+    />
     <AddProductMaterial
       :product-id="product.id"
       :product-materials="productMaterials"
       @success="onAddProductMaterialSuccess"
       @cancel="showAddProductMaterial = false"
       v-if="showAddProductMaterial"
+    />
+    <UpdateProductMaterial
+      :data="productMaterial"
+      @success="onUpdateProductMaterialSuccess"
+      @cancel="showUpdateProductMaterial = false"
+      v-if="showUpdateProductMaterial"
+    />
+    <RemoveProductMaterial
+      :data="productMaterial"
+      @success="onRemoveProductMaterialSuccess"
+      @cancel="showRemoveProductMaterial = false"
+      v-if="showRemoveProductMaterial"
     />
 
     <UpdateProduct

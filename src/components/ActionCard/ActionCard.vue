@@ -20,7 +20,7 @@ const props = defineProps({
     </div>
   </div>
 
-  <div class="cf-simple-action-card">
+  <div class="cf-simple-action-card" v-else>
     <div>
       <slot name="body"></slot>
     </div>

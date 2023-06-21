@@ -1,15 +1,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { getProduct } from '../api/index.js'
-import {
-  CfAppView,
-  CfAppViewHeader,
-  CfBreadcrumbs,
-  CfOutlinedButton,
-  CfHeader,
-  CfSummaryList
-} from '../../../components/index.js'
+import { getProductMaterials } from '../../productMaterial/api/index.js'
+import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfOutlinedButton, CfHeader, CfSummaryList } from '../../../components/index.js'
 import UpdateProduct from '../components/UpdateProduct.vue'
+import ProductMaterialsList from '../../productMaterial/components/ProductMaterialsList.vue'
+import AddProductMaterial from '../../productMaterial/components/AddProductMaterial.vue'
 
 const breadcrumbs = [{ name: 'Products', path: '/inventory/products' }]
 
@@ -43,7 +39,25 @@ const productSummary = computed(() => {
   ]
 })
 
-onMounted(async () => product.value = await getProduct(props.productId))
+const productMaterials = ref([])
+const productMaterial = ref(null)
+const showAddProductMaterial = ref(false)
+const showUpdateProductMaterial = ref(false)
+const showRemoveProductMaterial = ref(false)
+
+const onAddProductMaterialSuccess = (addedMaterial) => {
+  productMaterials.value.push(addedMaterial)
+}
+
+onMounted(async () => {
+  const [_product, materials] = await Promise.all([
+    getProduct(props.productId),
+    getProductMaterials(props.productId)
+  ])
+
+  product.value = _product
+  productMaterials.value = materials
+})
 </script>
 
 <template>
@@ -56,8 +70,28 @@ onMounted(async () => product.value = await getProduct(props.productId))
         </CfOutlinedButton>
       </template>
     </CfAppViewHeader>
-    <CfHeader>Product Details</CfHeader>
+    <CfHeader title="Product Details"/>
     <CfSummaryList :data="productSummary"/>
+
+    <CfHeader
+      title="Product Materials"
+      subtitle="Materials required to produce a single unit of the product."
+    >
+      <template #action>
+        <CfOutlinedButton @click="showAddProductMaterial = true">
+          Add material
+        </CfOutlinedButton>
+      </template>
+    </CfHeader>
+    <ProductMaterialsList :data="productMaterials"/>
+    <AddProductMaterial
+      :product-id="product.id"
+      :product-materials="productMaterials"
+      @success="onAddProductMaterialSuccess"
+      @cancel="showAddProductMaterial = false"
+      v-if="showAddProductMaterial"
+    />
+
     <UpdateProduct
       :data="product"
       @success="updatedProduct => product = updatedProduct"

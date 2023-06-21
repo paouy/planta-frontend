@@ -61,6 +61,7 @@ const onSubmit = async () => {
           v-model.number="qtyIncrement"
           type="number"
           label="Adjustment"
+          step="any"
           :suffix="props.data.uom"
           required
         />

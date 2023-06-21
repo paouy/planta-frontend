@@ -24,7 +24,7 @@ const props = defineProps({
   padding: 2rem;
   border: 1px solid var(--cf-gray-7);
   border-radius: 0.3125rem;
-  margin: 1rem 0;
+  margin: 1rem 0 2.5rem 0;
 
   dt {
     color: var(--cf-gray-3);

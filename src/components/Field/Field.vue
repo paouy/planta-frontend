@@ -12,6 +12,7 @@ const props = defineProps({
   suffix: String,
   options: Array,
   list: String,
+  step: [Number, String],
   helper: String,
   disabled: Boolean,
   required: Boolean
@@ -62,6 +63,7 @@ const computedValue = computed({
       v-model="computedValue"
       :type="props.type"
       :placeholder="props.placeholder"
+      :step="props.step"
       :list="props.list"
       :required="props.required"
       :disabled="props.disabled"

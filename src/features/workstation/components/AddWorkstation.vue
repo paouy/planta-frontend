@@ -20,11 +20,7 @@ const onSubmit = async () => {
 
     const addedWorkstation = await addWorkstation(workstation.value)
 
-    const operationName = operationOptions.value
-      .find(({ value }) => value === workstation.value.operationId)
-      .label
-
-    emit('success', { ...addedWorkstation, operationName })
+    emit('success', addedWorkstation)
     emit('cancel')
   } catch (error) {
     alert(error)

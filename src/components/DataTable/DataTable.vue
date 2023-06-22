@@ -184,7 +184,9 @@ const onSort = (key) => {
             >
           </td>
           <td v-for="column in columns" :key="column.key">
-            {{ item[column.key]?.toLocaleString() }}
+            {{ column.key.includes('.')
+                ? column.key.split('.').reduce((prevObj, key) => prevObj && prevObj[key], item)
+                : item[column.key]?.toLocaleString() }}
           </td>
           <td data-table-item-actions v-if="props.itemActions">
             <button>

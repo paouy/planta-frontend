@@ -45,7 +45,7 @@ const onUpdateWorkstationSuccess = (updatedWorkstation) => {
   const workstationIndex = workstations.value
     .findIndex(({ id }) => id === updatedWorkstation.id)
 
-  workstations.value[workstationIndex] = updatedWorkstation
+  Object.assign(workstations.value[workstationIndex], updatedWorkstation)
 }
 
 const onRemoveWorkstationSuccess = (workstationIndex) => {

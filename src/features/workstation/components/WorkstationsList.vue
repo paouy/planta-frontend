@@ -10,7 +10,7 @@ const columns = [
     key: 'name',
     label: 'Name'
   }, {
-    key: 'operationName',
+    key: 'operation.name',
     label: 'Operation'
   }
 ]

@@ -23,7 +23,12 @@ const onSubmit = async () => {
 
     await updateWorkstation(workstation.value)
 
-    emit('success', workstation.value)
+    const updatedWorkstation = {
+      id: workstation.value.id,
+      name: workstation.value.name
+    }
+
+    emit('success', updatedWorkstation)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -41,7 +46,7 @@ onBeforeMount(async () => {
   workstation.value = {
     id: props.data.id,
     name: props.data.name,
-    operationId: props.data.operationId
+    operationId: props.data.operation.id
   }
 })
 </script>

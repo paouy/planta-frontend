@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { CfDataTable } from '../../../components'
 
 const emit = defineEmits(['action'])
@@ -10,23 +11,24 @@ const columns = [
     key: 'name',
     label: 'Name'
   }, {
-    key: 'operations',
+    key: 'normalizedOperations',
     label: 'Operations'
   }
 ]
+
+const computedData = computed(() => {
+  return props.data.map(equipment => ({
+    ...equipment,
+    normalizedOperations: equipment.operations.map(({ name }) => name).join(', ')
+  }))
+})
 </script>
 
 <template>
   <CfDataTable
     :columns="columns"
+    :data="computedData"
     :item-actions="['Edit', 'Remove']"
-    :data="props.data"
-    custom-template
     @item-action="$event => emit('action', $event)"
-  >
-    <template v-slot="{ item }">
-      <td>{{ item.name }}</td>
-      <td>{{ item.operations.map(({ name }) => name).join(', ') }}</td>
-    </template>
-  </CfDataTable>
+  />
 </template>

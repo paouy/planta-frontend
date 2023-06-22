@@ -18,22 +18,9 @@ const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    const addedWorkstation = await addEquipment(equipment.value)
+    const addedEquipment = await addEquipment(equipment.value)
 
-    const operations = addedWorkstation.operationIds.map(operationId => {
-      const { label } = operationChoices.value.find(
-        choice => choice.value === operationId
-      )
-
-      return {
-        id: operationId,
-        name: label
-      }
-    })
-
-    delete addedWorkstation.operationsIds
-
-    emit('success', { ...addedWorkstation, operations })
+    emit('success', addedEquipment)
     emit('cancel')
   } catch (error) {
     alert(error)

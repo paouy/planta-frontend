@@ -24,15 +24,17 @@ const product = ref({
   name: '',
   sku: '',
   uom: '',
-  collectionId: '',
-  collectionName: ''
+  collection: {
+    id: '',
+    name: ''
+  }
 })
 
 const productSummary = computed(() => {
   return [
     {
       label: 'Collection',
-      value: product.value.collectionName
+      value: product.value.collection.name
     }, {
       label: 'SKU',
       value: product.value.sku

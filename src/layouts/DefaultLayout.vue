@@ -11,8 +11,8 @@ import { CfDefaultLayout, CfSidebarLink } from '../components/index.js'
       <CfSidebarLink icon="storefront" href="#">Sales</CfSidebarLink>
       <CfSidebarLink icon="pallet" parent>Production
         <template #children>
-          <CfSidebarLink to="/production/orders">Overview</CfSidebarLink>
-          <CfSidebarLink href="#">Schedule</CfSidebarLink>
+          <CfSidebarLink :to="{ name: 'ProductionOrders' }">Overview</CfSidebarLink>
+          <CfSidebarLink :to="{ name: 'ProductionJobs' }">Jobs</CfSidebarLink>
         </template>
       </CfSidebarLink>
       <CfSidebarLink icon="category" parent>Inventory

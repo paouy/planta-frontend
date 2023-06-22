@@ -25,30 +25,7 @@ const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    await updateProduct(product.value)
-
-    const collectionName = collectionOptions.value
-      .find(({ value }) => value === product.value.collectionId)
-      .label
-
-    const operations = product.value.operationIds.map(operationId => {
-      const { label } = operationChoices.value.find(
-        choice => choice.value === operationId
-      )
-
-      return {
-        id: operationId,
-        name: label
-      }
-    })
-
-    const updatedProduct = {
-      ...product.value,
-      collectionName,
-      operations
-    }
-
-    delete updatedProduct.operationIds
+    const updatedProduct = await updateProduct(product.value)
 
     emit('success', updatedProduct)
     emit('cancel')
@@ -76,7 +53,7 @@ onBeforeMount(async () => {
     sku: props.data.sku,
     name: props.data.name,
     uom: props.data.uom,
-    collectionId: props.data.collectionId,
+    collectionId: props.data.collection.id,
     operationIds: props.data.operations.map(({id}) => id)
   }
 })

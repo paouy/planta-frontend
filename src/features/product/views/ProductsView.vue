@@ -41,11 +41,11 @@ const onAddProductSuccess = (addedProduct) => {
   })
 }
 
-const onAddProductionOrderSuccess = (addedProductionOrder) => {
+const onAddProductionOrderSuccess = (productionOrder) => {
   const productIndex = products.value
-    .findIndex(({ id }) => id === addedProductionOrder.productId)
+    .findIndex(({ id }) => id === productionOrder.product.id)
 
-  products.value[productIndex].qtyExpected += addedProductionOrder.qty
+  products.value[productIndex].qtyExpected += productionOrder.qty
 }
 
 const onIncrementProductSucess = (incrementedProduct) => {

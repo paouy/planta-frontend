@@ -147,7 +147,7 @@ const onSort = (key) => {
           :style="{ '--w': column.width }"
         >
         <col
-          :style="{ '--w': props.itemActions.length > 1 ? '4rem' : '8rem' }"
+          :style="{ '--w': props.itemActions.length > 1 ? '4rem' : '6rem' }"
           v-if="props.itemActions"
         >
       </colgroup>
@@ -169,11 +169,7 @@ const onSort = (key) => {
               {{ column.label }}
             </div>
           </th>
-          <th data-table-item-actions v-if="props.itemActions">
-            <div v-if="props.itemActions.length === 1">
-              Actions
-            </div>
-          </th>
+          <th data-table-item-actions v-if="props.itemActions"></th>
         </tr>
       </thead>
       <tbody v-if="!props.customTemplate">

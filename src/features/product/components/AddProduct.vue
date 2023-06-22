@@ -24,11 +24,7 @@ const onSubmit = async () => {
 
     const addedProduct = await addProduct(product.value)
 
-    const collectionName = collectionOptions.value
-      .find(({ value }) => value === product.value.collectionId)
-      .label
-
-    emit('success', { ...addedProduct, collectionName })
+    emit('success', addedProduct)
     emit('cancel')
   } catch (error) {
     alert(error)

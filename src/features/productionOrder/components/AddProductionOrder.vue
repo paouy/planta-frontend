@@ -37,21 +37,12 @@ const computedProductOptions = computed(() => {
 const onSubmit = async () => {
   try {
     isLoading.value = true
-    const { id, operations } = await addProductionOrder({
+
+    const addedProductionOrder = await addProductionOrder({
       ...productionOrder.value,
       productId: product.value.id,
       status: 'OPEN'
     })
-
-    const addedProductionOrder = {
-      ...productionOrder.value,
-      id,
-      operations,
-      status: 'OPEN',
-      productId: product.value.id,
-      productName: product.value.name,
-      productSku: product.value.sku
-    }
 
     emit('success', addedProductionOrder)
     emit('cancel')

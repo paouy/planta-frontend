@@ -39,7 +39,7 @@ const data = computed(() => {
       fuseOptions: {
         keys: props.columns.map(({ key }) => key),
         minMatchCharLength: 3,
-        threshold: 0.4
+        threshold: 0.2
       },
       matchAllWhenSearchEmpty: true
     })

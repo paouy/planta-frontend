@@ -37,7 +37,7 @@ onBeforeMount(async () => {
 
   collectionOptions.value = collections
     .filter(collection => collection.type === 'MATERIALS')
-    .map(collection => ({ label: collection.name, value: collection.id}))
+    .map(collection => ({ label: collection.name, value: collection.id }))
 })
 </script>
 

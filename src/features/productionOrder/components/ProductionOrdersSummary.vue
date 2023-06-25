@@ -23,7 +23,7 @@ const summary = computed(() => {
 <template>
   <div class="productionOrderSummary">
     <h3>Summary</h3>
-    <p>There are currently {{ props.data.length }} production orders.</p>
+    <p>There are {{ props.data.length }} production orders currently.</p>
     <ul>
       <li>
         <span>Open</span>

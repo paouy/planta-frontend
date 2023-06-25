@@ -4,8 +4,8 @@ import { inject, computed } from 'vue'
 const emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({
-  modelValue: [Number, String, Boolean, Array],
-  value: [Number, String, Boolean],
+  modelValue: [Number, String, Boolean, Object, Array],
+  value: [Number, String, Boolean, Object],
   trueValue: {
     type: [Number, String, Boolean],
     default: true

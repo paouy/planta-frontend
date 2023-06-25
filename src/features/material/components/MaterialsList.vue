@@ -10,7 +10,7 @@ const columns = [
     key: 'name',
     label: 'Name'
   }, {
-    key: 'collectionName',
+    key: 'collection.name',
     label: 'Collection'
   }, {
     key: 'qtyAvailable',
@@ -33,9 +33,9 @@ const columns = [
   >
     <template v-slot="{item}">
       <td>{{ item.name }}</td>
-      <td>{{ item.collectionName }}</td>
+      <td>{{ item.collection.name }}</td>
       <td>{{ `${item.qtyAvailable} ${item.uom}` }}</td>
-      <td>{{ `${item.qtyCommitted || 0} ${item.uom}` }}</td>
+      <td>{{ `${item.qtyCommitted} ${item.uom}` }}</td>
     </template>
   </CfDataTable>
 </template>

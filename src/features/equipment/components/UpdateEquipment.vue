@@ -14,7 +14,7 @@ const operationChoices = ref([])
 const equipment = ref({
   id: '',
   name: '',
-  operationIds: ''
+  operations: []
 })
 
 const onSubmit = async () => {
@@ -23,24 +23,7 @@ const onSubmit = async () => {
 
     await updateEquipment(equipment.value)
 
-    const operations = equipment.value.operationIds.map(operationId => {
-      const { label } = operationChoices.value.find(
-        choice => choice.value === operationId
-      )
-
-      return {
-        id: operationId,
-        name: label
-      }
-    })
-
-    const updatedEquipment = {
-      id: equipment.value.id,
-      name: equipment.value.name,
-      operations
-    }
-
-    emit('success', updatedEquipment)
+    emit('success', equipment.value)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -53,12 +36,12 @@ onBeforeMount(async () => {
   const operations = await getOperations()
 
   operationChoices.value = operations
-    .map(operation => ({ label: operation.name, value: operation.id }))
+    .map(({ id, name }) => ({ label: name, value: { id, name } }))
 
   equipment.value = {
     id: props.data.id,
     name: props.data.name,
-    operationIds: props.data.operations.map(({ id }) => id)
+    operations: props.data.operations
   }
 })
 </script>
@@ -78,7 +61,7 @@ onBeforeMount(async () => {
           required
         />
         <CfChoiceList
-          v-model="equipment.operationIds"
+          v-model="equipment.operations"
           label="Operations"
           :choices="operationChoices"
           multiple

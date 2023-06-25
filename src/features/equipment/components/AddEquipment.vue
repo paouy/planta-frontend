@@ -11,7 +11,7 @@ const operationChoices = ref([])
 
 const equipment = ref({
   name: '',
-  operationIds: []
+  operations: []
 })
 
 const onSubmit = async () => {
@@ -33,7 +33,7 @@ onBeforeMount(async () => {
   const operations = await getOperations()
 
   operationChoices.value = operations
-    .map(operation => ({ label: operation.name, value: operation.id }))
+    .map(({ id, name }) => ({ label: name, value: { id, name } }))
 })
 </script>
 
@@ -52,7 +52,7 @@ onBeforeMount(async () => {
           required
         />
         <CfChoiceList
-          v-model="equipment.operationIds"
+          v-model="equipment.operations"
           label="Operations"
           :choices="operationChoices"
           multiple

@@ -15,7 +15,7 @@ const material = ref({
   id: '',
   name: '',
   uom: '',
-  collectionId: ''
+  collection: {}
 })
 
 const onSubmit = async () => {
@@ -24,11 +24,7 @@ const onSubmit = async () => {
 
     await updateMaterial(material.value)
 
-    const collectionName = collectionOptions.value
-      .find(({ value }) => value === material.value.collectionId)
-      .label
-
-    emit('success', { ...material.value, collectionName })
+    emit('success', material.value)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -40,15 +36,14 @@ const onSubmit = async () => {
 onBeforeMount(async () => {
   const collections = await getCollections()
 
-  collectionOptions.value = collections
-    .map(collection => ({ label: collection.name, value: collection.id}))
+  collectionOptions.value = collections.map(({ id, name }) => {
+    return {
+      label: name,
+      value: { id, name }
+    }
+  })
 
-  material.value = {
-    id: props.data.id,
-    name: props.data.name,
-    uom: props.data.uom,
-    collectionId: props.data.collectionId
-  }
+  Object.assign(material.value, props.data)
 })
 </script>
 
@@ -61,7 +56,7 @@ onBeforeMount(async () => {
     <template #body>
       <form id="updateMaterial" @submit.prevent="onSubmit">
         <CfField
-          v-model="material.collectionId"
+          v-model="material.collection"
           type="select"
           label="Collection"
           :options="collectionOptions"

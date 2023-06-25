@@ -12,7 +12,9 @@ const collectionOptions = ref([])
 const material = ref({
   name: '',
   uom: '',
-  collectionId: ''
+  collection: {
+    id:''
+  }
 })
 
 const onSubmit = async () => {
@@ -21,11 +23,7 @@ const onSubmit = async () => {
 
     const addedMaterial = await addMaterial(material.value)
 
-    const collectionName = collectionOptions.value
-      .find(({ value }) => value === material.value.collectionId)
-      .label
-
-    emit('success', { ...addedMaterial, collectionName })
+    emit('success', addedMaterial)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -52,7 +50,7 @@ onBeforeMount(async () => {
     <template #body>
       <form id="addMaterial" @submit.prevent="onSubmit">
         <CfField
-          v-model="material.collectionId"
+          v-model="material.collection.id"
           type="select"
           label="Collection"
           :options="collectionOptions"

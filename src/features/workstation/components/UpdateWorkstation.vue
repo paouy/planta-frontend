@@ -14,7 +14,7 @@ const operationOptions = ref([])
 const workstation = ref({
   id: '',
   name: '',
-  operationId: ''
+  operation: {}
 })
 
 const onSubmit = async () => {
@@ -23,12 +23,7 @@ const onSubmit = async () => {
 
     await updateWorkstation(workstation.value)
 
-    const updatedWorkstation = {
-      id: workstation.value.id,
-      name: workstation.value.name
-    }
-
-    emit('success', updatedWorkstation)
+    emit('success', workstation.value)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -41,13 +36,9 @@ onBeforeMount(async () => {
   const operations = await getOperations()
 
   operationOptions.value = operations
-    .map(operation => ({ label: operation.name, value: operation.id}))
+    .map(({ id, name }) => ({ label: name, value: { id, name } }))
 
-  workstation.value = {
-    id: props.data.id,
-    name: props.data.name,
-    operationId: props.data.operation.id
-  }
+  Object.assign(workstation.value, props.data)
 })
 </script>
 
@@ -60,7 +51,7 @@ onBeforeMount(async () => {
     <template #body>
       <form id="updateWorkstation" @submit.prevent="onSubmit">
         <CfField
-          v-model="workstation.operationId"
+          v-model="workstation.operation"
           type="select"
           label="Operation"
           :options="operationOptions"

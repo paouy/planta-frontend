@@ -11,7 +11,7 @@ const operationOptions = ref([])
 
 const workstation = ref({
   name: '',
-  operationId: ''
+  operation: {}
 })
 
 const onSubmit = async () => {
@@ -33,7 +33,7 @@ onBeforeMount(async () => {
   const operations = await getOperations()
 
   operationOptions.value = operations
-    .map(operation => ({ label: operation.name, value: operation.id}))
+    .map(({ id, name }) => ({ label: name, value: { id, name } }))
 })
 </script>
 
@@ -46,7 +46,7 @@ onBeforeMount(async () => {
     <template #body>
       <form id="addWorkstation" @submit.prevent="onSubmit">
         <CfField
-          v-model="workstation.operationId"
+          v-model="workstation.operation"
           type="select"
           label="Operation"
           :options="operationOptions"

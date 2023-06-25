@@ -8,7 +8,7 @@ import WorkstationsView from '../features/workstation/views/WorkstationsView.vue
 import EquipmentsView from '../features/equipment/views/EquipmentsView.vue'
 import CollectionsView from '../features/collection/views/CollectionsView.vue'
 import ProductionOrdersView from '../features/productionOrder/views/ProductionOrdersView.vue'
-import ProductionJobsView from '../features/productionJob/views/ProductionJobsView.vue'
+import ProductionOperationsView from '../features/misc/views/ProductionOperationsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,9 +21,9 @@ const router = createRouter({
           name: 'ProductionOrders',
           component: ProductionOrdersView
         }, {
-          path: 'jobs',
-          name: 'ProductionJobs',
-          component: ProductionJobsView
+          path: 'schedule',
+          name: 'ProductionOperations',
+          component: ProductionOperationsView
         }
       ]
     }, {

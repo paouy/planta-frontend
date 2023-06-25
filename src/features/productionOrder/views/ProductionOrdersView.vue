@@ -6,6 +6,7 @@ import {
   CfAppViewHeader,
   CfOutlinedButton
 } from '../../../components/index.js'
+import ProductionOrdersSummary from '../components/ProductionOrdersSummary.vue'
 import ProductionOrdersList from '../components/ProductionOrdersList.vue'
 
 const productionOrders = ref([])
@@ -22,6 +23,7 @@ onMounted(async () => productionOrders.value = await getProductionOrders())
         </CfOutlinedButton>
       </template>
     </CfAppViewHeader>
+    <ProductionOrdersSummary :data="productionOrders"/>
     <ProductionOrdersList :data="productionOrders"/>
   </CfAppView>
 </template>

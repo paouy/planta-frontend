@@ -14,8 +14,8 @@ const product = ref({
   sku: '',
   name: '',
   uom: '',
-  collectionId: '',
-  operationIds: []
+  collection: {},
+  operations: []
 })
 
 const onSubmit = async () => {
@@ -40,10 +40,10 @@ onBeforeMount(async () => {
   collectionOptions.value =
     collections
       .filter(collection => collection.type === 'PRODUCTS')
-      .map(collection => ({ label: collection.name, value: collection.id}))
+      .map(collection => ({ label: collection.name, value: collection }))
 
   operationChoices.value = operations
-    .map(operation => ({ label: operation.name, value: operation.id }))
+    .map(operation => ({ label: operation.name, value: operation }))
 })
 </script>
 
@@ -56,7 +56,7 @@ onBeforeMount(async () => {
     <template #body>
       <form id="addProduct" @submit.prevent="onSubmit">
         <CfField
-          v-model="product.collectionId"
+          v-model="product.collection"
           type="select"
           label="Collection"
           :options="collectionOptions"
@@ -81,7 +81,7 @@ onBeforeMount(async () => {
           required
         />
         <CfChoiceList
-          v-model="product.operationIds"
+          v-model="product.operations"
           label="Operations"
           :choices="operationChoices"
           multiple

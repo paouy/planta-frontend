@@ -8,12 +8,9 @@ const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
-
 const qtyIncrement = ref(0)
 
-const qtyAdjusted = computed(() => {
-  return props.data.qtyAvailable + qtyIncrement.value
-})
+const qtyNew = computed(() => props.data.qtyAvailable + qtyIncrement.value)
 
 const onSubmit = async () => {
   try {
@@ -26,7 +23,7 @@ const onSubmit = async () => {
 
     emit('success', {
       id: props.data.id,
-      qtyAvailable: qtyAdjusted.value
+      qtyAvailable: qtyNew.value
     })
     emit('cancel')
   } catch (error) {
@@ -66,7 +63,7 @@ const onSubmit = async () => {
           required
         />
         <CfField
-          v-model="qtyAdjusted"
+          v-model="qtyNew"
           type="text"
           label="New Quantity"
           :suffix="props.data.uom"

@@ -147,7 +147,7 @@ const onSort = (key) => {
           :style="{ '--w': column.width }"
         >
         <col
-          :style="{ '--w': props.itemActions.length > 1 ? '4rem' : '6rem' }"
+          :style="{ '--w': props.itemActions.length > 1 ? '4rem' : '5rem' }"
           v-if="props.itemActions"
         >
       </colgroup>
@@ -319,6 +319,7 @@ const onSort = (key) => {
 
     > button {
       &:only-child {
+        float: right;
         color: var(--cf-blue-4);
 
         &:hover {

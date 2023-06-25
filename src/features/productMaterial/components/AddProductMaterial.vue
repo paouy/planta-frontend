@@ -13,44 +13,32 @@ const props = defineProps({
 })
 
 const isLoading = ref(false)
-const productMaterialQty = ref(null)
 const collectionOptions = ref([])
-const collection = ref({
-  id: '',
-  name: ''
-})
-const materialOptions = ref([])
-const material = ref({
-  id: '',
-  uom: ''
+const materials = []
+
+const collectionId = ref('')
+const productMaterial = ref({
+  productId: props.productId,
+  reference: {},
+  qty: null
 })
 
-const currentProductMaterialIds = computed(() => {
-  return props.productMaterials.map(({ materialId }) => materialId)
-})
+const materialOptions = computed(() => {
+  const referenceIds = props.productMaterials.map(({ reference }) => reference.id)
 
-const computedMaterialOptions = computed(() => {
-  return materialOptions.value
-    .filter(({ value }) => !currentProductMaterialIds.value.includes(value.id))
-    .filter(({ value }) => value.collectionId === collection.value.id)
+  return materials.value
+    .filter(({ id }) => !referenceIds.includes(id))
+    .filter(({ collection }) => collection.id === collectionId.value)
+    .map(material => ({ label: material.name, value: material }))
 })
 
 const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    const addedProductMaterial = await addProductMaterial({
-      productId: props.productId,
-      materialId: material.value.id,
-      qty: productMaterialQty.value
-    })
+    const addedProductMaterial = await addProductMaterial(productMaterial.value)
 
-    emit('success', {
-      ...addedProductMaterial,
-      name: material.value.name,
-      uom: material.value.uom,
-      collectionName: collection.value.name
-    })
+    emit('success', addedProductMaterial)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -60,15 +48,14 @@ const onSubmit = async () => {
 }
 
 onBeforeMount(async () => {
-  const [collections, materials] =
+  const [collections, _materials] =
     await Promise.all([getCollections(), getMaterials()])
 
   collectionOptions.value = collections
     .filter(collection => collection.type === 'MATERIALS')
-    .map(collection => ({ label: collection.name, value: collection }))
+    .map(({ id, name }) => ({ label: name, value: id }))
 
-  materialOptions.value = materials
-    .map(material => ({ label: material.name, value: material }))
+  materials.value = _materials
 })
 </script>
 
@@ -81,25 +68,25 @@ onBeforeMount(async () => {
     <template #body>
       <form id="addProductMaterial" @submit.prevent="onSubmit">
         <CfField
-          v-model="collection"
-          type="select"
+          v-model="collectionId"
           label="Collection"
+          type="select"
           :options="collectionOptions"
           required
         />
         <CfField
-          v-model="material"
-          type="select"
+          v-model="productMaterial.reference"
           label="Name"
-          :options="computedMaterialOptions"
+          type="select"
+          :options="materialOptions"
           required
         />
         <CfField
-          v-model="productMaterialQty"
+          v-model="productMaterial.qty"
+          label="Quantity"
           type="number"
           step="any"
-          label="Quantity"
-          :suffix="material.uom"
+          :suffix="productMaterial.reference?.uom"
           required
         />
       </form>

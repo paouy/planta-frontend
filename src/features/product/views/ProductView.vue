@@ -74,7 +74,7 @@ const onUpdateProductMaterialSuccess = (updatedMaterial) => {
   const materialIndex = productMaterials.value
     .findIndex(({ id }) => id === updatedMaterial.id)
 
-  productMaterials.value[materialIndex] = updatedMaterial
+  Object.assign(productMaterials.value[materialIndex], updatedMaterial)
 }
 
 const onRemoveProductMaterialSuccess = (materialIndex) => {

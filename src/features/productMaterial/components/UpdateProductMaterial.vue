@@ -19,7 +19,7 @@ const onSubmit = async () => {
 
     await updateProductMaterial(productMaterial.value)
 
-    emit('success', { ...props.data, qty: productMaterial.value.qty })
+    emit('success', productMaterial.value)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -37,13 +37,13 @@ const onSubmit = async () => {
     <template #body>
       <form id="updateProductMaterial" @submit.prevent="onSubmit">
         <CfField
-          v-model="props.data.collectionName"
+          v-model="props.data.reference.collectionName"
           type="text"
           label="Collection"
           disabled
         />
         <CfField
-          v-model="props.data.name"
+          v-model="props.data.reference.name"
           type="text"
           label="Name"
           disabled
@@ -53,7 +53,7 @@ const onSubmit = async () => {
           type="number"
           step="any"
           label="Quantity"
-          :suffix="props.data.uom"
+          :suffix="props.data.reference.uom"
           required
         />
       </form>

@@ -21,7 +21,7 @@ const router = createRouter({
           name: 'ProductionOrders',
           component: ProductionOrdersView
         }, {
-          path: 'schedule',
+          path: 'operations',
           name: 'ProductionOperations',
           component: ProductionOperationsView
         }

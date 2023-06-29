@@ -13,29 +13,29 @@ const equipmentStore = useEquipmentStore()
 const operationStore = useOperationStore()
 const workstationStore = useWorkstationStore()
 
-onMounted(async () => {
-  if (!isInitialized.value) {
-    try {
-      miscStore.startInitialization()
+const initialize = async () => {
+  try {
+    miscStore.startInitialization()
 
-      const {
-        collections,
-        equipments,
-        operations,
-        workstations
-      } = await initializeApp()
+    const {
+      collections,
+      equipments,
+      operations,
+      workstations
+    } = await initializeApp()
 
-      collectionStore.set(collections)
-      equipmentStore.set(equipments)
-      operationStore.set(operations)
-      workstationStore.set(workstations)
+    collectionStore.set(collections)
+    equipmentStore.set(equipments)
+    operationStore.set(operations)
+    workstationStore.set(workstations)
 
-      miscStore.completeInitialization()
-    } catch (error) {
-      alert(error)
-    }
+    miscStore.completeInitialization()
+  } catch (error) {
+    alert(error)
   }
-})
+}
+
+onMounted(() => initialize())
 </script>
 
 <template></template>

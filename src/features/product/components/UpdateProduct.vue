@@ -1,17 +1,15 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref, onMounted } from 'vue'
 import { updateProduct } from '../api/index.js'
-import { getCollections } from '../../collection/api/index.js'
-import { getOperations } from '../../operation/api/index.js'
-import { CfDialog, CfField, CfChoiceList, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import CollectionSelect from '../../collection/components/CollectionSelect.vue'
+import OperationChoiceList from '../../operation/components/OperationChoiceList.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
-const collectionOptions = ref([])
-const operationChoices = ref([])
 const product = ref({
   id: '',
   sku: '',
@@ -25,9 +23,9 @@ const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    const updatedProduct = await updateProduct(product.value)
+    await updateProduct(product.value)
 
-    emit('success', updatedProduct)
+    emit('success', product.value)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -36,36 +34,16 @@ const onSubmit = async () => {
   }
 }
 
-onBeforeMount(async () => {
-  const [collections, operations] =
-    await Promise.all([getCollections(), getOperations()])
-
-  collectionOptions.value =
-    collections
-      .filter(collection => collection.type === 'PRODUCTS')
-      .map(({ id, name }) => ({ label: name, value: { id, name } }))
-
-  operationChoices.value = operations
-    .map(({ id, name }) => ({ label: name, value: { id, name } }))
-
-  Object.assign(product.value, props.data)
-})
+onMounted(() => Object.assign(product.value, props.data))
 </script>
 
 <template>
-  <CfDialog
-    title="Edit product"
-    @close="emit('cancel')"
-    v-if="collectionOptions.length && operationChoices.length"
-  >
+  <CfDialog title="Edit product" @close="emit('cancel')">
     <template #body>
       <form id="updateProduct" @submit.prevent="onSubmit">
-        <CfField
+        <CollectionSelect
           v-model="product.collection"
-          type="select"
-          label="Collection"
-          :options="collectionOptions"
-          required
+          type="products"
         />
         <CfField
           v-model="product.sku"
@@ -85,12 +63,7 @@ onBeforeMount(async () => {
           label="Measurement Unit"
           required
         />
-        <CfChoiceList
-          v-model="product.operations"
-          label="Operations"
-          :choices="operationChoices"
-          multiple
-        />
+        <OperationChoiceList v-model="product.operations"/>
       </form>
     </template>
     <template #footer>

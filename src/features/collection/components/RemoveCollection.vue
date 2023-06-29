@@ -15,7 +15,7 @@ const onClick = async () => {
 
     await removeCollection(props.data.id)
 
-    emit('success', props.data.index)
+    emit('success', props.data)
     emit('cancel')
   } catch (error) {
     alert(error)

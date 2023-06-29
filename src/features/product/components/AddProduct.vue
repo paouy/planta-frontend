@@ -1,15 +1,13 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref } from 'vue'
 import { addProduct } from '../api/index.js'
-import { getCollections } from '../../collection/api/index.js'
-import { getOperations } from '../../operation/api/index.js'
-import { CfDialog, CfField, CfChoiceList, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import CollectionSelect from '../../collection/components/CollectionSelect.vue'
+import OperationChoiceList from '../../operation/components/OperationChoiceList.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
-const collectionOptions = ref([])
-const operationChoices = ref([])
 const product = ref({
   sku: '',
   name: '',
@@ -32,35 +30,15 @@ const onSubmit = async () => {
     isLoading.value = false
   }
 }
-
-onBeforeMount(async () => {
-  const [collections, operations] =
-    await Promise.all([getCollections(), getOperations()])
-
-  collectionOptions.value =
-    collections
-      .filter(collection => collection.type === 'PRODUCTS')
-      .map(collection => ({ label: collection.name, value: collection }))
-
-  operationChoices.value = operations
-    .map(operation => ({ label: operation.name, value: operation }))
-})
 </script>
 
 <template>
-  <CfDialog
-    title="Add product"
-    @close="emit('cancel')"
-    v-if="collectionOptions.length && operationChoices.length"
-  >
+  <CfDialog title="Add product" @close="emit('cancel')">
     <template #body>
       <form id="addProduct" @submit.prevent="onSubmit">
-        <CfField
+        <CollectionSelect
           v-model="product.collection"
-          type="select"
-          label="Collection"
-          :options="collectionOptions"
-          required
+          type="products"
         />
         <CfField
           v-model="product.sku"
@@ -80,12 +58,7 @@ onBeforeMount(async () => {
           label="Measurement Unit"
           required
         />
-        <CfChoiceList
-          v-model="product.operations"
-          label="Operations"
-          :choices="operationChoices"
-          multiple
-        />
+        <OperationChoiceList v-model="product.operations"/>
       </form>
     </template>
     <template #footer>

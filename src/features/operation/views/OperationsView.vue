@@ -1,12 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
+import { useOperationStore } from '../store.js'
+import { useMiscStore } from '../../misc/store.js'
 import { getOperations } from '../api/index.js'
-import {
-  CfAppView,
-  CfBreadcrumbs,
-  CfAppViewHeader,
-  CfFilledButton
-} from '../../../components/index.js'
+import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
 import OperationsList from '../components/OperationsList.vue'
 import AddOperation from '../components/AddOperation.vue'
 import UpdateOperation from '../components/UpdateOperation.vue'
@@ -21,42 +18,20 @@ const breadcrumbs = [
   }
 ]
 
-const operations = ref([])
+const { isInitialized, isInitializing } = useMiscStore()
+const { operations, ...operationStore } = useOperationStore()
+
+if (!isInitialized.value && !isInitializing.value) {
+  getOperations().then(operationStore.set)
+}
+
 const operation = ref(null)
-const showAddOperation = ref(false)
-const showUpdateOperation = ref(false)
-const showRemoveOperation = ref(false)
+const currentAction = ref(null)
 
 const onOperationsListAction = ({ action, item }) => {
-  if (action === 'Edit') {
-    showUpdateOperation.value = true
-  } else if (action === 'Remove') {
-    showRemoveOperation.value = true
-  }
-
+  currentAction.value = action
   operation.value = item
 }
-
-const onAddOperationSuccess = (addedOperation) => {
-  operations.value = [...operations.value, addedOperation]
-    .sort((a, b) => a.position - b.position)
-}
-
-const onUpdateOperationSuccess = (updatedOperation) => {
-  const operationIndex = operations.value
-    .findIndex(({ id }) => id === updatedOperation.id)
-
-  operations.value[operationIndex] = updatedOperation
-
-  operations.value = operations.value
-    .sort((a, b) => a.position - b.position)
-}
-
-const onRemoveOperationSuccess = (operationIndex) => {
-  operations.value.splice(operationIndex, 1)
-}
-
-onMounted(async () => operations.value = await getOperations())
 </script>
 
 <template>
@@ -64,7 +39,7 @@ onMounted(async () => operations.value = await getOperations())
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader title="Operations" description="Configure the operations in your production.">
       <template #actions>
-        <CfFilledButton @click="showAddOperation = true">
+        <CfFilledButton @click="currentAction = 'Add'">
           Add operation
         </CfFilledButton>
       </template>
@@ -74,21 +49,21 @@ onMounted(async () => operations.value = await getOperations())
       @action="onOperationsListAction"
     />
     <AddOperation
-      @success="onAddOperationSuccess"
-      @cancel="showAddOperation = false"
-      v-if="showAddOperation"
+      @success="operationStore.add"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Add'"
     />
     <UpdateOperation
       :data="operation"
-      @success="onUpdateOperationSuccess"
-      @cancel="showUpdateOperation = false"
-      v-if="showUpdateOperation"
+      @success="operationStore.update"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Edit'"
     />
     <RemoveOperation
       :data="operation"
-      @success="onRemoveOperationSuccess"
-      @cancel="showRemoveOperation = false"
-      v-if="showRemoveOperation"
+      @success="operationStore.remove"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Remove'"
     />
   </CfAppView>
 </template>

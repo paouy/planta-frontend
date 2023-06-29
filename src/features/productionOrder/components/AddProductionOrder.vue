@@ -1,37 +1,32 @@
 <script setup>
 import { ref, computed, onBeforeMount } from 'vue'
 import { addProductionOrder } from '../api/index.js'
-import { getCollections } from '../../collection/api/index.js'
 import { getProducts } from '../../product/api/index.js'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import CollectionSelect from '../../collection/components/CollectionSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const props = defineProps({ product: Object })
 
 const isLoading = ref(false)
+const collection = ref({ id: '' })
+const products = ref([])
+const product = ref({
+  id: '',
+  name: '',
+  uom: ''
+})
+
 const productionOrder = ref({
   qty: 1,
   dueDate: null
 })
 
-const collectionOptions = ref([])
-const collection = ref({
-  id: '',
-  name: ''
-})
-const productOptions = ref([])
-const product = ref({
-  id: '',
-  name: '',
-  sku: '',
-  uom: ''
-})
-
-const computedProductOptions = computed(() => {
-  return productOptions.value.filter(
-    ({ value }) => value.collectionId === collection.value.id
-  )
+const productOptions = computed(() => {
+  return products.value
+    .filter(product => product.collection.id === collection.value)
+    .map(product => ({ label: product.name, value: product }))
 })
 
 const onSubmit = async () => {
@@ -55,15 +50,7 @@ const onSubmit = async () => {
 
 onBeforeMount(async () => {
   if (!props.product) {
-    const [collections, products] =
-      await Promise.all([getCollections(), getProducts()])
-
-    collectionOptions.value = collections
-      .filter(collection => collection.type === 'PRODUCTS')
-      .map(collection => ({ label: collection.name, value: collection }))
-
-    productOptions.value = products
-      .map(product => ({ label: product.name, value: product }))
+    products.value = await getProducts()
   } else {
     product.value = props.product
   }
@@ -74,23 +61,20 @@ onBeforeMount(async () => {
   <CfDialog
     title="Add production order"
     @close="emit('cancel')"
-    v-if="!props.product ? collectionOptions.length && productOptions.length : true"
+    v-if="!props.product ? productOptions.length : true"
   >
     <template #body>
       <form id="addProductionOrder" @submit.prevent="onSubmit">
-        <CfField
+        <CollectionSelect
           v-model="collection"
-          label="Collection"
-          type="select"
-          :options="collectionOptions"
-          required
+          type="products"
           v-if="!props.product"
         />
         <CfField
           v-model="product"
           label="Name"
           type="select"
-          :options="computedProductOptions"
+          :options="productOptions"
           required
           v-if="!props.product"
         />

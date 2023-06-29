@@ -1,12 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
+import { useEquipmentStore } from '../store.js'
+import { useMiscStore } from '../../misc/store.js'
 import { getEquipments } from '../api/index.js'
-import {
-  CfAppView,
-  CfBreadcrumbs,
-  CfAppViewHeader,
-  CfFilledButton
-} from '../../../components/index.js'
+import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
 import EquipmentsList from '../components/EquipmentsList.vue'
 import AddEquipment from '../components/AddEquipment.vue'
 import UpdateEquipment from '../components/UpdateEquipment.vue'
@@ -21,38 +18,20 @@ const breadcrumbs = [
   }
 ]
 
-const equipments = ref([])
+const { isInitialized, isInitializing } = useMiscStore()
+const { equipments, ...equipmentStore } = useEquipmentStore()
+
+if (!isInitialized.value && !isInitializing.value) {
+  getEquipments().then(equipmentStore.set)
+}
+
 const equipment = ref(null)
-const showAddEquipment = ref(false)
-const showUpdateEquipment = ref(false)
-const showRemoveEquipment = ref(false)
+const currentAction = ref(null)
 
 const onEquipmentsListAction = ({ action, item }) => {
-  if (action === 'Edit') {
-    showUpdateEquipment.value = true
-  } else if (action === 'Remove') {
-    showRemoveEquipment.value = true
-  }
-
+  currentAction.value = action
   equipment.value = item
 }
-
-const onAddEquipmentSuccess = (addedEquipment) => {
-  equipments.value.push(addedEquipment)
-}
-
-const onUpdateEquipmentSuccess = (updatedEquipment) => {
-  const equipmentIndex = equipments.value
-    .findIndex(({ id }) => id === updatedEquipment.id)
-
-  equipments.value[equipmentIndex] = updatedEquipment
-}
-
-const onRemoveEquipmentSuccess = (equipmentIndex) => {
-  equipments.value.splice(equipmentIndex, 1)
-}
-
-onMounted(async () => equipments.value = await getEquipments())
 </script>
 
 <template>
@@ -60,7 +39,7 @@ onMounted(async () => equipments.value = await getEquipments())
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader title="Equipment" description="Configure the equipment used in your production.">
       <template #actions>
-        <CfFilledButton @click="showAddEquipment = true">
+        <CfFilledButton @click="currentAction = 'Add'">
           Add equipment
         </CfFilledButton>
       </template>
@@ -70,21 +49,21 @@ onMounted(async () => equipments.value = await getEquipments())
       @action="onEquipmentsListAction"
     />
     <AddEquipment
-      @success="onAddEquipmentSuccess"
-      @cancel="showAddEquipment = false"
-      v-if="showAddEquipment"
+      @success="equipmentStore.add"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Add'"
     />
     <UpdateEquipment
       :data="equipment"
-      @success="onUpdateEquipmentSuccess"
-      @cancel="showUpdateEquipment = false"
-      v-if="showUpdateEquipment"
+      @success="equipmentStore.update"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Edit'"
     />
     <RemoveEquipment
       :data="equipment"
-      @success="onRemoveEquipmentSuccess"
-      @cancel="showRemoveEquipment = false"
-      v-if="showRemoveEquipment"
+      @success="equipmentStore.remove"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Remove'"
     />
   </CfAppView>
 </template>

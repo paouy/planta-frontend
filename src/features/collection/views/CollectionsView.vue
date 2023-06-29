@@ -1,12 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
+import { useCollectionStore } from '../store.js'
+import { useMiscStore } from '../../misc/store.js'
 import { getCollections } from '../api/index.js'
-import {
-  CfAppView,
-  CfBreadcrumbs,
-  CfAppViewHeader,
-  CfFilledButton
-} from '../../../components/index.js'
+import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
 import CollectionsList from '../components/CollectionsList.vue'
 import AddCollection from '../components/AddCollection.vue'
 import UpdateCollection from '../components/UpdateCollection.vue'
@@ -21,38 +18,20 @@ const breadcrumbs = [
   }
 ]
 
-const collections = ref([])
+const { isInitialized, isInitializing } = useMiscStore()
+const { collections, ...collectionStore } = useCollectionStore()
+
+if (!isInitialized.value && !isInitializing.value) {
+  getCollections().then(collectionStore.set)
+}
+
 const collection = ref(null)
-const showAddCollection = ref(false)
-const showUpdateCollection = ref(false)
-const showRemoveCollection = ref(false)
+const currentAction = ref(null)
 
 const onCollectionsListAction = ({ action, item }) => {
-  if (action === 'Edit') {
-    showUpdateCollection.value = true
-  } else if (action === 'Remove') {
-    showRemoveCollection.value = true
-  }
-
+  currentAction.value = action
   collection.value = item
 }
-
-const onAddCollectionSuccess = (addedCollection) => {
-  collections.value.push(addedCollection)
-}
-
-const onUpdateCollectionSuccess = (updatedCollection) => {
-  const collectionIndex = collections.value
-    .findIndex(({ id }) => id === updatedCollection.id)
-
-  collections.value[collectionIndex] = updatedCollection
-}
-
-const onRemoveCollectionSuccess = (collectionIndex) => {
-  collections.value.splice(collectionIndex, 1)
-}
-
-onMounted(async () => collections.value = await getCollections())
 </script>
 
 <template>
@@ -60,7 +39,7 @@ onMounted(async () => collections.value = await getCollections())
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader title="Inventory Collections" description="Configure the collections that group your materials and products.">
       <template #actions>
-        <CfFilledButton @click="showAddCollection = true">
+        <CfFilledButton @click="currentAction = 'Add'">
           Add collection
         </CfFilledButton>
       </template>
@@ -70,21 +49,21 @@ onMounted(async () => collections.value = await getCollections())
       @action="onCollectionsListAction"
     />
     <AddCollection
-      @success="onAddCollectionSuccess"
-      @cancel="showAddCollection = false"
-      v-if="showAddCollection"
+      @success="collectionStore.add"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Add'"
     />
     <UpdateCollection
       :data="collection"
-      @success="onUpdateCollectionSuccess"
-      @cancel="showUpdateCollection = false"
-      v-if="showUpdateCollection"
+      @success="collectionStore.update"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Edit'"
     />
     <RemoveCollection
       :data="collection"
-      @success="onRemoveCollectionSuccess"
-      @cancel="showRemoveCollection = false"
-      v-if="showRemoveCollection"
+      @success="collectionStore.remove"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Remove'"
     />
   </CfAppView>
 </template>

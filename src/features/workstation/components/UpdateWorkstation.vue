@@ -1,16 +1,14 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref, onMounted } from 'vue'
 import { updateWorkstation } from '../api/index.js'
-import { getOperations } from '../../operation/api/index.js'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import OperationSelect from '../../operation/components/OperationSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
-const operationOptions = ref([])
-
 const workstation = ref({
   id: '',
   name: '',
@@ -32,31 +30,14 @@ const onSubmit = async () => {
   }
 }
 
-onBeforeMount(async () => {
-  const operations = await getOperations()
-
-  operationOptions.value = operations
-    .map(({ id, name }) => ({ label: name, value: { id, name } }))
-
-  Object.assign(workstation.value, props.data)
-})
+onMounted(() => Object.assign(workstation.value, props.data))
 </script>
 
 <template>
-  <CfDialog
-    title="Edit workstation"
-    @close="emit('cancel')"
-    v-if="operationOptions.length"  
-  >
+  <CfDialog title="Edit workstation" @close="emit('cancel')">
     <template #body>
       <form id="updateWorkstation" @submit.prevent="onSubmit">
-        <CfField
-          v-model="workstation.operation"
-          type="select"
-          label="Operation"
-          :options="operationOptions"
-          disabled
-        />
+        <OperationSelect v-model="workstation.operation"/>
         <CfField
           v-model="workstation.name"
           type="text"

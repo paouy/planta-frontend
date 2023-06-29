@@ -1,8 +1,10 @@
 <script setup>
+import InitializeApp from '../features/misc/components/InitializeApp.vue'
 import { CfDefaultLayout, CfSidebarLink } from '../components/index.js'
 </script>
 
 <template>
+  <InitializeApp/>
   <CfDefaultLayout>
     <template #brand>
       Planta

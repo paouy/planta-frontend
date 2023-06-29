@@ -1,9 +1,9 @@
 <script setup>
-import { ref, computed, onBeforeMount } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { addProductMaterial } from '../api/index.js'
-import { getCollections } from '../../collection/api/index.js'
 import { getMaterials } from '../../material/api/index.js'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import CollectionSelect from '../../collection/components/CollectionSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -13,10 +13,9 @@ const props = defineProps({
 })
 
 const isLoading = ref(false)
-const collectionOptions = ref([])
-const materials = []
+const materials = ref([])
+const collection = ref({ id: '' })
 
-const collectionId = ref('')
 const productMaterial = ref({
   productId: props.productId,
   reference: {},
@@ -27,8 +26,8 @@ const materialOptions = computed(() => {
   const referenceIds = props.productMaterials.map(({ reference }) => reference.id)
 
   return materials.value
-    .filter(({ id }) => !referenceIds.includes(id))
-    .filter(({ collection }) => collection.id === collectionId.value)
+    .filter(material => !referenceIds.includes(material.id))
+    .filter(material => material.collection.id === collection.value.id)
     .map(material => ({ label: material.name, value: material }))
 })
 
@@ -47,32 +46,16 @@ const onSubmit = async () => {
   }
 }
 
-onBeforeMount(async () => {
-  const [collections, _materials] =
-    await Promise.all([getCollections(), getMaterials()])
-
-  collectionOptions.value = collections
-    .filter(collection => collection.type === 'MATERIALS')
-    .map(({ id, name }) => ({ label: name, value: id }))
-
-  materials.value = _materials
-})
+onMounted(async () => materials.value = await getMaterials())
 </script>
 
 <template>
-  <CfDialog
-    title="Add product material"
-    @close="emit('cancel')"
-    v-if="collectionOptions.length"
-  >
+  <CfDialog title="Add product material" @close="emit('cancel')">
     <template #body>
       <form id="addProductMaterial" @submit.prevent="onSubmit">
-        <CfField
-          v-model="collectionId"
-          label="Collection"
-          type="select"
-          :options="collectionOptions"
-          required
+        <CollectionSelect
+          v-model="collection"
+          type="materials"
         />
         <CfField
           v-model="productMaterial.reference"

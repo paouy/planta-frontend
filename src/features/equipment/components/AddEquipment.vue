@@ -1,14 +1,12 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref } from 'vue'
 import { addEquipment } from '../api/index.js'
-import { getOperations } from '../../operation/api/index.js'
-import { CfDialog, CfField, CfChoiceList, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import OperationChoiceList from '../../operation/components/OperationChoiceList.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
-const operationChoices = ref([])
-
 const equipment = ref({
   name: '',
   operations: []
@@ -28,21 +26,10 @@ const onSubmit = async () => {
     isLoading.value = false
   }
 }
-
-onBeforeMount(async () => {
-  const operations = await getOperations()
-
-  operationChoices.value = operations
-    .map(({ id, name }) => ({ label: name, value: { id, name } }))
-})
 </script>
 
 <template>
-  <CfDialog
-    title="Add equipment"
-    @close="emit('cancel')"
-    v-if="operationChoices.length"
-  >
+  <CfDialog title="Add equipment" @close="emit('cancel')">
     <template #body>
       <form id="addEquipment" @submit.prevent="onSubmit">
         <CfField
@@ -51,12 +38,7 @@ onBeforeMount(async () => {
           label="Name"
           required
         />
-        <CfChoiceList
-          v-model="equipment.operations"
-          label="Operations"
-          :choices="operationChoices"
-          multiple
-        />
+        <OperationChoiceList v-model="equipment.operations"/>
       </form>
     </template>
     <template #footer>

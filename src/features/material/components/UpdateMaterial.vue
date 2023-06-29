@@ -1,16 +1,14 @@
 <script setup>
-import { ref, onBeforeMount } from 'vue'
+import { ref, onMounted } from 'vue'
 import { updateMaterial } from '../api/index.js'
-import { getCollections } from '../../collection/api/index.js'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import CollectionSelect from '../../collection/components/CollectionSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
-const collectionOptions = ref([])
-
 const material = ref({
   id: '',
   name: '',
@@ -33,34 +31,16 @@ const onSubmit = async () => {
   }
 }
 
-onBeforeMount(async () => {
-  const collections = await getCollections()
-
-  collectionOptions.value = collections.map(({ id, name }) => {
-    return {
-      label: name,
-      value: { id, name }
-    }
-  })
-
-  Object.assign(material.value, props.data)
-})
+onMounted(() => Object.assign(material.value, props.data))
 </script>
 
 <template>
-  <CfDialog
-    title="Update material"
-    @close="emit('cancel')"
-    v-if="collectionOptions.length"
-  >
+  <CfDialog title="Update material" @close="emit('cancel')">
     <template #body>
       <form id="updateMaterial" @submit.prevent="onSubmit">
-        <CfField
+        <CollectionSelect
           v-model="material.collection"
-          type="select"
-          label="Collection"
-          :options="collectionOptions"
-          required
+          type="materials"
         />
         <CfField
           v-model="material.name"

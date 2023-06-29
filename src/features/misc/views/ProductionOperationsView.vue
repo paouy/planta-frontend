@@ -5,6 +5,7 @@ import {
   CfAppView,
   CfAppViewHeader
 } from '../../../components/index.js'
+import OperationSelect from '../../operation/components/OperationSelect.vue'
 
 const productionJobs = ref([])
 
@@ -15,5 +16,6 @@ onMounted(async () => productionJobs.value = await getProductionJobs())
   <CfAppView>
     <CfAppViewHeader surtitle="Production" title="Operations"/>
     <pre>{{ productionJobs }}</pre>
+    <OperationSelect/>
   </CfAppView>
 </template>

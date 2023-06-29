@@ -1,12 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
+import { useWorkstationStore } from '../store.js'
+import { useMiscStore } from '../../misc/store.js'
 import { getWorkstations } from '../api/index.js'
-import {
-  CfAppView,
-  CfBreadcrumbs,
-  CfAppViewHeader,
-  CfFilledButton
-} from '../../../components/index.js'
+import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
 import WorkstationsList from '../components/WorkstationsList.vue'
 import AddWorkstation from '../components/AddWorkstation.vue'
 import UpdateWorkstation from '../components/UpdateWorkstation.vue'
@@ -21,38 +18,20 @@ const breadcrumbs = [
   }
 ]
 
-const workstations = ref([])
+const { isInitialized, isInitializing } = useMiscStore()
+const { workstations, ...workstationStore } = useWorkstationStore()
+
+if (!isInitialized.value && !isInitializing.value) {
+  getWorkstations().then(workstationStore.set)
+}
+
 const workstation = ref(null)
-const showAddWorkstation = ref(false)
-const showUpdateWorkstation = ref(false)
-const showRemoveWorkstation = ref(false)
+const currentAction = ref(null)
 
 const onWorkstationsListAction = ({ action, item }) => {
-  if (action === 'Edit') {
-    showUpdateWorkstation.value = true
-  } else if (action === 'Remove') {
-    showRemoveWorkstation.value = true
-  }
-
+  currentAction.value = action
   workstation.value = item
 }
-
-const onAddWorkstationSuccess = (addedWorkstation) => {
-  workstations.value.push(addedWorkstation)
-}
-
-const onUpdateWorkstationSuccess = (updatedWorkstation) => {
-  const workstationIndex = workstations.value
-    .findIndex(({ id }) => id === updatedWorkstation.id)
-
-  Object.assign(workstations.value[workstationIndex], updatedWorkstation)
-}
-
-const onRemoveWorkstationSuccess = (workstationIndex) => {
-  workstations.value.splice(workstationIndex, 1)
-}
-
-onMounted(async () => workstations.value = await getWorkstations())
 </script>
 
 <template>
@@ -60,7 +39,7 @@ onMounted(async () => workstations.value = await getWorkstations())
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader title="Workstations" description="Configure the workstations in your facility.">
       <template #actions>
-        <CfFilledButton @click="showAddWorkstation = true">
+        <CfFilledButton @click="currentAction = 'Add'">
           Add workstation
         </CfFilledButton>
       </template>
@@ -70,21 +49,21 @@ onMounted(async () => workstations.value = await getWorkstations())
       @action="onWorkstationsListAction"
     />
     <AddWorkstation
-      @success="onAddWorkstationSuccess"
-      @cancel="showAddWorkstation = false"
-      v-if="showAddWorkstation"
+      @success="workstationStore.add"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Add'"
     />
     <UpdateWorkstation
       :data="workstation"
-      @success="onUpdateWorkstationSuccess"
-      @cancel="showUpdateWorkstation = false"
-      v-if="showUpdateWorkstation"
+      @success="workstationStore.update"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Edit'"
     />
     <RemoveWorkstation
       :data="workstation"
-      @success="onRemoveWorkstationSuccess"
-      @cancel="showRemoveWorkstation = false"
-      v-if="showRemoveWorkstation"
+      @success="workstationStore.remove"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'Remove'"
     />
   </CfAppView>
 </template>

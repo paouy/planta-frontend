@@ -15,21 +15,25 @@ const workstationStore = useWorkstationStore()
 
 onMounted(async () => {
   if (!isInitialized.value) {
-    miscStore.startInitialization()
+    try {
+      miscStore.startInitialization()
 
-    const {
-      collections,
-      equipments,
-      operations,
-      workstations
-    } = await initializeApp()
+      const {
+        collections,
+        equipments,
+        operations,
+        workstations
+      } = await initializeApp()
 
-    collectionStore.set(collections)
-    equipmentStore.set(equipments)
-    operationStore.set(operations)
-    workstationStore.set(workstations)
+      collectionStore.set(collections)
+      equipmentStore.set(equipments)
+      operationStore.set(operations)
+      workstationStore.set(workstations)
 
-    miscStore.completeInitialization()
+      miscStore.completeInitialization()
+    } catch (error) {
+      alert(error)
+    }
   }
 })
 </script>

@@ -1,10 +1,12 @@
 <script setup>
+import { useMiscStore } from '../features/misc/store.js'
 import InitializeApp from '../features/misc/components/InitializeApp.vue'
 import { CfDefaultLayout, CfSidebarLink } from '../components/index.js'
+
+const { isInitialized } = useMiscStore()
 </script>
 
 <template>
-  <InitializeApp/>
   <CfDefaultLayout>
     <template #brand>
       Planta
@@ -33,7 +35,8 @@ import { CfDefaultLayout, CfSidebarLink } from '../components/index.js'
       </CfSidebarLink>
     </template>
     <template #main>
-      <RouterView/>
+      <InitializeApp v-if="!isInitialized"/>
+      <RouterView v-else/>
     </template>
   </CfDefaultLayout>
 </template>

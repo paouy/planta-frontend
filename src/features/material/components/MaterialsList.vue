@@ -16,8 +16,8 @@ const columns = [
     key: 'qtyAvailable',
     label: 'Available'
   }, {
-    key: 'qtyCommitted',
-    label: 'Committed'
+    key: 'qtyAllocated',
+    label: 'Allocated'
   }
 ]
 </script>
@@ -35,7 +35,7 @@ const columns = [
       <td>{{ item.name }}</td>
       <td>{{ item.collection.name }}</td>
       <td>{{ `${item.qtyAvailable} ${item.uom}` }}</td>
-      <td>{{ `${item.qtyCommitted} ${item.uom}` }}</td>
+      <td>{{ `${item.qtyAllocated} ${item.uom}` }}</td>
     </template>
   </CfDataTable>
 </template>

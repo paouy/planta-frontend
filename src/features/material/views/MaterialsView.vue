@@ -20,9 +20,9 @@ const showRemoveMaterial = ref(false)
 const showIncrementMaterial = ref(false)
 
 const onMaterialsListAction = ({ action, item }) => {
-  if (action === 'Edit') {
+  if (action === 'EDIT') {
     showUpdateMaterial.value = true
-  } else if (action === 'Remove') {
+  } else if (action === 'REMOVE') {
     showRemoveMaterial.value = true
   } else {
     showIncrementMaterial.value = true

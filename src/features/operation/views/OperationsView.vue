@@ -39,7 +39,7 @@ const onOperationsListAction = ({ action, item }) => {
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader title="Operations" description="Configure the operations in your production.">
       <template #actions>
-        <CfFilledButton @click="currentAction = 'Add'">
+        <CfFilledButton @click="currentAction = 'ADD'">
           Add operation
         </CfFilledButton>
       </template>
@@ -51,19 +51,19 @@ const onOperationsListAction = ({ action, item }) => {
     <AddOperation
       @success="operationStore.add"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Add'"
+      v-if="currentAction === 'ADD'"
     />
     <UpdateOperation
       :data="operation"
       @success="operationStore.update"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Edit'"
+      v-if="currentAction === 'EDIT'"
     />
     <RemoveOperation
       :data="operation"
       @success="operationStore.remove"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Remove'"
+      v-if="currentAction === 'REMOVE'"
     />
   </CfAppView>
 </template>

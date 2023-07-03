@@ -39,7 +39,7 @@ const onEquipmentsListAction = ({ action, item }) => {
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader title="Equipment" description="Configure the equipment used in your production.">
       <template #actions>
-        <CfFilledButton @click="currentAction = 'Add'">
+        <CfFilledButton @click="currentAction = 'ADD'">
           Add equipment
         </CfFilledButton>
       </template>
@@ -51,19 +51,19 @@ const onEquipmentsListAction = ({ action, item }) => {
     <AddEquipment
       @success="equipmentStore.add"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Add'"
+      v-if="currentAction === 'ADD'"
     />
     <UpdateEquipment
       :data="equipment"
       @success="equipmentStore.update"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Edit'"
+      v-if="currentAction === 'EDIT'"
     />
     <RemoveEquipment
       :data="equipment"
       @success="equipmentStore.remove"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Remove'"
+      v-if="currentAction === 'REMOVE'"
     />
   </CfAppView>
 </template>

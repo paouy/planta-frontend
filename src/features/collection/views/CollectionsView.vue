@@ -39,7 +39,7 @@ const onCollectionsListAction = ({ action, item }) => {
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader title="Inventory Collections" description="Configure the collections that group your materials and products.">
       <template #actions>
-        <CfFilledButton @click="currentAction = 'Add'">
+        <CfFilledButton @click="currentAction = 'ADD'">
           Add collection
         </CfFilledButton>
       </template>
@@ -51,19 +51,19 @@ const onCollectionsListAction = ({ action, item }) => {
     <AddCollection
       @success="collectionStore.add"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Add'"
+      v-if="currentAction === 'ADD'"
     />
     <UpdateCollection
       :data="collection"
       @success="collectionStore.update"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Edit'"
+      v-if="currentAction === 'EDIT'"
     />
     <RemoveCollection
       :data="collection"
       @success="collectionStore.remove"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Remove'"
+      v-if="currentAction === 'REMOVE'"
     />
   </CfAppView>
 </template>

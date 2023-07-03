@@ -120,6 +120,13 @@ const onSort = (key) => {
     sortOrder.value = 'asc'
   }
 }
+
+const onItemAction = (action, item) => {
+  emit('item-action', {
+    action: action.toUpperCase().replaceAll(' ', '_'),
+    item
+  })
+}
 </script>
 
 <template>
@@ -195,7 +202,7 @@ const onSort = (key) => {
             <div v-if="props.itemActions.length > 1">
               <button
                 v-for="action in props.itemActions"
-                @click="emit('item-action', { action, item })"
+                @click="onItemAction(action, item)"
               >
                 {{ action }}
               </button>
@@ -222,7 +229,7 @@ const onSort = (key) => {
             <div v-if="props.itemActions.length > 1">
               <button
                 v-for="action in props.itemActions"
-                @click="emit('item-action', { action, item })"
+                @click="onItemAction(action, item)"
               >
                 {{ action }}
               </button>

@@ -39,7 +39,7 @@ const onWorkstationsListAction = ({ action, item }) => {
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader title="Workstations" description="Configure the workstations in your facility.">
       <template #actions>
-        <CfFilledButton @click="currentAction = 'Add'">
+        <CfFilledButton @click="currentAction = 'ADD'">
           Add workstation
         </CfFilledButton>
       </template>
@@ -51,19 +51,19 @@ const onWorkstationsListAction = ({ action, item }) => {
     <AddWorkstation
       @success="workstationStore.add"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Add'"
+      v-if="currentAction === 'ADD'"
     />
     <UpdateWorkstation
       :data="workstation"
       @success="workstationStore.update"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Edit'"
+      v-if="currentAction === 'EDIT'"
     />
     <RemoveWorkstation
       :data="workstation"
       @success="workstationStore.remove"
       @cancel="currentAction = null"
-      v-if="currentAction === 'Remove'"
+      v-if="currentAction === 'REMOVE'"
     />
   </CfAppView>
 </template>

@@ -1,12 +1,17 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useOperationStore } from '../store.js'
 import { CfField } from '../../../components/index.js'
 
 const emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({
-  modelValue: Object,
+  modelValue: [Object, String],
+  defaultOption: Boolean,
+  keys: {
+    type: Array,
+    default: () => ['id', 'name']
+  },
   disabled: Boolean,
   required: {
     type: Boolean,
@@ -17,8 +22,20 @@ const props = defineProps({
 const { operations } = useOperationStore()
 
 const options = computed(() => {
-  return operations.value
-    .map(({ id, name }) => ({ label: name, value: { id, name } }))
+  return operations.value.map(operation => {
+    let value = {}
+
+    if (props.keys.length > 1) {
+      props.keys.forEach(key => value[key] = operation[key])
+    } else {
+      value = operation[props.keys.at(0)]
+    } 
+
+    return {
+      label: operation.name,
+      value
+    }
+  })
 })
 
 const computedValue = computed({
@@ -27,6 +44,14 @@ const computedValue = computed({
   },
   set(value) {
     emit('update:modelValue', value)
+  }
+})
+
+onMounted(() => {
+  if (props.defaultOption) {
+    const firstOption = options.value.at(0)
+
+    emit('update:modelValue', firstOption.value)
   }
 })
 </script>

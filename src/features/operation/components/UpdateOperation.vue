@@ -17,7 +17,8 @@ const operation = ref({
   id: props.data.id,
   name: props.data.name,
   type: props.data.type,
-  position: props.data.position
+  position: props.data.position,
+  uom: props.data.uom
 })
 
 const onSubmit = async () => {
@@ -41,6 +42,12 @@ const onSubmit = async () => {
     <template #body>
       <form id="updateOperation" @submit.prevent="onSubmit">
         <CfField
+          v-model.number="operation.position"
+          type="number"
+          label="Position"
+          required
+        />
+        <CfField
           v-model="operation.name"
           type="text"
           label="Name"
@@ -54,10 +61,11 @@ const onSubmit = async () => {
           required
         />
         <CfField
-          v-model.number="operation.position"
-          type="number"
-          label="Position"
+          v-model="operation.uom"
+          label="Batch size unit"
+          type="text"
           required
+          v-if="operation.type === 'BATCH'"
         />
       </form>
     </template>

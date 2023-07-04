@@ -318,6 +318,12 @@ const onItemAction = (action, item) => {
 
     td {
       padding: 0.5rem 1rem;
+
+      &:not([data-table-item-actions], [data-table-checkbox]) {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
     }
   }
 
@@ -354,6 +360,7 @@ const onItemAction = (action, item) => {
       border: 1px solid var(--cf-gray-7);
       border-radius: 0.3125rem;
       background: #fff;
+      width: max-content;
       position: absolute;
       left: auto;
       right: 1rem;

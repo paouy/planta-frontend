@@ -32,7 +32,7 @@ const columns = [
     searchable
     :columns="columns"
     :data="props.data"
-    :item-actions="['View']"
+    :item-actions="['View', 'Move up', 'Move down']"
     @item-action="$event => emit('action', $event)"
   >
     <template v-slot="{item}">

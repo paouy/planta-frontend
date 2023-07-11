@@ -16,15 +16,15 @@ const showAddProductionOrder = ref(false)
 const showIncrementProduct = ref(false)
 
 const onProductsListAction = ({ action, item }) => { 
-  if (action === 'Make') {
+  if (action === 'MAKE') {
     showAddProductionOrder.value = true
   }
   
-  if (action === 'Adjust') {
+  if (action === 'ADJUST') {
     showIncrementProduct.value = true
   }
 
-  if (action === 'View') {
+  if (action === 'VIEW') {
     router.push({
       name: 'Product',
       params: { productId: item.id }

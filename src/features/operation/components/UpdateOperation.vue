@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
 import { updateOperation } from '../api/index.js'
 
@@ -14,12 +14,15 @@ const operationTypeOptions = [
 
 const isLoading = ref(false)
 const operation = ref({
-  id: props.data.id,
-  name: props.data.name,
-  type: props.data.type,
-  position: props.data.position,
-  uom: props.data.uom
+  id: '',
+  name: '',
+  position: null,
+  type: '',
+  cycleTimeMins: null,
+  batchSizeParameter: null
 })
+
+onMounted(() => Object.assign(operation.value, props.data))
 
 const onSubmit = async () => {
   try {
@@ -42,15 +45,23 @@ const onSubmit = async () => {
     <template #body>
       <form id="updateOperation" @submit.prevent="onSubmit">
         <CfField
+          v-model="operation.name"
+          type="text"
+          label="Name"
+          required
+        />
+        <CfField
           v-model.number="operation.position"
           type="number"
           label="Position"
           required
         />
         <CfField
-          v-model="operation.name"
-          type="text"
-          label="Name"
+          v-model.number="operation.cycleTimeMins"
+          type="number"
+          label="Cycle time"
+          suffix="mins"
+          step="any"
           required
         />
         <CfField
@@ -61,8 +72,8 @@ const onSubmit = async () => {
           required
         />
         <CfField
-          v-model="operation.uom"
-          label="Batch size unit"
+          v-model="operation.batchSizeParameter"
+          label="Batch size parameter"
           type="text"
           required
           v-if="operation.type === 'BATCH'"

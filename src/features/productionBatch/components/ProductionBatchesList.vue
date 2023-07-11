@@ -11,22 +11,16 @@ const props = defineProps({
 const columns = [
   {
     label: 'ID',
-    key: 'productionOrder.friendlyId'
+    key: 'friendlyId'
   }, {
-    label: 'Product',
-    key: 'product.name'
+    label: 'Schedule',
+    key: 'schedule'
   }, {
     label: 'Qty',
     key: 'qtyExpected'
   }, {
-    label: 'Est Time',
-    key: 'timeEstimatedMins'
-  }, {
     label: 'Status',
     key: 'status'
-  }, {
-    label: 'Workstation',
-    key: 'workstation.name'
   }
 ]
 </script>
@@ -36,6 +30,5 @@ const columns = [
     :columns="columns"
     :data="props.data"
     :item-actions="['Add record', 'View']"
-    searchable
   />
 </template>

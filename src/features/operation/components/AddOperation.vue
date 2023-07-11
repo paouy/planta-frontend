@@ -13,9 +13,10 @@ const operationTypeOptions = [
 const isLoading = ref(false)
 const operation = ref({
   name: '',
-  type: '',
   position: null,
-  uom: null
+  type: '',
+  cycleTimeMins: null,
+  batchSizeParameter: null
 })
 
 const onSubmit = async () => {
@@ -39,15 +40,23 @@ const onSubmit = async () => {
     <template #body>
       <form id="addOperation" @submit.prevent="onSubmit">
         <CfField
+          v-model="operation.name"
+          type="text"
+          label="Name"
+          required
+        />
+        <CfField
           v-model.number="operation.position"
           type="number"
           label="Position"
           required
         />
         <CfField
-          v-model="operation.name"
-          type="text"
-          label="Name"
+          v-model.number="operation.cycleTimeMins"
+          type="number"
+          label="Cycle time"
+          suffix="mins"
+          step="any"
           required
         />
         <CfField
@@ -58,8 +67,8 @@ const onSubmit = async () => {
           required
         />
         <CfField
-          v-model="operation.uom"
-          label="Batch size unit"
+          v-model="operation.batchSizeParameter"
+          label="Batch size parameter"
           type="text"
           required
           v-if="operation.type === 'BATCH'"

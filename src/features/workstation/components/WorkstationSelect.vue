@@ -6,8 +6,13 @@ import { CfField } from '../../../components/index.js'
 const emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({
-  modelValue: Object,
+  modelValue: [Object, String],
   operationId: String,
+  defaultOption: Boolean,
+  keys: {
+    type: Array,
+    default: () => ['id', 'name']
+  },
   disabled: Boolean,
   required: {
     type: Boolean,
@@ -20,8 +25,22 @@ const { workstations } = useWorkstationStore()
 const options = computed(() => {
   return workstations.value
     .filter(({ operation }) => operation.id === props.operationId)
-    .map(({ id, name }) => ({ label: name, value: { id, name } }))
+    .map(workstation => {
+      let value = {}
+
+      if (props.keys.length > 1) {
+        props.keys.forEach(key => value[key] = workstation[key])
+      } else {
+        value = workstation[props.keys.at(0)]
+      } 
+
+      return {
+        label: workstation.name,
+        value
+      }
+    })
 })
+
 
 const computedValue = computed({
   get() {

@@ -12,11 +12,16 @@ const { isInitialized } = useMiscStore()
       Planta
     </template>
     <template #sidebar>
-      <CfSidebarLink icon="storefront" href="#">Sales</CfSidebarLink>
+      <CfSidebarLink icon="storefront" parent>Sales
+        <template #children>
+          <CfSidebarLink href="#">Orders</CfSidebarLink>
+          <CfSidebarLink href="#">Customers</CfSidebarLink>
+        </template>
+      </CfSidebarLink>
       <CfSidebarLink icon="pallet" parent>Production
         <template #children>
           <CfSidebarLink :to="{ name: 'ProductionOrders' }">Overview</CfSidebarLink>
-          <CfSidebarLink :to="{ name: 'ProductionOperations' }">Operations</CfSidebarLink>
+          <CfSidebarLink :to="{ name: 'ProductionExecution' }">Execution</CfSidebarLink>
         </template>
       </CfSidebarLink>
       <CfSidebarLink icon="category" parent>Inventory

@@ -11,7 +11,8 @@ const props = defineProps({ data: Object })
 const isLoading = ref(false)
 const productionJob = ref({
   id: props.data.id,
-  workstation: props.data.workstation
+  workstation: props.data.workstation,
+  timeEstimatedMins: props.data.timeEstimatedMins
 })
 
 const dialogTitle = computed(() => {
@@ -28,7 +29,13 @@ const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    await updateProductionJob(productionJob.value)
+    const updatedProductionJob = { ...productionJob.value }
+
+    if (updatedProductionJob.timeEstimatedMins === props.data.timeEstimatedMins) {
+      updatedProductionJob.timeEstimatedMins = null
+    }
+
+    await updateProductionJob(updatedProductionJob)
 
     emit('success', productionJob.value)
     emit('cancel')
@@ -53,6 +60,14 @@ const onSubmit = async () => {
         <WorkstationSelect
           v-model="productionJob.workstation"
           :operation-id="props.data.operation.id"
+          required
+        />
+        <CfField
+          v-model.number="productionJob.timeEstimatedMins"
+          label="Estimated time"
+          type="number"
+          suffix="mins"
+          step="any"
           required
         />
       </form>

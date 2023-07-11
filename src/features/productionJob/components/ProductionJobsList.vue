@@ -1,6 +1,8 @@
 <script setup>
 import { CfDataTable } from '../../../components/index.js'
 
+const emit = defineEmits(['action'])
+
 const props = defineProps({
   data: {
     type: Array,
@@ -35,7 +37,8 @@ const columns = [
   <CfDataTable
     :columns="columns"
     :data="props.data"
-    :item-actions="['Add record', 'View']"
+    :item-actions="['Add record', 'Edit']"
     searchable
+    @item-action="$event => emit('action', $event)"
   />
 </template>

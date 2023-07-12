@@ -39,14 +39,14 @@ const onSubmit = async () => {
         />
         <CfField
           v-model="material.name"
-          type="text"
           label="Name"
+          type="text"
           required
         />
         <CfField
           v-model="material.uom"
+          label="UOM"
           type="text"
-          label="Measurement Unit"
           required
         />
       </form>

@@ -47,20 +47,20 @@ onMounted(() => Object.assign(product.value, props.data))
         />
         <CfField
           v-model="product.sku"
-          type="text"
           label="SKU"
+          type="text"
           required
         />
         <CfField
           v-model="product.name"
-          type="text"
           label="Name"
+          type="text"
           required
         />
         <CfField
           v-model="product.uom"
+          label="UOM"
           type="text"
-          label="Measurement Unit"
           required
         />
         <OperationChoiceList v-model="product.operations"/>

@@ -39,7 +39,7 @@ const productSummary = computed(() => {
       label: 'SKU',
       value: product.value.sku
     }, {
-      label: 'Measurement Unit',
+      label: 'UOM',
       value: product.value.uom
     }, {
       label: 'Operations',

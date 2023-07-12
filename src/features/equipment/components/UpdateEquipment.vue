@@ -39,8 +39,8 @@ onMounted(() => Object.assign(equipment.value, props.data))
       <form id="updateEquipment" @submit.prevent="onSubmit">
         <CfField
           v-model="equipment.name"
-          type="text"
           label="Name"
+          type="text"
           required
         />
         <OperationChoiceList v-model="equipment.operations"/>

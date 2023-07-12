@@ -41,28 +41,28 @@ const onSubmit = async () => {
       <form id="addOperation" @submit.prevent="onSubmit">
         <CfField
           v-model="operation.name"
-          type="text"
           label="Name"
+          type="text"
           required
         />
         <CfField
           v-model.number="operation.position"
-          type="number"
           label="Position"
+          type="number"
           required
         />
         <CfField
           v-model.number="operation.cycleTimeMins"
-          type="number"
           label="Cycle time"
+          type="number"
           suffix="mins"
           step="any"
           required
         />
         <CfField
           v-model="operation.type"
-          type="select"
           label="Type"
+          type="select"
           :options="operationTypeOptions"
           required
         />

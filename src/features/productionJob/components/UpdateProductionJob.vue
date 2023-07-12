@@ -52,9 +52,9 @@ const onSubmit = async () => {
     <template #body>
       <form id="updateProductionJob" @submit.prevent="onSubmit">
         <CfField
-          v-model="normalizedProductionJob"
           label="Job"
           type="text"
+          :value="normalizedProductionJob"
           disabled
         />
         <WorkstationSelect

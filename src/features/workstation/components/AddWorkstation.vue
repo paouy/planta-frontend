@@ -35,8 +35,8 @@ const onSubmit = async () => {
         <OperationSelect v-model="workstation.operation"/>
         <CfField
           v-model="workstation.name"
-          type="text"
           label="Name"
+          type="text"
           required
         />
       </form>

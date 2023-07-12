@@ -42,31 +42,31 @@ const onSubmit = async () => {
     <template #body>
       <form id="incrementProduct" @submit.prevent="onSubmit">
         <CfField
-          v-model="props.data.name"
-          type="text"
           label="Product"
+          type="text"
+          :value="props.data.name"
           disabled
         />
         <CfField
-          v-model="props.data.qtyAvailable"
+          label="Available quantity"
           type="text"
-          label="Available Quantity"
           :suffix="props.data.uom"
+          :value="props.data.qtyAvailable"
           disabled
         />
         <CfField
           v-model.number="qtyIncrement"
-          type="number"
           label="Adjustment"
+          type="number"
           step="any"
           :suffix="props.data.uom"
           required
         />
         <CfField
-          v-model="qtyNew"
+          label="New quantity"
           type="text"
-          label="New Quantity"
           :suffix="props.data.uom"
+          :value="qtyNew"
           disabled
         />
       </form>

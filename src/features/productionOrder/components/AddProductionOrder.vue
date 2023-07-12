@@ -80,9 +80,9 @@ onMounted(async () => {
           v-if="!props.product"
         />
         <CfField
-          :value="`[${product.sku}] ${product.name}`"
           label="Product"
           type="text"
+          :value="`[${product.sku}] ${product.name}`"
           disabled
           v-else
         />

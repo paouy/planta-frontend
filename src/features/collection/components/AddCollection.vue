@@ -38,14 +38,14 @@ const onSubmit = async () => {
       <form id="addCollection" @submit.prevent="onSubmit">
         <CfField
           v-model="collection.name"
-          type="text"
           label="Name"
+          type="text"
           required
         />
         <CfField
           v-model="collection.type"
-          type="select"
           label="Type"
+          type="select"
           :options="collectionTypeOptions"
           required
         />

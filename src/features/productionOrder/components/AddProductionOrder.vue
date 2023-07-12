@@ -15,6 +15,7 @@ const products = ref([])
 const product = ref({
   id: '',
   name: '',
+  sku: '',
   uom: ''
 })
 
@@ -26,7 +27,7 @@ const productionOrder = ref({
 const productOptions = computed(() => {
   return products.value
     .filter(product => product.collection.id === collection.value.id)
-    .map(product => ({ label: product.name, value: product }))
+    .map(product => ({ label: `[${product.sku}] ${product.name}`, value: product }))
 })
 
 const onSubmit = async () => {
@@ -79,7 +80,7 @@ onMounted(async () => {
           v-if="!props.product"
         />
         <CfField
-          v-model="product.name"
+          :value="`[${product.sku}] ${product.name}`"
           label="Product"
           type="text"
           disabled

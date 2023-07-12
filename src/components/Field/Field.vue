@@ -5,6 +5,7 @@ const emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({
   modelValue: [Number, String, Object],
+  value: [Number, String, Object],
   type: String,
   label: String,
   placeholder: String,
@@ -20,7 +21,7 @@ const props = defineProps({
 
 const computedValue = computed({
   get() {
-    return props.modelValue
+    return props.modelValue || props.value
   },
   set(value) {
     emit('update:modelValue', value)

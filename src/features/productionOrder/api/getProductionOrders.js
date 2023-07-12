@@ -2,7 +2,7 @@ import axios from '../../../lib/axios.js'
 
 const getProductionOrders = async () => {
   try {
-    const { data } = await axios.get('/v1/production-orders')
+    const { data } = await axios.get('/v1/production-orders/not-closed')
 
     return data
   } catch (error) {

@@ -8,8 +8,10 @@ import {
 } from '../../../components/index.js'
 import ProductionOrdersSummary from '../components/ProductionOrdersSummary.vue'
 import ProductionOrdersList from '../components/ProductionOrdersList.vue'
+import AddProductionOrder from '../components/AddProductionOrder.vue'
 
 const productionOrders = ref([])
+const showAddProductionOrder = ref(false)
 
 onMounted(async () => productionOrders.value = await getProductionOrders())
 </script>
@@ -18,12 +20,17 @@ onMounted(async () => productionOrders.value = await getProductionOrders())
   <CfAppView>
     <CfAppViewHeader surtitle="Production" title="Overview">
       <template #actions>
-        <CfOutlinedButton>
+        <CfOutlinedButton @click="showAddProductionOrder = true">
           Create order
         </CfOutlinedButton>
       </template>
     </CfAppViewHeader>
     <ProductionOrdersSummary :data="productionOrders"/>
     <ProductionOrdersList :data="productionOrders"/>
+    <AddProductionOrder
+      @success="data => productionOrders.push(data)"
+      @cancel="showAddProductionOrder = false"
+      v-if="showAddProductionOrder"
+    />
   </CfAppView>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onBeforeMount } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { addProductionOrder } from '../api/index.js'
 import { getProducts } from '../../product/api/index.js'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
@@ -25,7 +25,7 @@ const productionOrder = ref({
 
 const productOptions = computed(() => {
   return products.value
-    .filter(product => product.collection.id === collection.value)
+    .filter(product => product.collection.id === collection.value.id)
     .map(product => ({ label: product.name, value: product }))
 })
 
@@ -48,7 +48,7 @@ const onSubmit = async () => {
   }
 }
 
-onBeforeMount(async () => {
+onMounted(async () => {
   if (!props.product) {
     products.value = await getProducts()
   } else {
@@ -61,7 +61,7 @@ onBeforeMount(async () => {
   <CfDialog
     title="Add production order"
     @close="emit('cancel')"
-    v-if="!props.product ? productOptions.length : true"
+    v-if="!props.product ? products.length : true"
   >
     <template #body>
       <form id="addProductionOrder" @submit.prevent="onSubmit">
@@ -72,7 +72,7 @@ onBeforeMount(async () => {
         />
         <CfField
           v-model="product"
-          label="Name"
+          label="Product"
           type="select"
           :options="productOptions"
           required
@@ -80,7 +80,7 @@ onBeforeMount(async () => {
         />
         <CfField
           v-model="product.name"
-          label="Name"
+          label="Product"
           type="text"
           disabled
           v-else

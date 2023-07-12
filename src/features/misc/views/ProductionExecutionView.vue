@@ -10,6 +10,8 @@ import ProductionJobsList from '../../productionJob/components/ProductionJobsLis
 import AssignProductionJob from '../../productionJob/components/AssignProductionJob.vue'
 import UpdateProductionJob from '../../productionJob/components/UpdateProductionJob.vue'
 import UnassignedProductionJobsCallout from '../../productionJob/components/UnassignedProductionJobsCallout.vue'
+import AddProductionRecord from '../../productionRecord/components/AddProductionRecord.vue'
+import AddShortfallProductionRecord from '../../productionRecord/components/AddShortfallProductionRecord.vue'
 
 const showProductionJobsAwaitingInput = ref(true)
 const showAssignProductionJob = ref(false)
@@ -66,6 +68,28 @@ const onUpdateProductionJobSuccess = (productionJob) => {
   const productionJobIndex = productionJobs.value.findIndex(({ id }) => id === productionJob.id)
 
   Object.assign(productionJobs.value[productionJobIndex], productionJob)
+}
+
+const onAddProductionRecordSuccess = (productionRecord) => {
+  const { productionJobId, newProductionJobStatus, type, qty } = productionRecord
+
+  const productionJobIndex = productionJobs.value.findIndex(({ id }) => id === productionJobId)
+
+  productionJobs.value[productionJobIndex].status = newProductionJobStatus
+  productionJobs.value[productionJobIndex].operation.summary[type.toLowerCase()] += qty
+
+  for (let index = 0; index < productionJobs.value.length; index++) {
+    if (index > 0) {
+      const previousProductionJob = productionJobs.value[index - 1]
+      const currentProductionJob = productionJobs.value[index]
+
+      if (previousProductionJob.productionOrder.id === currentProductionJob.productionOrder.id) {
+        productionJobs.value[index].qtyExpected = previousProductionJob.qtyExpected + previousProductionJob.operation.summary.shortfall
+      } else {
+        break
+      }
+    }
+  }
 }
 
 onMounted(async () => {
@@ -128,6 +152,18 @@ onMounted(async () => {
       @success="onUpdateProductionJobSuccess"
       @cancel="currentAction = null"
       v-if="currentAction === 'EDIT'"
+    />
+    <AddProductionRecord
+      :production-job="productionJob"
+      @success="onAddProductionRecordSuccess"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'ADD_RECORD'"
+    />
+    <AddShortfallProductionRecord
+      :production-job="productionJob"
+      @success="onAddProductionRecordSuccess"
+      @cancel="currentAction = null"
+      v-if="currentAction === 'CLOSE'"
     />
 
     <ProductionBatchesList

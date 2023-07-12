@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { CfDataTable } from '../../../components/index.js'
 
 const emit = defineEmits(['action'])
@@ -19,7 +20,7 @@ const columns = [
     key: 'product.name'
   }, {
     label: 'Qty',
-    key: 'qtyExpected'
+    key: 'qty'
   }, {
     label: 'Est Time',
     key: 'timeEstimatedMins'
@@ -31,13 +32,36 @@ const columns = [
     key: 'workstation.name'
   }
 ]
+
+const computedData = computed(() => {
+  return props.data.map(productionJob => {
+    let actions = ['Add record', 'Close', 'Edit']
+
+    if (productionJob.status === 'OPEN') {
+      actions = ['Add record', 'Edit']
+    }
+
+    if (productionJob.status === 'CLOSED') {
+      actions = ['Add record', null]
+    }
+
+    const { output, reject, rework, adjustment } = productionJob.operation.summary
+    const qty = `${output + reject + rework + adjustment}/${productionJob.qtyExpected}`
+
+    return {
+      ...productionJob,
+      actions,
+      qty
+    }
+  })
+})
 </script>
 
 <template>
   <CfDataTable
     :columns="columns"
-    :data="props.data"
-    :item-actions="['Add record', 'Edit']"
+    :data="computedData"
+    :item-actions="['Add record', 'Close', 'Edit']"
     searchable
     @item-action="$event => emit('action', $event)"
   />

@@ -70,12 +70,14 @@ const computedData = computed(() => {
     .map((item, index) => {
       const selectable = item.selectable ?? true
       const selected = props.selection.includes(item.id)
+      const actions = item.actions ?? props.itemActions
 
       return {
         ...item,
         index,
         selectable,
-        selected
+        selected,
+        actions
       }
     })
 })
@@ -195,13 +197,13 @@ const onItemAction = (action, item) => {
                 ? column.key.split('.').reduce((prevObj, key) => prevObj && prevObj[key], item)
                 : item[column.key]?.toLocaleString() }}
           </td>
-          <td data-table-item-actions v-if="props.itemActions">
+          <td data-table-item-actions v-if="item.actions">
             <button>
-              {{ props.itemActions.length > 1 ? '•••' : props.itemActions[0] }}
+              {{ item.actions.length > 1 ? '•••' : item.actions[0] }}
             </button>
-            <div v-if="props.itemActions.length > 1">
+            <div v-if="item.actions.length > 1">
               <button
-                v-for="action in props.itemActions"
+                v-for="action in item.actions"
                 @click="onItemAction(action, item)"
               >
                 {{ action }}
@@ -222,13 +224,13 @@ const onItemAction = (action, item) => {
             >
           </td>
           <slot :item="item"></slot>
-          <td data-table-item-actions v-if="props.itemActions">
+          <td data-table-item-actions v-if="item.actions">
             <button>
-              {{ props.itemActions.length > 1 ? '•••' : props.itemActions[0] }}
+              {{ item.actions.length > 1 ? '•••' : item.actions[0] }}
             </button>
-            <div v-if="props.itemActions.length > 1">
+            <div v-if="item.actions.length > 1">
               <button
-                v-for="action in props.itemActions"
+                v-for="action in item.actions"
                 @click="onItemAction(action, item)"
               >
                 {{ action }}
@@ -372,6 +374,10 @@ const onItemAction = (action, item) => {
 
         &:hover {
           background: var(--cf-gray-9);
+        }
+
+        &:empty {
+          display: none;
         }
       }
     }

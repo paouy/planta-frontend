@@ -25,7 +25,7 @@ const productionJob = ref(null)
 const currentAction = ref(null)
 
 const productionJobsAwaitingInputFilter = (job, index) => {
-  if (showProductionJobsAwaitingInput.value || index === 0) {
+  if (showProductionJobsAwaitingInput.value || job.index === 0) {
     return true
   } else {
     const { status, productionOrder } = productionJobs.value[index - 1]

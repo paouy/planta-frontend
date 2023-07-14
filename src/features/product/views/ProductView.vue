@@ -55,11 +55,11 @@ const showUpdateProductMaterial = ref(false)
 const showRemoveProductMaterial = ref(false)
 
 const onProductMaterialsListAction = ({ action, item }) => {
-  if (action === 'Edit') {
+  if (action === 'EDIT') {
     showUpdateProductMaterial.value = true
   }
   
-  if (action === 'Remove') {
+  if (action === 'REMOVE') {
     showRemoveProductMaterial.value = true
   }
 

@@ -18,7 +18,7 @@ const columns = [
     key: 'schedule'
   }, {
     label: 'Job Count',
-    key: 'qtyExpected'
+    key: 'count'
   }, {
     label: 'Status',
     key: 'status'

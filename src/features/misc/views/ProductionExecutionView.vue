@@ -67,17 +67,26 @@ const onProductionJobsListAction = ({ action, item }) => {
 }
 
 const onUpdateProductionJobSuccess = (productionJob) => {
-  const productionJobIndex = productionJobs.value.findIndex(({ id }) => id === productionJob.id)
+  const productionJobIndex = productionJobs.value
+    .findIndex(({ id }) => id === productionJob.id)
 
   Object.assign(productionJobs.value[productionJobIndex], productionJob)
+
+  if (productionJob.productionBatchId) {
+    const productionBatchIndex = productionBatches.value
+      .findIndex(({ id }) => id === productionJob.productionBatchId)
+    
+    productionBatches.value[productionBatchIndex].count++
+  }
 }
 
 const onAddProductionRecordSuccess = (productionRecord) => {
-  const { productionJobId, newProductionJobStatus, type, qty } = productionRecord
-  const productionJobIndex = productionJobs.value.findIndex(({ id }) => id === productionJobId)
+  const { productionJobId, type, qty, newProductionJobStatus } = productionRecord
+  const productionJobIndex = productionJobs.value
+    .findIndex(({ id }) => id === productionJobId)
 
-  productionJobs.value[productionJobIndex].status = newProductionJobStatus
   productionJobs.value[productionJobIndex].operation.summary[type.toLowerCase()] += qty
+  productionJobs.value[productionJobIndex].status = newProductionJobStatus
 
   for (let index = 1; index < productionJobs.value.length; index++) {
     const previousProductionJob = productionJobs.value[index - 1]

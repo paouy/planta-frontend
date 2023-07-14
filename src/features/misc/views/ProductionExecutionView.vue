@@ -13,7 +13,7 @@ import UnassignedProductionJobsCallout from '../../productionJob/components/Unas
 import AddProductionRecord from '../../productionRecord/components/AddProductionRecord.vue'
 import AddShortfallProductionRecord from '../../productionRecord/components/AddShortfallProductionRecord.vue'
 
-const showProductionJobsAwaitingInput = ref(true)
+const showProductionJobsAwaitingInput = ref(false)
 const showAssignProductionJob = ref(false)
 const productionJobs = ref([])
 const productionBatches = ref([])

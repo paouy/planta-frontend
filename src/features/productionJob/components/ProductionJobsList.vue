@@ -14,7 +14,8 @@ const props = defineProps({
 const columns = [
   {
     label: 'ID',
-    key: 'productionOrder.friendlyId'
+    key: 'productionOrder.friendlyId',
+    width: '12%'
   }, {
     label: 'Product',
     key: 'product.name'

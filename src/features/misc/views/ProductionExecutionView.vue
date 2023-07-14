@@ -130,7 +130,7 @@ onMounted(async () => {
     <UnassignedProductionJobsCallout
       :operation="operation"
       :count="unassignedProductionJobs.length"
-      @view="showAssignProductionJob = true"
+      @trigger="showAssignProductionJob = true"
       v-if="unassignedProductionJobs.length"
     />
     <AssignProductionJob

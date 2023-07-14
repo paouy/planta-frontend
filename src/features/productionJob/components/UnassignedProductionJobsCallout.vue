@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { CfFilledButton } from '../../../components/index.js'
 
-const emit = defineEmits(['view'])
+const emit = defineEmits(['trigger'])
 
 const props = defineProps({
   operation: Object,
@@ -29,7 +29,7 @@ const description = computed(() => {
   <div class="unassignedProductionJobsCallout">
     <h4>{{ heading }}</h4>
     <p>{{ description }}</p>
-    <CfFilledButton @click="emit('view')">View</CfFilledButton>
+    <CfFilledButton @click="emit('trigger')">View</CfFilledButton>
   </div>
 </template>
 

@@ -19,8 +19,8 @@ const props = defineProps({
 })
 
 const isLoading = ref(false)
-const productionJob = ref({
-  id: null,
+const productionJobId = ref('')
+const productionJobData = ref({
   workstation: null,
   productionBatchId: null
 })
@@ -35,7 +35,7 @@ const productionJobOptions = computed(() => {
 const productionBatchesOptions = computed(() => {
   return props.productionBatches.map(batch => ({
     label: `${batch.friendlyId} — ${batch.schedule}`,
-    value: batch.id
+    value: { workstation: batch.workstation, productionBatchId: batch.id }
   }))
 })
 
@@ -50,12 +50,17 @@ const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    await updateProductionJob(productionJob.value)
+    const productionJob = {
+      id: productionJobId.value,
+      ...productionJobData.value
+    }
 
-    await emit('success', productionJob.value)
+    await updateProductionJob(productionJob)
 
-    productionJob.value = {
-      id: null,
+    await emit('success', productionJob)
+
+    productionJobId.value = ''
+    productionJobData.value = {
       workstation: null,
       productionBatchId: null
     }
@@ -76,20 +81,20 @@ const onSubmit = async () => {
     <template #body>
       <form id="assignProductionJobs" @submit.prevent="onSubmit">
         <CfField
-          v-model="productionJob.id"
+          v-model="productionJobId"
           label="Job"
           type="select"
           :options="productionJobOptions"
           required
         />
         <WorkstationSelect
-          v-model="productionJob.workstation"
+          v-model="productionJobData.workstation"
           :operation-id="operation.id"
           required
           v-if="props.operation.type === 'JOB'"
         />
         <CfField
-          v-model="productionJob.productionBatchId"
+          v-model="productionJobData"
           label="Batch"
           type="select"
           :options="productionBatchesOptions"

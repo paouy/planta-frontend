@@ -1,5 +1,5 @@
 <script setup>
-import { CfDataTable } from '../../../components/index.js'
+import { CfDataTable, CfFilledButton } from '../../../components/index.js'
 
 const props = defineProps({
   data: {
@@ -11,16 +11,20 @@ const props = defineProps({
 const columns = [
   {
     label: 'ID',
-    key: 'friendlyId'
+    key: 'friendlyId',
+    width: '12%'
   }, {
     label: 'Schedule',
     key: 'schedule'
   }, {
-    label: 'Qty',
+    label: 'Job Count',
     key: 'qtyExpected'
   }, {
     label: 'Status',
     key: 'status'
+  }, {
+    label: 'Workstation',
+    key: 'workstation.name'
   }
 ]
 </script>
@@ -30,5 +34,12 @@ const columns = [
     :columns="columns"
     :data="props.data"
     :item-actions="['Add record', 'View']"
-  />
+    searchable
+  >
+    <template #action>
+      <CfFilledButton>
+        Add batch
+      </CfFilledButton>
+    </template>
+  </CfDataTable>
 </template>

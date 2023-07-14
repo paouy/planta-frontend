@@ -2,61 +2,63 @@
 import { ref, computed, onMounted } from 'vue'
 import { getProductionJobs } from '../../productionJob/api/index.js'
 import { getNotClosedProductionBatches } from '../../productionBatch/api/index.js'
-import { CfAppView, CfAppViewHeader, CfSwitch } from '../../../components/index.js'
-import OperationSelect from '../../operation/components/OperationSelect.vue'
-import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
-import ProductionBatchesList from '../../productionBatch/components/ProductionBatchesList.vue'
+import { CfAppView, CfAppViewHeader } from '../../../components/index.js'
+import ProductionExecutionFilters from '../components/ProductionExecutionFilters.vue'
+import UnassignedProductionJobsCallout from '../../productionJob/components/UnassignedProductionJobsCallout.vue'
 import ProductionJobsList from '../../productionJob/components/ProductionJobsList.vue'
+import ProductionBatchesList from '../../productionBatch/components/ProductionBatchesList.vue'
 import AssignProductionJob from '../../productionJob/components/AssignProductionJob.vue'
 import UpdateProductionJob from '../../productionJob/components/UpdateProductionJob.vue'
-import UnassignedProductionJobsCallout from '../../productionJob/components/UnassignedProductionJobsCallout.vue'
 import AddProductionRecord from '../../productionRecord/components/AddProductionRecord.vue'
 import AddShortfallProductionRecord from '../../productionRecord/components/AddShortfallProductionRecord.vue'
 
-const showProductionJobsAwaitingInput = ref(false)
-const showAssignProductionJob = ref(false)
-const productionJobs = ref([])
-const productionBatches = ref([])
 const operation = ref({
   id: '',
   name: '',
   type: ''
 })
-const workstationId = ref(null)
-const productionJob = ref(null)
+const workstation = ref(null)
+const showJobsAwaitingInput = ref(false)
 const currentAction = ref(null)
 
-const productionJobsAwaitingInputFilter = (job, index) => {
-  if (showProductionJobsAwaitingInput.value || job.index === 0) {
-    return true
-  } else {
-    const { status, productionOrder } = productionJobs.value[index - 1]
+const productionJobs = ref([])
+const showAssignProductionJob = ref(false)
+const productionJob = ref(null)
 
-    return status !== 'OPEN' && job.productionOrder.id === productionOrder.id
+const productionBatches = ref([])
+
+const productionJobsAwaitingInputFilterFn = (job, index) => {
+  if (showJobsAwaitingInput.value || job.index === 0) {
+    return true
   }
+  
+  const { status, productionOrder } = productionJobs.value[index - 1]
+  return status !== 'OPEN' && productionOrder.id === job.productionOrder.id
 }
 
 const unassignedProductionJobs = computed(() => {
-  return productionJobs.value
-    .filter((job, index) => productionJobsAwaitingInputFilter(job, index))
-    .filter(job =>
-      !job.workstation &&
-      !job.productionBatchId &&
-      job.operation.id === operation.value.id
-    )
+  return productionJobs.value.filter((job, index) =>
+    job.operation.id === operation.value.id &&
+    !job.workstation &&
+    !job.productionBatchId &&
+    productionJobsAwaitingInputFilterFn(job, index)
+  )
 })
 
 const currentProductionJobs = computed(() => {
-  return productionJobs.value
-    .filter((job, index) => productionJobsAwaitingInputFilter(job, index))
-    .filter(job => job.operation.id === operation.value.id && !!job.workstation)
-    .filter(job => workstationId.value ? job.workstation?.id === workstationId.value : true)
+  return productionJobs.value.filter((job, index) =>
+    job.operation.id === operation.value.id &&
+    !!job.workstation &&
+    (workstation.value ? job.workstation.id === workstation.value.id : true) &&
+    productionJobsAwaitingInputFilterFn(job, index)
+  )
 })
 
 const currentProductionBatches = computed(() => {
-  return productionBatches.value
-    .filter(batch => batch.operation.id === operation.value.id)
-    .filter(batch => workstationId.value ? batch.workstationId === workstationId.value : true)
+  return productionBatches.value.filter(batch =>
+    batch.operation.id === operation.value.id &&
+    (workstation.value ? batch.workstation.id === workstation.value.id : true)
+  )
 })
 
 const onProductionJobsListAction = ({ action, item }) => {
@@ -106,82 +108,55 @@ onMounted(async () => {
 <template>
   <CfAppView>
     <CfAppViewHeader surtitle="Production" title="Execution"/>
-
-    <div class="productionScheduleFilters">
-      <OperationSelect
-        v-model="operation"
-        :keys="['id', 'name', 'type']"
-        default-option
-        @input="workstationId = null"
-      />
-      <WorkstationSelect
-        v-model="workstationId"
-        :keys="['id']"
-        :operation-id="operation.id"
-        :disabled="!operation.id"
-        :required="false"
-      />
-      <CfSwitch
-        v-model="showProductionJobsAwaitingInput"
-        label="Show jobs awaiting input"
-      />
-    </div>
-
+    <ProductionExecutionFilters
+      v-model:operation="operation"
+      v-model:workstation="workstation"
+      v-model:showJobsAwaitingInput="showJobsAwaitingInput"
+    />
     <UnassignedProductionJobsCallout
       :operation="operation"
       :count="unassignedProductionJobs.length"
       @trigger="showAssignProductionJob = true"
       v-if="unassignedProductionJobs.length"
     />
-    <AssignProductionJob
-      :operation="operation"
-      :production-jobs="unassignedProductionJobs"
-      :production-batches="productionBatches"
-      @success="onUpdateProductionJobSuccess"
-      @cancel="showAssignProductionJob = false"
-      v-if="showAssignProductionJob"
-    />
-
     <ProductionJobsList
       :data="currentProductionJobs"
       @action="onProductionJobsListAction"
       v-if="operation.type === 'JOB'"
     />
-    <UpdateProductionJob
-      :data="productionJob"
-      @success="onUpdateProductionJobSuccess"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'EDIT'"
-    />
-    <AddProductionRecord
-      :production-job="productionJob"
-      @success="onAddProductionRecordSuccess"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'ADD_RECORD'"
-    />
-    <AddShortfallProductionRecord
-      :production-job="productionJob"
-      @success="onAddProductionRecordSuccess"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'CLOSE'"
-    />
-
     <ProductionBatchesList
       :data="currentProductionBatches"
       v-if="operation.type === 'BATCH'"
     />
   </CfAppView>
+
+  <AssignProductionJob
+    :operation="operation"
+    :production-jobs="unassignedProductionJobs"
+    :production-batches="productionBatches"
+    @success="onUpdateProductionJobSuccess"
+    @cancel="showAssignProductionJob = false"
+    v-if="showAssignProductionJob"
+  />
+
+  <UpdateProductionJob
+    :data="productionJob"
+    @success="onUpdateProductionJobSuccess"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'EDIT'"
+  />
+
+  <AddProductionRecord
+    :production-job="productionJob"
+    @success="onAddProductionRecordSuccess"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'ADD_RECORD'"
+  />
+
+  <AddShortfallProductionRecord
+    :production-job="productionJob"
+    @success="onAddProductionRecordSuccess"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'CLOSE'"
+  />
 </template>
-
-<style lang="scss">
-.productionScheduleFilters {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-end;
-  margin-bottom: 1.5rem;
-
-  > :not(:last-child) {
-    max-width: 12rem;
-  }
-}
-</style>

@@ -1,6 +1,7 @@
 <script setup>
-import { useSlots, ref, computed, onBeforeMount } from 'vue'
+import { useSlots, ref, computed } from 'vue'
 import { useFuse } from '@vueuse/integrations/useFuse'
+import { getProperty } from 'dot-prop'
 import Field from '../Field/Field.vue'
 
 const slots = useSlots()
@@ -27,10 +28,14 @@ const props = defineProps({
   customTemplate: Boolean,
   selectable: Boolean,
   sortable: Boolean,
+  defaultSortKey: {
+    type: String,
+    default: ''
+  },
   searchable: Boolean
 })
 
-const sortKey = ref('')
+const sortKey = ref(props.defaultSortKey)
 const sortOrder = ref('asc')
 const searchText = ref('')
 
@@ -55,13 +60,13 @@ const computedData = computed(() => {
   return data.value
     .map(result => result.item || result)
     .sort((a, b) => {
-      const aValue = a[sortKey.value]
-      const bValue = b[sortKey.value]
+      const aValue = getProperty(a, sortKey.value)
+      const bValue = getProperty(b, sortKey.value)
 
       if (typeof aValue === 'string') {
         return sortOrder.value === 'asc'
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue)
+          ? aValue?.localeCompare(bValue)
+          : bValue?.localeCompare(aValue)
       }
 
       return sortOrder.value === 'asc'
@@ -191,9 +196,7 @@ const onItemAction = (action, item) => {
             >
           </td>
           <td v-for="column in columns" :key="column.key">
-            {{ column.key.includes('.')
-                ? column.key.split('.').reduce((prevObj, key) => prevObj && prevObj[key], item)
-                : item[column.key]?.toLocaleString() }}
+            {{ getProperty(item, column.key)?.toLocaleString() }}
           </td>
           <td data-table-item-actions v-if="item.actions">
             <button>

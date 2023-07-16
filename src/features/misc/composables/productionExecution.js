@@ -11,7 +11,7 @@ const productionJobs = ref([])
 const productionBatches = ref([])
 
 const showAllProductionJobsFilterFn = (job, index) => {
-  if (showAllProductionJobs.value || job.index === 0) {
+  if (showAllProductionJobs.value || job.seq === 1) {
     return true
   }
   

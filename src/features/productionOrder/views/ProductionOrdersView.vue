@@ -13,6 +13,13 @@ import AddProductionOrder from '../components/AddProductionOrder.vue'
 const productionOrders = ref([])
 const showAddProductionOrder = ref(false)
 
+const onAddProductionOrderSuccess = (productionOrder) => {
+  productionOrders.value.push({
+    ...productionOrder,
+    seq: productionOrders.value.length + 1
+  })
+}
+
 onMounted(async () => productionOrders.value = await getProductionOrders())
 </script>
 
@@ -28,7 +35,7 @@ onMounted(async () => productionOrders.value = await getProductionOrders())
     <ProductionOrdersSummary :data="productionOrders"/>
     <ProductionOrdersList :data="productionOrders"/>
     <AddProductionOrder
-      @success="data => productionOrders.push(data)"
+      @success="onAddProductionOrderSuccess"
       @cancel="showAddProductionOrder = false"
       v-if="showAddProductionOrder"
     />

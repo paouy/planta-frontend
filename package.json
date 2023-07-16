@@ -11,6 +11,7 @@
     "@vueuse/core": "^10.1.2",
     "@vueuse/integrations": "^10.1.2",
     "destyle.css": "^4.0.0",
+    "dot-prop": "^8.0.1",
     "fuse.js": "^6.6.2",
     "redaxios": "^0.5.1",
     "supertokens-web-js": "^0.6.0",

@@ -7,21 +7,25 @@ const props = defineProps({ data: Array })
 
 const columns = [
   {
-    key: 'friendlyId',
+    label: '#',
+    key: 'seq',
+    width: '4rem'
+  }, {
     label: 'ID',
+    key: 'friendlyId',
     width: '12%'
   }, {
-    key: 'product.name',
-    label: 'Product'
+    label: 'Product',
+    key: 'product.name'
   }, {
-    key: 'qty',
-    label: 'Qty'
+    label: 'Qty',
+    key: 'qty'
   }, {
-    key: 'status',
-    label: 'Status'
+    label: 'Status',
+    key: 'status'
   }, {
-    key: 'dueDate',
-    label: 'Due date'
+    label: 'Due date',
+    key: 'dueDate'
   }
 ]
 </script>
@@ -30,12 +34,15 @@ const columns = [
   <CfDataTable
     custom-template
     searchable
+    sortable
+    default-sort-key="seq"
     :columns="columns"
     :data="props.data"
     :item-actions="['View', 'Move up', 'Move down']"
     @item-action="$event => emit('action', $event)"
   >
     <template v-slot="{item}">
+      <td>{{ item.seq }}</td>
       <td>{{ item.friendlyId }}</td>
       <td>{{ item.product.name }}</td>
       <td>{{ `${item.qty} ${item.product.uom}` }}</td>

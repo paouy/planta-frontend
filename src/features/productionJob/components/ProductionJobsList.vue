@@ -36,14 +36,14 @@ const columns = [
 
 const computedData = computed(() => {
   return props.data.map(productionJob => {
-    let actions = ['Add record', 'Close', 'Edit']
+    let actions = ['Add record', 'Edit', 'Close']
 
     if (productionJob.status === 'OPEN') {
       actions = ['Add record', 'Edit']
     }
 
     if (productionJob.status === 'CLOSED') {
-      actions = ['Add record', null]
+      actions = ['Add record']
     }
 
     const { output, reject, rework, adjustment } = productionJob.operation.summary
@@ -62,8 +62,9 @@ const computedData = computed(() => {
   <CfDataTable
     :columns="columns"
     :data="computedData"
-    :item-actions="['Add record', 'Close', 'Edit']"
     searchable
+    item-actions
+    force-item-actions-menu
     @item-action="$event => emit('action', $event)"
   />
 </template>

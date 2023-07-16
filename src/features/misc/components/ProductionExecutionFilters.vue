@@ -7,7 +7,7 @@ import WorkstationSelect from '../../workstation/components/WorkstationSelect.vu
 const emit = defineEmits([
   'update:operation',
   'update:workstation',
-  'update:showJobsAwaitingInput'
+  'update:showAll'
 ])
 
 const props = defineProps({
@@ -34,12 +34,12 @@ const workstation = computed({
   }
 })
 
-const showJobsAwaitingInput = computed({
+const showAll = computed({
   get() {
-    return props.showJobsAwaitingInput
+    return props.showAll
   },
   set(value) {
-    emit('update:showJobsAwaitingInput', value)
+    emit('update:showAll', value)
   }
 })
 </script>
@@ -59,7 +59,7 @@ const showJobsAwaitingInput = computed({
       :required="false"
     />
     <CfSwitch
-      v-model="showJobsAwaitingInput"
+      v-model="showAll"
       label="Show jobs awaiting input"
     />
   </div>

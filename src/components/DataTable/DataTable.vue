@@ -22,7 +22,8 @@ const props = defineProps({
     type: Array,
     default: []
   },
-  itemActions: Array,
+  itemActions: [Boolean, Array],
+  forceItemActionsMenu: Boolean,
   customTemplate: Boolean,
   selectable: Boolean,
   sortable: Boolean,
@@ -155,10 +156,7 @@ const onItemAction = (action, item) => {
           :key="column.key"
           :style="{ '--w': column.width }"
         >
-        <col
-          :style="{ '--w': props.itemActions.length > 1 ? '4rem' : '5rem' }"
-          v-if="props.itemActions"
-        >
+        <col style="--w: 4rem" v-if="props.itemActions">
       </colgroup>
       <thead>
         <tr>
@@ -199,9 +197,9 @@ const onItemAction = (action, item) => {
           </td>
           <td data-table-item-actions v-if="item.actions">
             <button>
-              {{ item.actions.length > 1 ? '•••' : item.actions[0] }}
+              {{ props.forceItemActionsMenu || item.actions.length > 1 ? '•••' : item.actions[0] }}
             </button>
-            <div v-if="item.actions.length > 1">
+            <div v-if="props.forceItemActionsMenu || item.actions.length > 1">
               <button
                 v-for="action in item.actions"
                 @click="onItemAction(action, item)"
@@ -226,9 +224,9 @@ const onItemAction = (action, item) => {
           <slot :item="item"></slot>
           <td data-table-item-actions v-if="item.actions">
             <button>
-              {{ item.actions.length > 1 ? '•••' : item.actions[0] }}
+              {{ props.forceItemActionsMenu || item.actions.length > 1 ? '•••' : item.actions[0] }}
             </button>
-            <div v-if="item.actions.length > 1">
+            <div v-if="props.forceItemActionsMenu || item.actions.length > 1">
               <button
                 v-for="action in item.actions"
                 @click="onItemAction(action, item)"

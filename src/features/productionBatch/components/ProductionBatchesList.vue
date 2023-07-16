@@ -1,6 +1,8 @@
 <script setup>
 import { CfDataTable, CfFilledButton } from '../../../components/index.js'
 
+const emit = defineEmits(['action'])
+
 const props = defineProps({
   data: {
     type: Array,
@@ -33,8 +35,9 @@ const columns = [
   <CfDataTable
     :columns="columns"
     :data="props.data"
-    :item-actions="['Add record', 'View']"
     searchable
+    :item-actions="['Add report', 'View', 'Remove']"
+    @item-action="$event => emit('action', $event)"
   >
     <template #action>
       <CfFilledButton>

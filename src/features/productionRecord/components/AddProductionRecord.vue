@@ -15,8 +15,7 @@ const productionRecordTypeOptions = computed(() => {
         { label: 'Output', value: 'OUTPUT' },
         { label: 'Reject', value: 'REJECT' },
         { label: 'Rework', value: 'REWORK' },
-        { label: 'Adjustment', value: 'ADJUSTMENT' },
-        { label: 'Shortfall', value: 'SHORTFALL' }
+        { label: 'Adjustment', value: 'ADJUSTMENT' }
     ]
     : [
       { label: 'Reject', value: 'REJECT' },

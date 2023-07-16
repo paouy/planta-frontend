@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProductionExecution } from '../composables/productionExecution.js'
+import { useOperationStore } from '../../operation/store.js'
 import { getProductionJobs } from '../../productionJob/api/index.js'
 import { getNotClosedProductionBatches } from '../../productionBatch/api/index.js'
 import { CfAppView, CfAppViewHeader } from '../../../components/index.js'
@@ -26,20 +27,15 @@ const {
   ...productionExecution
 } = useProductionExecution()
 
-onMounted(async () => {
-  const [jobs, batches] = await Promise.all([
-    getProductionJobs(),
-    getNotClosedProductionBatches()
-  ])
-
-  productionExecution.initialize({ jobs, batches })
-})
+const props = defineProps({ operationSlug: String })
 
 const showAssignProductionJob = ref(false)
 const productionJobAction = ref(null)
 const productionJob = ref(null)
 const productionBatchAction = ref(null)
 const productionBatch = ref(null)
+
+const toSlug = (string) => string.toLowerCase().replaceAll(' ', '-')
 
 const onProductionJobAction = ({ action, item }) => {
   productionJobAction.value = action
@@ -51,7 +47,7 @@ const onProductionBatchAction = ({ action, item }) => {
     router.push({
       name: 'AddProductionBatchReport',
       params: {
-        operationName: operation.value.name.toLowerCase().replaceAll(' ', '-'),
+        operationSlug: toSlug(operation.value.name),
         productionBatchId: item.id
       }
     })
@@ -60,6 +56,25 @@ const onProductionBatchAction = ({ action, item }) => {
   productionBatchAction.value = action
   productionBatch.value = item
 }
+
+watch(operation, ({ name }) => router.push(`/production/execution/${toSlug(name)}`))
+
+onMounted(async () => {
+  const { operations } = useOperationStore()
+
+  const { id, name, type } = props.operationSlug
+    ? operations.value.find(({ name }) => props.operationSlug === toSlug(name))
+    : operations.value[0]
+
+  operation.value = { id, name, type }
+
+  const [jobs, batches] = await Promise.all([
+    getProductionJobs(),
+    getNotClosedProductionBatches()
+  ])
+
+  productionExecution.initialize({ jobs, batches })
+})
 </script>
 
 <template>

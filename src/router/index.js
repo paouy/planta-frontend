@@ -23,13 +23,15 @@ const router = createRouter({
           component: ProductionOrdersView
         }, {
           path: 'execution',
+          name: 'ProductionExecution',
+          redirect: '/production/execution/',
           children: [
             {
-              path: '',
-              name: 'ProductionExecution',
-              component: ProductionExecutionView
+              path: ':operationSlug?',
+              component: ProductionExecutionView,
+              props: true
             }, {
-              path: ':operationName/:productionBatchId/add-report',
+              path: ':operationSlug/:productionBatchId/add-report',
               name: 'AddProductionBatchReport',
               component: AddProductionBatchReportView,
               props: true

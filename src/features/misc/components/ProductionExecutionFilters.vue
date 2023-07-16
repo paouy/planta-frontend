@@ -13,34 +13,22 @@ const emit = defineEmits([
 const props = defineProps({
   operation: Object,
   workstation: Object,
-  showJobsAwaitingInput: Boolean
+  showAll: Boolean
 })
 
 const operation = computed({
-  get() {
-    return props.operation
-  },
-  set(value) {
-    emit('update:operation', value)
-  }
+  get: () => props.operation,
+  set: (value) => emit('update:operation', value)
 })
 
 const workstation = computed({
-  get() {
-    return props.workstation
-  },
-  set(value) {
-    emit('update:workstation', value)
-  }
+  get: () => props.workstation,
+  set: (value) => emit('update:workstation', value)
 })
 
 const showAll = computed({
-  get() {
-    return props.showAll
-  },
-  set(value) {
-    emit('update:showAll', value)
-  }
+  get: () => props.showAll,
+  set: (value) => emit('update:showAll', value)
 })
 </script>
 
@@ -49,8 +37,7 @@ const showAll = computed({
     <OperationSelect
       v-model="operation"
       :keys="['id', 'name', 'type']"
-      default-option
-      @input=""
+      @input="workstation = null"
     />
     <WorkstationSelect
       v-model="workstation"

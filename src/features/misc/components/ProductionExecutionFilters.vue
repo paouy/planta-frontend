@@ -36,7 +36,7 @@ const showAll = computed({
   <div class="productionExecutionFilters">
     <OperationSelect
       v-model="operation"
-      :keys="['id', 'name', 'type']"
+      :keys="['id', 'name', 'isBatch']"
       @input="workstation = null"
     />
     <WorkstationSelect

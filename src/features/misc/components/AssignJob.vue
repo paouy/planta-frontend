@@ -1,46 +1,47 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { updateProductionJob } from '../api/index.js'
+import { addProductionOrderWorkstation } from '../../productionOrder/api/index.js'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const props = defineProps({
-  operation: Object,
-  productionJobs: {
+  data: {
     type: Array,
     default: () => []
   },
-  productionBatches: {
+  operation: Object,
+  operationBatches: {
     type: Array,
     default: () => []
   }
 })
 
 const isLoading = ref(false)
-const productionJobId = ref('')
-const productionJobData = ref({
+const assignment = ref({
+  productionOrderId: null,
+  operationId: props.operation.id,
   workstation: null,
-  productionBatchId: null
+  operationBatchId: null
 })
 
-const productionJobOptions = computed(() => {
-  return props.productionJobs.map(job => ({
-    label: `${job.productionOrder.friendlyId} — ${job.product.name}`,
-    value: job.id
+const jobOptions = computed(() => {
+  return props.data.map(job => ({
+    label: `${job.productionOrder.friendlyId} — ${job.productName}`,
+    value: job.productionOrder.id
   }))
 })
 
-const productionBatchesOptions = computed(() => {
-  return props.productionBatches.map(batch => ({
+const operationBatchesOptions = computed(() => {
+  return props.operationBatches.map(batch => ({
     label: `${batch.friendlyId} — ${batch.schedule}`,
-    value: { workstation: batch.workstation, productionBatchId: batch.id }
+    value: batch.id
   }))
 })
 
 const dialogTitle = computed(() => {
-  const assignment = props.operation.type === 'JOB' ? 'workstation' : 'batch'
+  const assignment = props.operation.isBatch ? 'batch' : 'workstation'
   const normalizedOperation = props.operation.name.toLowerCase()
 
   return `Assign ${normalizedOperation} job to a ${assignment}`
@@ -50,22 +51,22 @@ const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    const productionJob = {
-      id: productionJobId.value,
-      ...productionJobData.value
+    if (props.operation.isBatch) {
+      // Implement
+    } else {
+      await addProductionOrderWorkstation(assignment.value)
     }
 
-    await updateProductionJob(productionJob)
+    await emit('success', assignment.value)
 
-    await emit('success', productionJob)
-
-    productionJobId.value = ''
-    productionJobData.value = {
+    assignment.value = {
+      productionOrderId: null,
+      operationId: props.operation.id,
       workstation: null,
-      productionBatchId: null
+      operationBatchId: null
     }
 
-    if (!props.productionJobs.length) {
+    if (!props.data.length) {
       emit('cancel')
     }
   } catch (error) {
@@ -81,23 +82,23 @@ const onSubmit = async () => {
     <template #body>
       <form id="assignProductionJobs" @submit.prevent="onSubmit">
         <CfField
-          v-model="productionJobId"
+          v-model="assignment.productionOrderId"
           label="Job"
           type="select"
-          :options="productionJobOptions"
+          :options="jobOptions"
           required
         />
         <WorkstationSelect
-          v-model="productionJobData.workstation"
+          v-model="assignment.workstation"
           :operation-id="operation.id"
           required
-          v-if="props.operation.type === 'JOB'"
+          v-if="!props.operation.isBatch"
         />
         <CfField
-          v-model="productionJobData"
+          v-model="assignment.operationBatchId"
           label="Batch"
           type="select"
-          :options="productionBatchesOptions"
+          :options="operationBatchesOptions"
           required
           v-else
         />

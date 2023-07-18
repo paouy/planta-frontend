@@ -5,26 +5,22 @@ import { addProductionRecord } from '../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
-const props = defineProps({ productionJob: Object })
+const props = defineProps({ job: Object })
 
 const isLoading = ref(false)
 
-const normalizedOperationName = computed(() => props.productionJob.operation.name.toLowerCase())
-const normalizedProductionOrder = computed(() => `${props.productionJob.productionOrder.friendlyId} — ${props.productionJob.product.name}`)
-const shortfallQty = computed(() => {
-  const { output, reject, rework, adjustment } = props.productionJob.operation.summary
-
-  return  props.productionJob.qtyExpected - (output + reject + rework + adjustment)
-})
+const normalizedOperationName = computed(() => props.job.operation.name.toLowerCase())
+const normalizedProductionOrder = computed(() => `${props.job.productionOrder.friendlyId} — ${props.job.productName}`)
+const shortfallQty = computed(() => props.job.qtyExpected - props.job.qtyProduced)
 const dialogTitle = computed(() => `Close ${normalizedOperationName.value} job`)
-
 
 const onClick = async () => {
   try {
     isLoading.value = true
 
     const addedProductionRecord = await addProductionRecord({
-      productionJobId: props.productionJob.id,
+      productionOrderId: props.job.productionOrder.id,
+      operationId: props.job.operation.id,
       type: 'SHORTFALL',
       qty: shortfallQty.value * -1
     })

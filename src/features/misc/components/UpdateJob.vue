@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { updateProductionJob } from '../api/index.js'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 
@@ -35,7 +34,7 @@ const onSubmit = async () => {
       updatedProductionJob.timeEstimatedMins = null
     }
 
-    await updateProductionJob(updatedProductionJob)
+    // await updateProductionJob(updatedProductionJob)
 
     emit('success', productionJob.value)
     emit('cancel')

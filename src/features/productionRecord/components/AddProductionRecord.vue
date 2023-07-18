@@ -7,10 +7,10 @@ import { addProductionRecord } from '../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
-const props = defineProps({ productionJob: Object })
+const props = defineProps({ job: Object })
 
 const productionRecordTypeOptions = computed(() => {
-  return props.productionJob.status !== 'CLOSED'
+  return props.job.status !== 'CLOSED'
     ? [
         { label: 'Output', value: 'OUTPUT' },
         { label: 'Reject', value: 'REJECT' },
@@ -25,15 +25,16 @@ const productionRecordTypeOptions = computed(() => {
 
 const isLoading = ref(false)
 const productionRecord = ref({
-  productionJobId: props.productionJob.id,
-  workstationId: props.productionJob.workstation.id,
+  productionOrderId: props.job.productionOrder.id,
+  operationId: props.job.operation.id,
+  workstationId: props.job.workstation.id,
   equipmentId: null,
   type: null,
   qty: null,
   timeTakenMins: null
 })
 
-const dialogTitle = computed(() => `Add ${props.productionJob.operation.name.toLowerCase()} record`)
+const dialogTitle = computed(() => `Add ${props.job.operation.name.toLowerCase()} record`)
 
 const onSubmit = async () => {
   try {
@@ -65,18 +66,18 @@ const onSubmit = async () => {
         <CfField
           label="Job"
           type="text"
-          :value="`${props.productionJob.productionOrder.friendlyId} — ${props.productionJob.product.name}`"
+          :value="`${props.job.productionOrder.friendlyId} — ${props.job.productName}`"
           disabled
         />
         <WorkstationSelect
           v-model="productionRecord.workstationId"
-          :operation-id="props.productionJob.operation.id"
+          :operation-id="props.job.operation.id"
           :keys="['id']"
           required
         />
         <EquipmentSelect
           v-model="productionRecord.equipmentId"
-          :operation-id="props.productionJob.operation.id"
+          :operation-id="props.job.operation.id"
           :keys="['id']"
           required
         />

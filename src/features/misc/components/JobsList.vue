@@ -18,7 +18,7 @@ const columns = [
     width: '12%'
   }, {
     label: 'Product',
-    key: 'product.name'
+    key: 'productName'
   }, {
     label: 'Qty',
     key: 'qty'
@@ -35,22 +35,21 @@ const columns = [
 ]
 
 const computedData = computed(() => {
-  return props.data.map(productionJob => {
+  return props.data.map(job => {
     let actions = ['Add record', 'Edit', 'Close']
 
-    if (productionJob.status === 'OPEN') {
+    if (job.status === 'OPEN') {
       actions = ['Add record', 'Edit']
     }
 
-    if (productionJob.status === 'CLOSED') {
+    if (job.status === 'CLOSED') {
       actions = ['Add record']
     }
 
-    const { output, reject, rework, adjustment } = productionJob.operation.summary
-    const qty = `${output + reject + rework + adjustment}/${productionJob.qtyExpected}`
+    const qty = `${job.qtyProduced.toLocaleString()}/${job.qtyExpected.toLocaleString()}`
 
     return {
-      ...productionJob,
+      ...job,
       actions,
       qty
     }

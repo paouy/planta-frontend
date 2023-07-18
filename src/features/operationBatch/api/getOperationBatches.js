@@ -1,8 +1,8 @@
 import axios from '../../../lib/axios.js'
 
-const getProductionOrders = async () => {
+const getOperationBatches = async () => {
   try {
-    const { data } = await axios.get('/v1/production-orders')
+    const { data } = await axios.get('/v1/operation-batches')
 
     return data
   } catch (error) {
@@ -10,4 +10,4 @@ const getProductionOrders = async () => {
   }
 }
 
-export default getProductionOrders
+export default getOperationBatches

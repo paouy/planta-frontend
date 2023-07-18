@@ -3,7 +3,7 @@ import { ref, readonly } from 'vue'
 const operations = ref([])
 
 const sortOperations = () => {
-  operations.value.sort((a, b) => a.position - b.position)
+  operations.value.sort((a, b) => a.seq - b.seq)
 }
 
 export const useOperationStore = () => {

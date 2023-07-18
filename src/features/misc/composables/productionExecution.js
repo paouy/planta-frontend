@@ -3,97 +3,128 @@ import { ref, computed } from 'vue'
 const operation = ref({
   id: '',
   name: '',
-  type: ''
+  isBatch: null
 })
 const workstation = ref(null)
-const showAllProductionJobs = ref(false)
-const productionJobs = ref([])
-const productionBatches = ref([])
+const showAllJobs = ref(false)
+const productionOrders = ref([])
+const operationBatches = ref([])
 
-const showAllProductionJobsFilterFn = (job, index) => {
-  if (showAllProductionJobs.value || job.seq === 1) {
+const jobs = computed(() => {
+  return productionOrders.value.flatMap(order => order.operations.map((operation, index) => {
+    let qtyExpected = order.qty
+
+    if (index > 0) {
+      const { output, reject, rework, adjustment } = order.operations[index - 1].tally
+
+      qtyExpected = output + reject + rework + adjustment
+    }
+
+    const { output, reject, rework, adjustment } = operation.tally
+    const qtyProduced = output + reject + rework + adjustment
+
+    const job = {
+      productionOrder: {
+        id: order.id,
+        friendlyId: order.friendlyId
+      },
+      seq: parseFloat(index + 1),
+      status: operation.status,
+      operation: {
+        id: operation.id,
+        name: operation.name
+      },
+      workstation: operation.workstation,
+      operationBatchId: null,
+      productName: order.product.name,
+      qtyExpected,
+      qtyProduced
+    }
+
+    return job
+  }))
+})
+
+const showAllJobsFilterFn = (job, index) => {
+  if (showAllJobs.value || job.seq === 1) {
     return true
   }
   
-  const { status, productionOrder } = productionJobs.value[index - 1]
-  return status !== 'OPEN' && productionOrder.id === job.productionOrder.id
+  const { productionOrder, status } = jobs.value[index - 1]
+  return productionOrder.id === job.productionOrder.id && status !== 'OPEN'
 }
 
-const unassignedProductionJobs = computed(() => {
-  return productionJobs.value.filter((job, index) =>
+const unassignedJobs = computed(() => {
+  return jobs.value.filter((job, index) =>
     job.operation.id === operation.value.id &&
     !job.workstation &&
-    !job.productionBatchId &&
-    showAllProductionJobsFilterFn(job, index)
+    !job.operationBatchId &&
+    showAllJobsFilterFn(job, index)
   )
 })
 
-const currentProductionJobs = computed(() => {
-  return productionJobs.value.filter((job, index) =>
+const currentJobs = computed(() => {
+  return jobs.value.filter((job, index) =>
     job.operation.id === operation.value.id &&
     !!job.workstation &&
     (workstation.value ? job.workstation.id === workstation.value.id : true) &&
-    showAllProductionJobsFilterFn(job, index)
+    showAllJobsFilterFn(job, index)
   )
 })
 
-const currentProductionBatches = computed(() => {
-  return productionBatches.value.filter(batch =>
+const currentOperationBatches = computed(() => {
+  return operationBatches.value.filter(batch =>
     batch.operation.id === operation.value.id &&
     (workstation.value ? batch.workstation.id === workstation.value.id : true)
   )
 })
 
 export const useProductionExecution = () => {
-  const updateProductionJob = (productionJob) => {
-    const productionJobIndex = productionJobs.value
-      .findIndex(({ id }) => id === productionJob.id)
-  
-    Object.assign(productionJobs.value[productionJobIndex], productionJob)
-  
-    if (productionJob.productionBatchId) {
-      const productionBatchIndex = productionBatches.value
-        .findIndex(({ id }) => id === productionJob.productionBatchId)
-      
-      productionBatches.value[productionBatchIndex].count++
+  const updateJob = (job) => {
+    console.log(JSON.stringify(job, null, 2))
+    const productionOrder = productionOrders.value.find(({ id }) => job.productionOrderId === id)
+    const operation = productionOrder.operations.find(({ id }) => job.operationId === id)
+
+    if (job.workstation) {
+      operation.workstation = job.workstation
+    }
+
+    if (job.operationBatchId) {
+      operation.operationBatchId = job.operationBatchId
     }
   }
   
   const addProductionRecord = (productionRecord) => {
-    const { productionJobId, type, qty, newProductionJobStatus } = productionRecord
-    const productionJobIndex = productionJobs.value
-      .findIndex(({ id }) => id === productionJobId)
-  
-    productionJobs.value[productionJobIndex].operation.summary[type.toLowerCase()] += qty
-    productionJobs.value[productionJobIndex].status = newProductionJobStatus
-  
-    for (let index = 1; index < productionJobs.value.length; index++) {
-      const previousProductionJob = productionJobs.value[index - 1]
-      const currentProductionJob = productionJobs.value[index]
-  
-      if (previousProductionJob.productionOrder.id === currentProductionJob.productionOrder.id) {
-        productionJobs.value[index].qtyExpected =
-          previousProductionJob.qtyExpected + previousProductionJob.operation.summary.shortfall
-      } else {
-        break
-      }
-    }
+    const productionOrder = productionOrders.value.find(({ id }) => productionRecord.productionOrderId === id)
+    const operation = productionOrder.operations.find(({ id }) => productionRecord.operationId === id)
+
+    operation.tally[productionRecord.type.toLowerCase()] += productionRecord.qty
+    operation.timeTakenMins += productionRecord.timeTakenMins
+
+    const job = currentJobs.value.find(job =>
+      productionRecord.productionOrderId === job.productionOrder.id &&
+      productionOrder.operationId === job.operationId
+    )
+
+    operation.status = job.qtyProduced >= job.qtyExpected || productionRecord.type === 'SHORTFALL'
+      ? 'CLOSED'
+      : 'IN_PROGRESS'
   }
 
-  const initialize = ({ jobs, batches }) => {
-    productionJobs.value = jobs
-    productionBatches.value = batches
+  const initialize = ({ orders, batches }) => {
+    productionOrders.value = orders
+    operationBatches.value = batches
   }
 
   return {
     operation,
     workstation,
-    showAllProductionJobs,
-    unassignedProductionJobs,
-    productionJobs: currentProductionJobs,
-    productionBatches: currentProductionBatches,
+    showAllJobs,
+    unassignedJobs,
+    jobs: currentJobs,
+    operationBatches: currentOperationBatches,
     initialize,
-    updateProductionJob,
+    updateJob,
     addProductionRecord
   }
 }

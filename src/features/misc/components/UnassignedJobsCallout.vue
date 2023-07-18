@@ -19,7 +19,7 @@ const heading = computed(() => {
 })
 const description = computed(() => {
   const label = props.count > 1 ? 'jobs' : 'job'
-  const assignment = props.operation.type === 'JOB' ? 'workstation' : 'batch'
+  const assignment = props.operation.isBatch ? 'batch' : 'workstation'
 
   return `You need to assign ${props.count} ${label} to a ${assignment}.`
 })

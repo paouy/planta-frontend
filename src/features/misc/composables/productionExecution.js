@@ -36,6 +36,7 @@ const jobs = computed(() => {
       },
       workstation: operation.workstation,
       productName: order.product.name,
+      timeEstimatedMins: operation.timeEstimatedMins,
       qtyExpected,
       qtyProduced
     }

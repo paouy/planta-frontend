@@ -20,7 +20,7 @@ const columns = [
     key: 'schedule'
   }, {
     label: 'Job Count',
-    key: 'count'
+    key: 'jobCount'
   }, {
     label: 'Status',
     key: 'status'
@@ -40,7 +40,7 @@ const columns = [
     @item-action="$event => emit('action', $event)"
   >
     <template #action>
-      <CfFilledButton>
+      <CfFilledButton @click="emit('action', { action: 'CREATE' })">
         Add batch
       </CfFilledButton>
     </template>

@@ -32,13 +32,16 @@ const jobs = computed(() => {
       status: operation.status,
       operation: {
         id: operation.id,
-        name: operation.name
+        name: operation.name,
       },
       workstation: operation.workstation,
-      operationBatchId: null,
       productName: order.product.name,
       qtyExpected,
       qtyProduced
+    }
+
+    if (operation.batch) {
+      job.operation.batch = operation.batch
     }
 
     return job
@@ -58,7 +61,7 @@ const unassignedJobs = computed(() => {
   return jobs.value.filter((job, index) =>
     job.operation.id === operation.value.id &&
     !job.workstation &&
-    !job.operationBatchId &&
+    !job.operation.batch &&
     showAllJobsFilterFn(job, index)
   )
 })
@@ -90,7 +93,11 @@ export const useProductionExecution = () => {
     }
 
     if (job.operationBatchId) {
-      operation.operationBatchId = job.operationBatchId
+      operation.batchId = job.operationBatchId
+
+      const operationBatch = operationBatches.value.find(({ id }) => job.operationBatchId === id)
+
+      operationBatch.jobCount++
     }
   }
   
@@ -111,6 +118,10 @@ export const useProductionExecution = () => {
       : 'IN_PROGRESS'
   }
 
+  const addOperationBatch = (operationBatch) => {
+    operationBatches.value.push(operationBatch)
+  }
+
   const initialize = ({ orders, batches }) => {
     productionOrders.value = orders
     operationBatches.value = batches
@@ -125,6 +136,7 @@ export const useProductionExecution = () => {
     operationBatches: currentOperationBatches,
     initialize,
     updateJob,
-    addProductionRecord
+    addProductionRecord,
+    addOperationBatch
   }
 }

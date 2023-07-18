@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { addProductionOrderWorkstation } from '../../productionOrder/api/index.js'
+import { addOperationBatchJob } from '../../operationBatchJob/api/index.js'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 
@@ -52,10 +53,15 @@ const onSubmit = async () => {
     isLoading.value = true
 
     if (props.operation.isBatch) {
-      // Implement
-    } else {
-      await addProductionOrderWorkstation(assignment.value)
+      const { workstation } = props.operationBatches
+        .find(({ id }) => id === assignment.value.operationBatchId)
+
+      assignment.value.workstation = workstation
+
+      await addOperationBatchJob(assignment.value)
     }
+
+    await addProductionOrderWorkstation(assignment.value)
 
     await emit('success', assignment.value)
 

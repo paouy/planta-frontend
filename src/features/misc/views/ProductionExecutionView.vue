@@ -11,9 +11,10 @@ import UnassignedJobsCallout from '../components/UnassignedJobsCallout.vue'
 import JobsList from '../components/JobsList.vue'
 import AssignJob from '../components/AssignJob.vue'
 import UpdateJob from '../components/UpdateJob.vue'
-import OperationBatchesList from '../../operationBatch/components/OperationBatchesList.vue'
 import AddProductionRecord from '../../productionRecord/components/AddProductionRecord.vue'
 import AddShortfallProductionRecord from '../../productionRecord/components/AddShortfallProductionRecord.vue'
+import OperationBatchesList from '../../operationBatch/components/OperationBatchesList.vue'
+import AddOperationBatch from '../../operationBatch/components/AddOperationBatch.vue'
 
 const router = useRouter()
 
@@ -131,5 +132,12 @@ onMounted(async () => {
     @success="productionExecution.addProductionRecord"
     @cancel="jobAction = null"
     v-if="jobAction === 'CLOSE'"
+  />
+
+  <AddOperationBatch
+    :operation="operation"
+    @success="productionExecution.addOperationBatch"
+    @cancel="operationBatchAction = null"
+    v-if="operationBatchAction === 'CREATE'"
   />
 </template>

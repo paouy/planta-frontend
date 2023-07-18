@@ -44,8 +44,8 @@ const data = computed(() => {
     const { results } = useFuse(searchText, props.data, {
       fuseOptions: {
         keys: props.columns.map(({ key }) => key),
-        minMatchCharLength: 3,
-        threshold: 0.2
+        minMatchCharLength: 2,
+        threshold: 0.15
       },
       matchAllWhenSearchEmpty: true
     })

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { toSlug } from '../../../helpers/index.js'
 import { useProductionExecution } from '../composables/productionExecution.js'
 import { useOperationStore } from '../../operation/store.js'
 import { getProductionOrders } from '../../productionOrder/api/index.js'
@@ -35,8 +36,6 @@ const jobAction = ref(null)
 const job = ref(null)
 const operationBatchAction = ref(null)
 const operationBatch = ref(null)
-
-const toSlug = (string) => string.toLowerCase().replaceAll(' ', '-')
 
 const onJobAction = ({ action, item }) => {
   jobAction.value = action

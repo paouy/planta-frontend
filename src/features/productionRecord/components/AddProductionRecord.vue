@@ -40,14 +40,7 @@ const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    const fixedProductionRecord = {
-      ...productionRecord.value,
-      qty: productionRecord.value.type === 'REJECT'
-        ? productionRecord.value.qty * -1
-        : productionRecord.value.qty
-    }
-
-    const addedProductionRecord = await addProductionRecord(fixedProductionRecord)
+    const addedProductionRecord = await addProductionRecord(productionRecord.value)
 
     emit('success', addedProductionRecord)
     emit('cancel')

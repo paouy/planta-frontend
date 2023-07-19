@@ -35,10 +35,12 @@ const jobOptions = computed(() => {
 })
 
 const operationBatchesOptions = computed(() => {
-  return props.operationBatches.map(batch => ({
-    label: `${batch.friendlyId} — ${batch.schedule}`,
-    value: batch.id
-  }))
+  return props.operationBatches
+    .filter(({ status }) => status === 'OPEN')
+    .map(batch => ({
+      label: `${batch.friendlyId} — ${batch.schedule}`,
+      value: batch.id
+    }))
 })
 
 const dialogTitle = computed(() => {

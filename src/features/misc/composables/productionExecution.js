@@ -22,6 +22,7 @@ const jobs = computed(() => {
 
     const { output, rework, adjustment } = operation.tally
     const qtyProduced = output + rework + adjustment
+    const isLastSeq = index === order.operations.length - 1
 
     const job = {
       productionOrder: {
@@ -38,7 +39,8 @@ const jobs = computed(() => {
       productName: order.product.name,
       timeEstimatedMins: operation.timeEstimatedMins,
       qtyExpected,
-      qtyProduced
+      qtyProduced,
+      isLastSeq
     }
 
     if (operation.batch) {

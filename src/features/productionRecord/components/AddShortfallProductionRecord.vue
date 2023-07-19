@@ -22,7 +22,7 @@ const onClick = async () => {
       productionOrderId: props.job.productionOrder.id,
       operationId: props.job.operation.id,
       type: 'SHORTFALL',
-      qty: shortfallQty.value * -1
+      qty: shortfallQty.value
     })
 
     emit('success', addedProductionRecord)

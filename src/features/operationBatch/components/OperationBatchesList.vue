@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { CfDataTable, CfFilledButton } from '../../../components/index.js'
 
 const emit = defineEmits(['action'])
@@ -29,14 +30,38 @@ const columns = [
     key: 'workstation.name'
   }
 ]
+
+const computedData = computed(() => {
+  return props.data.map(batch => {
+    let actions = ['Add report', 'View', 'Remove']
+
+    if (batch.status === 'OPEN') {
+      actions = ['Start', 'View', 'Remove']
+
+      if (!batch.jobCount) {
+        actions = ['Remove']
+      }
+    }
+
+    if (batch.status === 'CLOSED') {
+      actions = ['Archive']
+    }
+
+    return {
+      ...batch,
+      actions
+    }
+  })
+})
 </script>
 
 <template>
   <CfDataTable
     :columns="columns"
-    :data="props.data"
+    :data="computedData"
     searchable
-    :item-actions="['Add report', 'View', 'Remove']"
+    item-actions
+    force-item-actions-menu
     @item-action="$event => emit('action', $event)"
   >
     <template #action>

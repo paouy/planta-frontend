@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { addProductionOrderWorkstation, removeProductionOrderWorkstation } from '../../productionOrder/api/index.js'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 
@@ -8,35 +9,28 @@ const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
-const productionJob = ref({
-  id: props.data.id,
-  workstation: props.data.workstation,
-  timeEstimatedMins: props.data.timeEstimatedMins
+const reassignment = ref({
+  productionOrderId: props.data.productionOrder.id,
+  workstation: props.data.workstation
 })
 
 const dialogTitle = computed(() => {
   const normalizedOperation = props.data.operation.name.toLowerCase()
 
-  return `Update ${normalizedOperation} job`
-})
-
-const normalizedProductionJob = computed(() => {
-  return `${props.data.productionOrder.friendlyId} — ${props.data.product.name}`
+  return `Reassign ${normalizedOperation} job to a workstation`
 })
 
 const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    const updatedProductionJob = { ...productionJob.value }
+    await removeProductionOrderWorkstation({
+      productionOrderId: props.data.productionOrder.id,
+      workstation: props.data.workstation
+    })
+    await addProductionOrderWorkstation(reassignment.value)
 
-    if (updatedProductionJob.timeEstimatedMins === props.data.timeEstimatedMins) {
-      updatedProductionJob.timeEstimatedMins = null
-    }
-
-    // await updateProductionJob(updatedProductionJob)
-
-    emit('success', productionJob.value)
+    emit('success', reassignment.value)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -49,24 +43,16 @@ const onSubmit = async () => {
 <template>
   <CfDialog :title="dialogTitle" @close="emit('cancel')">
     <template #body>
-      <form id="updateProductionJob" @submit.prevent="onSubmit">
+      <form id="reassignProductionJobs" @submit.prevent="onSubmit">
         <CfField
           label="Job"
+          :value="`${data.productionOrder.friendlyId} — ${data.productName}`"
           type="text"
-          :value="normalizedProductionJob"
           disabled
         />
         <WorkstationSelect
-          v-model="productionJob.workstation"
+          v-model="reassignment.workstation"
           :operation-id="props.data.operation.id"
-          required
-        />
-        <CfField
-          v-model.number="productionJob.timeEstimatedMins"
-          label="Estimated time"
-          type="number"
-          suffix="mins"
-          step="any"
           required
         />
       </form>
@@ -74,8 +60,9 @@ const onSubmit = async () => {
     <template #footer>
       <CfFilledButton
         type="submit"
-        form="updateProductionJob"
+        form="reassignProductionJobs"
         :loading="isLoading"
+        :disabled="props.data.workstation.id === reassignment.workstation.id"
       >Save</CfFilledButton>
       <CfFilledButton
         color="gray"
@@ -87,7 +74,7 @@ const onSubmit = async () => {
 </template>
 
 <style lang="scss">
-#updateProductionJob {
+#reassignProductionJobs {
   display: grid;
   gap: 1rem;
 }

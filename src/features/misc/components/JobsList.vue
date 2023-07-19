@@ -35,15 +35,19 @@ const columns = [
 ]
 
 const computedData = computed(() => {
-  return props.data.map(job => {
-    let actions = ['Add record', 'Edit', 'Close']
+  return props.data.map((job, index) => {
+    let actions = ['Add record', 'Reassign', 'Close']
 
     if (job.status === 'OPEN') {
-      actions = ['Add record', 'Edit']
+      actions = ['Add record', 'Reassign']
     }
 
     if (job.status === 'CLOSED') {
       actions = ['Add record']
+
+      if (props.data[index + 1]?.status !==' OPEN' && !job.isLastSeq) {
+        actions = false
+      }
     }
 
     const qty = `${job.qtyProduced.toLocaleString()}/${job.qtyExpected.toLocaleString()}`

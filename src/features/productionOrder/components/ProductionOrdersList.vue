@@ -18,8 +18,11 @@ const columns = [
     label: 'Product',
     key: 'product.name'
   }, {
-    label: 'Qty',
+    label: 'Expected',
     key: 'qty'
+  }, {
+    label: 'Produced',
+    key: 'qtyProduced'
   }, {
     label: 'Status',
     key: 'status'
@@ -46,6 +49,7 @@ const columns = [
       <td>{{ item.friendlyId }}</td>
       <td>{{ item.product.name }}</td>
       <td>{{ `${item.qty} ${item.product.uom}` }}</td>
+      <td>{{ `${item.qtyProduced} ${item.product.uom}` }}</td>
       <td>{{ item.status }}</td>
       <td>{{ item.dueDate }}</td>
     </template>

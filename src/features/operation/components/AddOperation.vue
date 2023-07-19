@@ -1,21 +1,19 @@
 <script setup>
 import { ref } from 'vue'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfField, CfSwitch, CfFilledButton } from '../../../components/index.js'
 import { addOperation } from '../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
-const operationTypeOptions = [
-  { label: 'Job', value: 'JOB' },
-  { label: 'Batch', value: 'BATCH' }
-]
+const props = defineProps({ lastSeq: Number })
 
 const isLoading = ref(false)
 const operation = ref({
   name: '',
-  position: null,
-  type: '',
-  cycleTimeMins: null,
+  seq: props.lastSeq + 1,
+  timePerCycleMins: null,
+  allowsRework: true,
+  isBatch: false,
   batchSizeParameter: null
 })
 
@@ -46,32 +44,27 @@ const onSubmit = async () => {
           required
         />
         <CfField
-          v-model.number="operation.position"
-          label="Position"
-          type="number"
-          required
-        />
-        <CfField
-          v-model.number="operation.cycleTimeMins"
+          v-model.number="operation.timePerCycleMins"
           label="Cycle time"
           type="number"
           suffix="mins"
           step="any"
           required
         />
-        <CfField
-          v-model="operation.type"
-          label="Type"
-          type="select"
-          :options="operationTypeOptions"
-          required
+        <CfSwitch
+          v-model="operation.allowsRework"
+          label="Allow rework"
+        />
+        <CfSwitch
+          v-model="operation.isBatch"
+          label="Run by batch"
         />
         <CfField
           v-model="operation.batchSizeParameter"
           label="Batch size parameter"
           type="text"
           required
-          v-if="operation.type === 'BATCH'"
+          v-if="operation.isBatch"
         />
       </form>
     </template>

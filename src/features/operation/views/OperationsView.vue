@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useOperationStore } from '../store.js'
 import { useMiscStore } from '../../misc/store.js'
-import { getOperations } from '../api/index.js'
+import { getOperations, updateOperation } from '../api/index.js'
 import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
 import OperationsList from '../components/OperationsList.vue'
 import AddOperation from '../components/AddOperation.vue'
@@ -29,6 +29,24 @@ const operation = ref(null)
 const currentAction = ref(null)
 
 const onOperationsListAction = ({ action, item }) => {
+  if (action === 'MOVE_UP') {
+    const { id, seq } = operations.value[item.index - 1]
+
+    updateOperation({ id, seq: seq + 1})
+    updateOperation({ id: item.id, seq: item.seq - 1 })
+    
+    return operationStore.moveUp(item.index)
+  }
+
+  if (action === 'MOVE_DOWN') {
+    const { id, seq } = operations.value[item.index + 1]
+    
+    updateOperation({ id, seq: seq - 1})
+    updateOperation({ id: item.id, seq: item.seq + 1 })
+
+    return operationStore.moveDown(item.index)
+  }
+
   currentAction.value = action
   operation.value = item
 }
@@ -49,6 +67,7 @@ const onOperationsListAction = ({ action, item }) => {
       @action="onOperationsListAction"
     />
     <AddOperation
+      :last-seq="operations[operations.length - 1].seq"
       @success="operationStore.add"
       @cancel="currentAction = null"
       v-if="currentAction === 'ADD'"

@@ -16,7 +16,7 @@ const { operations } = useOperationStore()
 
 const choices = computed(() => {
   return operations.value
-    .map(({ id, name }) => ({ label: name, value: { id, name } }))
+    .map(({ id, name, seq }) => ({ label: name, value: { id, name }, seq }))
 })
 
 const computedValue = computed({
@@ -24,7 +24,7 @@ const computedValue = computed({
     return props.modelValue
   },
   set(value) {
-    emit('update:modelValue', value)
+    emit('update:modelValue', value.sort((a, b) => a.seq - b.seq))
   }
 })
 </script>

@@ -29,11 +29,47 @@ export const useOperationStore = () => {
     sortOperations()
   }
 
+  const moveUp = (index) => {
+    if (index <= 0 || index >= operations.value.length) {
+      return false
+    }
+
+    operations.value[index].seq--
+    operations.value[index - 1].seq++
+
+    [
+      operations.value[index],
+      operations.value[index - 1]
+    ] = [
+      operations.value[index - 1],
+      operations.value[index]
+    ]
+  }
+  
+  const moveDown = (index) => {
+    if (index < 0 || index >= operations.value.length - 1) {
+      return false
+    }
+
+    operations.value[index].seq++
+    operations.value[index + 1].seq--
+  
+    [
+      operations.value[index],
+      operations.value[index + 1]
+    ] = [
+      operations.value[index + 1],
+      operations.value[index]
+    ]
+  }
+
   return {
     operations: readonly(operations),
     set,
     add,
     remove,
-    update
+    update,
+    moveUp,
+    moveDown
   }
 }

@@ -9,7 +9,7 @@ import EquipmentsView from '../features/equipment/views/EquipmentsView.vue'
 import CollectionsView from '../features/collection/views/CollectionsView.vue'
 import ProductionOrdersView from '../features/productionOrder/views/ProductionOrdersView.vue'
 import ProductionExecutionView from '../features/misc/views/ProductionExecutionView.vue'
-import AddOperationBatchReport from '../features/operationBatch/views/AddOperationBatchReport.vue'
+import AddOperationBatchReportView from '../features/operationBatch/views/AddOperationBatchReportView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,7 +33,7 @@ const router = createRouter({
             }, {
               path: ':operationSlug/:operationBatchId/add-report',
               name: 'AddOperationBatchReport',
-              component: AddOperationBatchReport,
+              component: AddOperationBatchReportView,
               props: true
             }
           ]

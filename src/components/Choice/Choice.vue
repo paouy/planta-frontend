@@ -15,7 +15,7 @@ const props = defineProps({
     default: false
   },
   type: String,
-  label: String,
+  label: [String, Boolean],
   helper: String,
   disabled: Boolean
 })
@@ -50,7 +50,7 @@ const computedValue = computed({
       :required="choiceList.required"
       :disabled="props.disabled"
     >
-    <label :for="id">
+    <label :for="id" v-if="label">
       {{ props.label || props.value }}
     </label>
     <small v-if="props.helper">

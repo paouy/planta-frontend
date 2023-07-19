@@ -20,8 +20,8 @@ const jobs = computed(() => {
       qtyExpected = output + rework + adjustment
     }
 
-    const { output, rework, adjustment } = operation.tally
-    const qtyProduced = output + rework + adjustment
+    const { output, rework, adjustment, reject } = operation.tally
+    const qtyProduced = output + rework + adjustment - reject
     const isLastSeq = index === order.operations.length - 1
 
     const job = {

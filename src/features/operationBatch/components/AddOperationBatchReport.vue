@@ -87,7 +87,8 @@ watchEffect(() => {
   <form class="addOperationBatchReport" @submit.prevent="onSubmit">
     <table>
       <colgroup>
-        <col v-for="n in 5">
+        <col v-for="n in 4">
+        <col v-if="props.operationBatch.operation.allowsRework">
       </colgroup>
       <thead>
         <tr>
@@ -95,7 +96,7 @@ watchEffect(() => {
           <th>Product</th>
           <th>Output</th>
           <th>Reject</th>
-          <th></th>
+          <th v-if="props.operationBatch.operation.allowsRework"></th>
         </tr>
       </thead>
       <tbody>
@@ -135,7 +136,7 @@ watchEffect(() => {
               required
             />
           </td>
-          <td>
+          <td v-if="props.operationBatch.operation.allowsRework">
             <CfSwitch
               label="Rework"
               v-model="pseudoRecords[index].requiresRework"
@@ -153,7 +154,9 @@ watchEffect(() => {
       <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
         Cancel
       </CfFilledButton>
-      <p>Adding a report will close the batch, while incomplete jobs will be available for assignment.</p>
+      <p>{{ `Adding a report will close the batch${props.operationBatch.operation.allowsRework
+          ? ', while incomplete jobs will be available for assignment'
+          : ' and its jobs'}.` }}</p>
     </footer>
   </form>
 </template>

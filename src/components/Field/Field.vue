@@ -14,6 +14,8 @@ const props = defineProps({
   options: Array,
   list: String,
   step: [Number, String],
+  max: [Number, String],
+  min: [Number, String],
   helper: String,
   disabled: Boolean,
   required: Boolean
@@ -66,6 +68,8 @@ const computedValue = computed({
       :placeholder="props.placeholder"
       :step="props.step"
       :list="props.list"
+      :max="props.max"
+      :min="props.min"
       :required="props.required"
       :disabled="props.disabled"
       v-else

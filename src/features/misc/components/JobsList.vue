@@ -50,6 +50,10 @@ const computedData = computed(() => {
       }
     }
 
+    if (job.operation.batch) {
+      actions = false
+    }
+
     const qty = `${job.qtyProduced.toLocaleString()}/${job.qtyExpected.toLocaleString()}`
 
     return {

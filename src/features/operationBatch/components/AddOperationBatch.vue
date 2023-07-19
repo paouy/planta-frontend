@@ -18,7 +18,7 @@ const operationBatch = ref({
   schedule: null
 })
 
-const dialogTitle = computed(() => `Add ${props.operation.name.toLowerCase()} record`)
+const dialogTitle = computed(() => `Add ${props.operation.name.toLowerCase()} batch`)
 
 const onSubmit = async () => {
   try {

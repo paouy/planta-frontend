@@ -20,8 +20,8 @@ const jobs = computed(() => {
       qtyExpected = output + rework + adjustment
     }
 
-    const { output, rework, adjustment, reject } = operation.tally
-    const qtyProduced = output + rework + adjustment - reject
+    const { output, rework, adjustment } = operation.tally
+    const qtyProduced = output + rework + adjustment
     const isLastSeq = index === order.operations.length - 1
 
     const job = {
@@ -125,6 +125,11 @@ export const useProductionExecution = () => {
     operationBatches.value.push(operationBatch)
   }
 
+  const startOperationBatch = ({ id }) => {
+    const operationBatch = operationBatches.value.find(batch => id === batch.id)
+    operationBatch.status = 'IN_PROGRESS'
+  }
+
   const initialize = ({ orders, batches }) => {
     productionOrders.value = orders
     operationBatches.value = batches
@@ -140,6 +145,7 @@ export const useProductionExecution = () => {
     initialize,
     updateJob,
     addProductionRecord,
-    addOperationBatch
+    addOperationBatch,
+    startOperationBatch
   }
 }

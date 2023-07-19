@@ -1,19 +1,21 @@
 <script setup>
 import { computed } from 'vue'
-import { CfSwitch } from '../../../components/index.js'
+import { CfField, CfSwitch } from '../../../components/index.js'
 import OperationSelect from '../../operation/components/OperationSelect.vue'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 
 const emit = defineEmits([
   'update:operation',
   'update:workstation',
-  'update:showAll'
+  'update:showAll',
+  'update:listType'
 ])
 
 const props = defineProps({
   operation: Object,
   workstation: Object,
-  showAll: Boolean
+  showAll: Boolean,
+  listType: String
 })
 
 const operation = computed({
@@ -30,6 +32,11 @@ const showAll = computed({
   get: () => props.showAll,
   set: (value) => emit('update:showAll', value)
 })
+
+const listType = computed({
+  get: () => props.listType,
+  set: (value) => emit('update:listType', value)
+})
 </script>
 
 <template>
@@ -38,6 +45,14 @@ const showAll = computed({
       v-model="operation"
       :keys="['id', 'name', 'isBatch']"
       @input="workstation = null"
+    />
+    <CfField
+      v-model="listType"
+      label="Display"
+      type="select"
+      :options="[{ label: 'Batches', value: 'BATCH' }, { label: 'Jobs', value: 'JOB' }]"
+      required
+      v-if="operation.isBatch"
     />
     <WorkstationSelect
       v-model="workstation"

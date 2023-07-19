@@ -16,6 +16,7 @@ import AddProductionRecord from '../../productionRecord/components/AddProduction
 import AddShortfallProductionRecord from '../../productionRecord/components/AddShortfallProductionRecord.vue'
 import OperationBatchesList from '../../operationBatch/components/OperationBatchesList.vue'
 import AddOperationBatch from '../../operationBatch/components/AddOperationBatch.vue'
+import StartOperationBatch from '../../operationBatch/components/StartOperationBatch.vue'
 
 const router = useRouter()
 
@@ -31,6 +32,7 @@ const {
 
 const props = defineProps({ operationSlug: String })
 
+const listType = ref('BATCH')
 const showAssignJob = ref(false)
 const jobAction = ref(null)
 const job = ref(null)
@@ -84,6 +86,7 @@ onMounted(async () => {
       v-model:operation="operation"
       v-model:workstation="workstation"
       v-model:showAll="showAllJobs"
+      v-model:listType="listType"
     />
     <UnassignedJobsCallout
       :operation="operation"
@@ -94,7 +97,7 @@ onMounted(async () => {
     <JobsList
       :data="jobs"
       @action="onJobAction"
-      v-if="!operation.isBatch"
+      v-if="!operation.isBatch || listType === 'JOB'"
     />
     <OperationBatchesList
       :data="operationBatches"
@@ -138,5 +141,12 @@ onMounted(async () => {
     @success="productionExecution.addOperationBatch"
     @cancel="operationBatchAction = null"
     v-if="operationBatchAction === 'CREATE'"
+  />
+
+  <StartOperationBatch
+    :data="operationBatch"
+    @success="productionExecution.startOperationBatch"
+    @cancel="operationBatchAction = null"
+    v-if="operationBatchAction === 'START'"
   />
 </template>

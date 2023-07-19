@@ -15,13 +15,13 @@ const jobs = computed(() => {
     let qtyExpected = order.qty
 
     if (index > 0) {
-      const { output, reject, rework, adjustment } = order.operations[index - 1].tally
+      const { output, rework, adjustment } = order.operations[index - 1].tally
 
-      qtyExpected = output + reject + rework + adjustment
+      qtyExpected = output + rework + adjustment
     }
 
-    const { output, reject, rework, adjustment } = operation.tally
-    const qtyProduced = output + reject + rework + adjustment
+    const { output, rework, adjustment } = operation.tally
+    const qtyProduced = output + rework + adjustment
 
     const job = {
       productionOrder: {

@@ -37,30 +37,30 @@ const computedData = computed(() => {
   const isNotAlone = props.data.length > 1
 
   return props.data.map((order, index) => {
-    const positionActions = []
-    const actions = ['View']
+    const commonActions = ['View']
+    const priorityActions = []
 
     if (isNotAlone) {
       if (index > 0) {
-        positionActions.push('Move up')
+        priorityActions.push('Move up')
       }
       
       if (index < props.data.length - 1) {
-        positionActions.push('Move down')
+        priorityActions.push('Move down')
       }
     }
 
     if (order.status === 'OPEN') {
-      actions.push('Remove')
+      commonActions.push('Remove')
     }
 
     if (order.status === 'CLOSED') {
-      actions.push('Archive')
+      commonActions.push('Archive')
     }
 
     return {
       ...order,
-      actions: [...actions, ...positionActions]
+      actions: [...commonActions, ...priorityActions]
     }
   })
 })
@@ -74,7 +74,8 @@ const computedData = computed(() => {
     default-sort-key="seq"
     :columns="columns"
     :data="computedData"
-    :item-actions="['View', 'Move up', 'Move down']"
+    item-actions
+    force-item-actions-menu
     @item-action="$event => emit('action', $event)"
   >
     <template v-slot="{item}">

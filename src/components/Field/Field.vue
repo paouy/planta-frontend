@@ -49,7 +49,7 @@ const computedValue = computed({
         :key="option.value || option"
         :value="option.value || option"
       >
-        {{ option.label || option}}
+        {{ option.label || option }}
       </option>
     </select>
 

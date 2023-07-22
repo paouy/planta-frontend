@@ -138,6 +138,10 @@ export const useProductionExecution = () => {
     })
   }
 
+  const removeOperationBatch = ({ id }) => {
+    operationBatches.value = operationBatches.value.filter(batch => id !== batch.id)
+  }
+
   const initialize = ({ orders, batches }) => {
     productionOrders.value = orders
     operationBatches.value = batches
@@ -154,6 +158,7 @@ export const useProductionExecution = () => {
     updateJob,
     addProductionRecord,
     addOperationBatch,
-    startOperationBatch
+    startOperationBatch,
+    removeOperationBatch
   }
 }

@@ -17,6 +17,7 @@ import AddShortfallProductionRecord from '../../productionRecord/components/AddS
 import OperationBatchesList from '../../operationBatch/components/OperationBatchesList.vue'
 import AddOperationBatch from '../../operationBatch/components/AddOperationBatch.vue'
 import StartOperationBatch from '../../operationBatch/components/StartOperationBatch.vue'
+import RemoveOperationBatch from '../../operationBatch/components/RemoveOperationBatch.vue'
 
 const router = useRouter()
 
@@ -148,5 +149,12 @@ onMounted(async () => {
     @success="productionExecution.startOperationBatch"
     @cancel="operationBatchAction = null"
     v-if="operationBatchAction === 'START'"
+  />
+
+  <RemoveOperationBatch
+    :data="operationBatch"
+    @success="productionExecution.removeOperationBatch"
+    @cancel="operationBatchAction = null"
+    v-if="operationBatchAction === 'REMOVE'"
   />
 </template>

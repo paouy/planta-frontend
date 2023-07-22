@@ -10,7 +10,7 @@ const summary = computed(() => {
     return count
   }, {})
 
-  const allStatuses = ['OPEN', 'IN_PROGRESS', 'PAUSED', 'BLOCKED']
+  const allStatuses = ['OPEN', 'IN_PROGRESS', 'PAUSED', 'CLOSED']
 
   allStatuses.forEach(status => {
     summary[status] = summary[status] || 0
@@ -38,8 +38,8 @@ const summary = computed(() => {
         <div>{{ summary['PAUSED'] }}</div>
       </li>
       <li>
-        <span>Blocked</span>
-        <div>{{ summary['BLOCKED'] }}</div>
+        <span>Closed</span>
+        <div>{{ summary['CLOSED'] }}</div>
       </li>
     </ul>
   </div>

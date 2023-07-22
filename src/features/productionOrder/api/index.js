@@ -5,6 +5,7 @@ import getProductionOrders from './getProductionOrders.js'
 import getProductionOrdersByOperationBatch from './getProductionOrdersByOperationBatch.js'
 import removeProductionOrder from './removeProductionOrder.js'
 import removeProductionOrderWorkstation from './removeProductionOrderWorkstation.js'
+import replaceProductionOrderWorkstation from './replaceProductionOrderWorkstation.js'
 import updateProductionOrder from './updateProductionOrder.js'
 
 export {
@@ -15,5 +16,6 @@ export {
   getProductionOrdersByOperationBatch,
   removeProductionOrder,
   removeProductionOrderWorkstation,
+  replaceProductionOrderWorkstation,
   updateProductionOrder
 }

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { addProductionOrderWorkstation, removeProductionOrderWorkstation } from '../../productionOrder/api/index.js'
+import { replaceProductionOrderWorkstation } from '../../productionOrder/api/index.js'
 import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 
@@ -11,6 +11,7 @@ const props = defineProps({ data: Object })
 const isLoading = ref(false)
 const reassignment = ref({
   productionOrderId: props.data.productionOrder.id,
+  operationId: props.data.operation.id,
   workstation: props.data.workstation
 })
 
@@ -24,11 +25,11 @@ const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    await removeProductionOrderWorkstation({
-      productionOrderId: props.data.productionOrder.id,
-      workstation: props.data.workstation
-    })
-    await addProductionOrderWorkstation(reassignment.value)
+    await replaceProductionOrderWorkstation(
+      props.data.productionOrder.id,
+      props.data.workstation.id,
+      reassignment.value.workstation.id
+    )
 
     emit('success', reassignment.value)
     emit('cancel')

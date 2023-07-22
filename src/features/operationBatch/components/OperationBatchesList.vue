@@ -33,14 +33,18 @@ const columns = [
 
 const computedData = computed(() => {
   return props.data.map(batch => {
-    let actions = ['Add report', 'View', 'Remove']
-
+    let actions
+    
     if (batch.status === 'OPEN') {
       actions = ['Start', 'View', 'Remove']
 
       if (!batch.jobCount) {
         actions = ['Remove']
       }
+    }
+
+    if (batch.status === 'IN_PROGRESS') {
+      actions = ['Add report', 'View']
     }
 
     if (batch.status === 'CLOSED') {

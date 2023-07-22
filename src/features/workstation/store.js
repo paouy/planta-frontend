@@ -6,13 +6,13 @@ const workstations = ref([])
 const sortWorkstations = () => {
   const { operations } = useOperationStore()
 
-  const operationPostions = {}
+  const sequence = {}
 
-  operations.value.forEach(({ id, position }) => operationPostions[id] = position)
+  operations.value.forEach(({ id, seq }) => sequence[id] = seq)
 
   workstations.value
     .sort((a, b) => a.name.localeCompare(b.name))
-    .sort((a, b) => operationPostions[a.operation.id] - operationPostions[b.operation.id])
+    .sort((a, b) => sequence[a.operation.id] - sequence[b.operation.id])
 }
 
 export const useWorkstationStore = () => {

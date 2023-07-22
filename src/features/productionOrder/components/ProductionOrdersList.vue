@@ -1,5 +1,6 @@
 <script setup>
-import { CfDataTable } from '../../../components'
+import { computed } from 'vue'
+import { CfDataTable } from '../../../components/index.js'
 
 const emit = defineEmits(['action'])
 
@@ -31,6 +32,38 @@ const columns = [
     key: 'dueDate'
   }
 ]
+
+const computedData = computed(() => {
+  const isNotAlone = props.data.length > 1
+
+  return props.data.map((order, index) => {
+    const positionActions = []
+    const actions = ['View']
+
+    if (isNotAlone) {
+      if (index > 0) {
+        positionActions.push('Move up')
+      }
+      
+      if (index < props.data.length - 1) {
+        positionActions.push('Move down')
+      }
+    }
+
+    if (order.status === 'OPEN') {
+      actions.push('Remove')
+    }
+
+    if (order.status === 'CLOSED') {
+      actions.push('Archive')
+    }
+
+    return {
+      ...order,
+      actions: [...actions, ...positionActions]
+    }
+  })
+})
 </script>
 
 <template>
@@ -40,7 +73,7 @@ const columns = [
     sortable
     default-sort-key="seq"
     :columns="columns"
-    :data="props.data"
+    :data="computedData"
     :item-actions="['View', 'Move up', 'Move down']"
     @item-action="$event => emit('action', $event)"
   >

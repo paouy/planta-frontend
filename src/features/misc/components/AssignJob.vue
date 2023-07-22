@@ -24,7 +24,7 @@ const assignment = ref({
   productionOrderId: null,
   operationId: props.operation.id,
   workstation: null,
-  operationBatchId: null
+  batch: null
 })
 
 const jobOptions = computed(() => {
@@ -37,9 +37,9 @@ const jobOptions = computed(() => {
 const operationBatchesOptions = computed(() => {
   return props.operationBatches
     .filter(({ status }) => status === 'OPEN')
-    .map(batch => ({
-      label: `${batch.friendlyId} — ${batch.schedule}`,
-      value: batch.id
+    .map(({ id, friendlyId, schedule }) => ({
+      label: `${friendlyId} — ${schedule}`,
+      value: { id, friendlyId, schedule }
     }))
 })
 
@@ -56,7 +56,7 @@ const onSubmit = async () => {
 
     if (props.operation.isBatch) {
       const { workstation } = props.operationBatches
-        .find(({ id }) => id === assignment.value.operationBatchId)
+        .find(({ id }) => id === assignment.value.batch.id)
 
       assignment.value.workstation = workstation
 
@@ -71,7 +71,7 @@ const onSubmit = async () => {
       productionOrderId: null,
       operationId: props.operation.id,
       workstation: null,
-      operationBatchId: null
+      batch: null
     }
 
     if (!props.data.length) {
@@ -103,7 +103,7 @@ const onSubmit = async () => {
           v-if="!props.operation.isBatch"
         />
         <CfField
-          v-model="assignment.operationBatchId"
+          v-model="assignment.batch"
           label="Batch"
           type="select"
           :options="operationBatchesOptions"

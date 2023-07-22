@@ -11,47 +11,39 @@ const pseudoRecords = ref([])
 const isLoading = ref(false)
 
 const onSubmit = async () => {
+  const { operation, workstation, equipment } = props.operationBatch
+
   const report = {
     id: props.operationBatch.id,
+    operationId: operation.id,
+    workstationId: workstation.id,
+    equipmentId: equipment.id,
     productionRecords: []
   }
 
-  const { operation, workstation, equipment } = props.operationBatch
+  pseudoRecords.value.forEach(pseudoRecord => {
+    const { productionOrderId, qtyOutput, qtyReject, requiresRework } = pseudoRecord
 
-  const baseProductionRecord = {
-    operationId: operation.id,
-    workstationId: workstation.id,
-    equipmentId: equipment.id
-  }
+    report.productionRecords.push({
+      productionOrderId,
+      type: 'OUTPUT',
+      qty: qtyOutput,
+      timeTakenMins: operation.timePerCycleMins
+    })
 
-  pseudoRecords.value.forEach((pseudoRecord, index) => {
-    if (pseudoRecord.qtyOutput) {
+    if (qtyReject) {
       report.productionRecords.push({
-        ...baseProductionRecord,
-        productionOrderId: pseudoRecord.productionOrderId,
-        type: 'OUTPUT',
-        qty: pseudoRecord.qtyOutput,
-        timeTakenMins: operation.timePerCycleMins
-      })
-    }
-
-    if (pseudoRecord.qtyReject) {
-      report.productionRecords.push({
-        ...baseProductionRecord,
-        productionOrderId: pseudoRecord.productionOrderId,
+        productionOrderId,
         type: 'REJECT',
-        qty: pseudoRecord.qtyReject,
-        requiresRework: pseudoRecord.requiresRework
+        qty: qtyReject,
+        requiresRework: requiresRework
       })
 
-      if (!pseudoRecord.requiresRework) {
-        const qtyShortfall = props.operationBatch.jobs[index].qtyExpected - pseudoRecord.qtyOutput
-
+      if (!requiresRework) {
         report.productionRecords.push({
-          ...baseProductionRecord,
-          productionOrderId: pseudoRecord.productionOrderId,
+          productionOrderId,
           type: 'SHORTFALL',
-          qty: qtyShortfall
+          qty: qtyReject
         })
       }
     }
@@ -75,7 +67,7 @@ watchEffect(() => {
   pseudoRecords.value = props.operationBatch.jobs.map(job => {
     return {
       productionOrderId: job.productionOrder.id,
-      qtyOutput: 0,
+      qtyOutput: job.qtyExpected - job.qtyProduced,
       qtyReject: 0,
       requiresRework: false
     }
@@ -117,12 +109,9 @@ watchEffect(() => {
           </td>
           <td>
             <CfField
-              v-model.number="pseudoRecords[index].qtyOutput"
+              :value="pseudoRecords[index].qtyOutput - pseudoRecords[index].qtyReject"
               type="number"
-              step="any"
-              min="0"
-              :max="job.qtyExpected - job.qtyProduced"
-              required
+              disabled
             />
           </td>
           <td>
@@ -131,8 +120,7 @@ watchEffect(() => {
               type="number"
               step="any"
               min="0"
-              :max="job.qtyExpected - job.qtyProduced - pseudoRecords[index].qtyOutput"
-              :disabled="job.qtyExpected - job.qtyProduced === pseudoRecords[index].qtyOutput"
+              :max="job.qtyExpected"
               required
             />
           </td>

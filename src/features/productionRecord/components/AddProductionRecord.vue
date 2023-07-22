@@ -10,17 +10,25 @@ const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ job: Object })
 
 const productionRecordTypeOptions = computed(() => {
-  return props.job.status !== 'CLOSED'
-    ? [
-        { label: 'Output', value: 'OUTPUT' },
-        { label: 'Reject', value: 'REJECT' },
-        { label: 'Rework', value: 'REWORK' },
-        { label: 'Adjustment', value: 'ADJUSTMENT' }
+  if (props.job.status === 'OPEN') {
+    return [{ label: 'Output', value: 'OUTPUT' }]
+  }
+
+  if (props.job.status === 'IN_PROGRESS') {
+    return [
+      { label: 'Output', value: 'OUTPUT' },
+      { label: 'Reject', value: 'REJECT' },
+      { label: 'Rework', value: 'REWORK' },
+      { label: 'Adjustment', value: 'ADJUSTMENT' }
     ]
-    : [
+  }
+
+  if (props.job.status === 'CLOSED') {
+    return [
       { label: 'Reject', value: 'REJECT' },
       { label: 'Adjustment', value: 'ADJUSTMENT' }
     ]
+  }
 })
 
 const isLoading = ref(false)
@@ -29,7 +37,7 @@ const productionRecord = ref({
   operationId: props.job.operation.id,
   workstationId: props.job.workstation.id,
   equipmentId: null,
-  type: null,
+  type: props.job.status === 'OPEN' ? 'OUTPUT' : null,
   qty: null,
   timeTakenMins: null
 })
@@ -68,17 +76,17 @@ const onSubmit = async () => {
           :keys="['id']"
           required
         />
-        <EquipmentSelect
-          v-model="productionRecord.equipmentId"
-          :operation-id="props.job.operation.id"
-          :keys="['id']"
-          required
-        />
         <CfField
           v-model="productionRecord.type"
           label="Type"
           type="select"
           :options="productionRecordTypeOptions"
+          required
+        />
+        <EquipmentSelect
+          v-model="productionRecord.equipmentId"
+          :operation-id="props.job.operation.id"
+          :keys="['id']"
           required
         />
         <CfField

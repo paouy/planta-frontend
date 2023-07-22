@@ -36,18 +36,18 @@ const columns = [
 
 const computedData = computed(() => {
   return props.data.map((job, index) => {
-    let actions = ['Add record', 'Reassign', 'Close']
+    let actions = false
 
     if (job.status === 'OPEN') {
       actions = ['Add record', 'Reassign']
     }
 
-    if (job.status === 'CLOSED') {
-      actions = ['Add record']
+    if (job.status === 'IN_PROGRESS') {
+      actions = ['Add record', 'Reassign', 'Close']
+    }
 
-      if (props.data[index + 1]?.status !==' OPEN' && !job.isLastSeq) {
-        actions = false
-      }
+    if (job.status === 'CLOSED' && !job.isLocked) {
+      actions = ['Add record']
     }
 
     if (job.operation.batch) {

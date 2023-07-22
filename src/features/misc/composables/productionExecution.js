@@ -15,14 +15,17 @@ const jobs = computed(() => {
     let qtyExpected = order.qty
 
     if (index > 0) {
-      const { output, rework, adjustment } = order.operations[index - 1].tally
+      const previousOperation = order.operations[index - 1]
+      const { output, reject, rework, adjustment } = previousOperation.tally
 
-      qtyExpected = output + rework + adjustment
+      qtyExpected = output - reject + rework + adjustment
     }
 
-    const { output, rework, adjustment } = operation.tally
-    const qtyProduced = output + rework + adjustment
-    const isLastSeq = index === order.operations.length - 1
+    const { output, reject, rework, adjustment } = operation.tally
+    const qtyProduced = output - reject + rework + adjustment
+
+    const nextJob = order.operations[index + 1]
+    const isLocked = nextJob ? nextJob?.batch || nextJob?.status !== 'OPEN' : false
 
     const job = {
       productionOrder: {
@@ -40,7 +43,7 @@ const jobs = computed(() => {
       timeEstimatedMins: operation.timeEstimatedMins,
       qtyExpected,
       qtyProduced,
-      isLastSeq
+      isLocked
     }
 
     if (operation.batch) {
@@ -87,18 +90,15 @@ const currentOperationBatches = computed(() => {
 
 export const useProductionExecution = () => {
   const updateJob = (job) => {
-    console.log(JSON.stringify(job, null, 2))
     const productionOrder = productionOrders.value.find(({ id }) => job.productionOrderId === id)
     const operation = productionOrder.operations.find(({ id }) => job.operationId === id)
 
-    if (job.workstation) {
-      operation.workstation = job.workstation
-    }
+    operation.workstation = job.workstation
 
-    if (job.operationBatchId) {
-      operation.batchId = job.operationBatchId
+    if (job.batch) {
+      operation.batch = job.batch
 
-      const operationBatch = operationBatches.value.find(({ id }) => job.operationBatchId === id)
+      const operationBatch = operationBatches.value.find(({ id }) => job.batch.id === id)
 
       operationBatch.jobCount++
     }
@@ -128,6 +128,14 @@ export const useProductionExecution = () => {
   const startOperationBatch = ({ id }) => {
     const operationBatch = operationBatches.value.find(batch => id === batch.id)
     operationBatch.status = 'IN_PROGRESS'
+
+    productionOrders.value.forEach(({ operations }) => {
+      operations.forEach(operation => {
+        if (operation.batch?.id === id) {
+          operation.status = 'IN_PROGRESS'
+        }
+      })
+    })
   }
 
   const initialize = ({ orders, batches }) => {

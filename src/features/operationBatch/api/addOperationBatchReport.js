@@ -1,10 +1,10 @@
 import axios from '../../../lib/axios.js'
 
-const addOperationBatchReport = async ({ id, productionRecords }) => {
+const addOperationBatchReport = async ({ id, ...data }) => {
   try {
-    const { data } = await axios.post(`/v1/operation-batches/${id}/report`, { productionRecords })
+    await axios.post(`/v1/operation-batches/${id}/report`, data)
 
-    return data
+    return
   } catch (error) {
     throw Error(error.response.data.message)
   }

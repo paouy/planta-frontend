@@ -20,10 +20,26 @@ export const useProductionOrderStore = () => {
       .map((productionOrder, index) => ({ ...productionOrder, seq: index + 1 }))
   }
 
+  const reprioritize = ({ id, priority }) => {
+    const productionOrder = productionOrders.value.find(order => order.id === id)
+
+    console.log(JSON.stringify(productionOrder, null, 2))
+
+    productionOrder.priority = priority
+
+    console.log(JSON.stringify(productionOrder, null, 2))
+
+    productionOrders.value = productionOrders.value
+      .sort((a, b) => a.priority - b.priority)
+      .sort((a, b) => a.id - b.id)
+      .map((data, index) => ({ ...data, seq: index + 1 }))
+  }
+
   return {
     productionOrders: readonly(productionOrders),
     initialize,
     add,
-    remove
+    remove,
+    reprioritize
   }
 }

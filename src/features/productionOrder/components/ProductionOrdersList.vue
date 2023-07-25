@@ -37,30 +37,23 @@ const computedData = computed(() => {
   const isNotAlone = props.data.length > 1
 
   return props.data.map((order, index) => {
-    const commonActions = ['View']
-    const priorityActions = []
+    const actions = ['View']
 
     if (isNotAlone) {
-      if (index > 0) {
-        priorityActions.push('Move up')
-      }
-      
-      if (index < props.data.length - 1) {
-        priorityActions.push('Move down')
-      }
+      actions.push('Reprioritize')
     }
 
     if (order.status === 'OPEN') {
-      commonActions.push('Remove')
+      actions.push('Remove')
     }
 
     if (order.status === 'CLOSED') {
-      commonActions.push('Archive')
+      actions.push('Archive')
     }
 
     return {
       ...order,
-      actions: [...commonActions, ...priorityActions]
+      actions
     }
   })
 })

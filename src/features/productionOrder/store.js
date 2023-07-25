@@ -23,11 +23,7 @@ export const useProductionOrderStore = () => {
   const reprioritize = ({ id, priority }) => {
     const productionOrder = productionOrders.value.find(order => order.id === id)
 
-    console.log(JSON.stringify(productionOrder, null, 2))
-
     productionOrder.priority = priority
-
-    console.log(JSON.stringify(productionOrder, null, 2))
 
     productionOrders.value = productionOrders.value
       .sort((a, b) => a.priority - b.priority)

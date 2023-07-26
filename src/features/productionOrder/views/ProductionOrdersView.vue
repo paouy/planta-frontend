@@ -8,6 +8,7 @@ import ProductionOrdersList from '../components/ProductionOrdersList.vue'
 import AddProductionOrder from '../components/AddProductionOrder.vue'
 import RemoveProductionOrder from '../components/RemoveProductionOrder.vue'
 import UpdateProductionOrderPriority from '../components/UpdateProductionOrderPriority.vue'
+import ReleaseProductionOrder from '../components/ReleaseProductionOrder.vue'
 
 const { productionOrders, ...productionOrderStore } = useProductionOrderStore()
 const productionOrder = ref(null)
@@ -56,5 +57,12 @@ onMounted(() => getProductionOrders().then(productionOrderStore.initialize))
     @success="productionOrderStore.reprioritize"
     @cancel="currentAction = null"
     v-if="currentAction === 'REPRIORITIZE'"
+  />
+
+  <ReleaseProductionOrder
+    :data="productionOrder"
+    @success="productionOrderStore.remove"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'RELEASE'"
   />
 </template>

@@ -36,10 +36,10 @@ const columns = [
 const computedData = computed(() => {
   const isNotAlone = props.data.length > 1
 
-  return props.data.map((order, index) => {
+  return props.data.map(order => {
     const actions = ['View']
 
-    if (isNotAlone) {
+    if (isNotAlone && order.status !== 'CLOSED') {
       actions.push('Reprioritize')
     }
 
@@ -48,7 +48,7 @@ const computedData = computed(() => {
     }
 
     if (order.status === 'CLOSED') {
-      actions.push('Archive')
+      actions.push('Release')
     }
 
     return {

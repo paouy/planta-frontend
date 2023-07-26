@@ -15,7 +15,7 @@ const { isInitialized } = useMiscStore()
       <CfSidebarLink icon="storefront" parent>Sales
         <template #children>
           <CfSidebarLink href="#">Orders</CfSidebarLink>
-          <CfSidebarLink href="#">Customers</CfSidebarLink>
+          <CfSidebarLink :to="{ name: 'Customers' }">Customers</CfSidebarLink>
         </template>
       </CfSidebarLink>
       <CfSidebarLink icon="pallet" parent>Production

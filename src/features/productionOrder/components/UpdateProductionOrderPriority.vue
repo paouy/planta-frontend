@@ -16,8 +16,8 @@ const index = computed(() => position.value - 1)
 const positionOptions = computed(() => Array.from({ length: props.productionOrders.length }, (_, i) => i + 1))
 const productionOrders = computed(() => props.productionOrders.filter(({ id }) => props.data.id !== id))
 
-const prevOrder = computed(() => productionOrders.value[index.value - 1])
-const nextOrder = computed(() => productionOrders.value[index.value])
+const prev = computed(() => productionOrders.value[index.value - 1])
+const next = computed(() => productionOrders.value[index.value])
 
 const onSubmit = async () => {
   try {
@@ -25,7 +25,7 @@ const onSubmit = async () => {
 
     const productionOrder = {
       id: props.data.id,
-      priority: ((prevOrder.value?.priority || 0) + nextOrder.value.priority) / 2
+      priority: ((prev.value?.priority || 0) + next.value.priority) / 2
     }
 
     await updateProductionOrder(productionOrder)
@@ -60,20 +60,20 @@ const onSubmit = async () => {
       <div class="productionOrdersListPreview">
         <h4>Preview</h4>
         <ul>
-          <li v-if="prevOrder">
+          <li v-if="prev">
             <span>{{ position - 1 }}.</span>
-            <span>{{ prevOrder.friendlyId }}</span>
-            <span>{{ prevOrder.product.name }}</span>
+            <span>{{ prev.friendlyId }}</span>
+            <span>{{ prev.product.name }}</span>
           </li>
           <li class="currentProductionOrder">
             <span>{{ position }}.</span>
             <span>{{ props.data.friendlyId }}</span>
             <span>{{ props.data.product.name }}</span>
           </li>
-          <li v-if="nextOrder">
+          <li v-if="next">
             <span>{{ position + 1 }}.</span>
-            <span>{{ nextOrder.friendlyId }}</span>
-            <span>{{ nextOrder.product.name }}</span>
+            <span>{{ next.friendlyId }}</span>
+            <span>{{ next.product.name }}</span>
           </li>
         </ul>
       </div>
@@ -123,7 +123,7 @@ const onSubmit = async () => {
   }
 
   .currentProductionOrder {
-    background: var(--cf-blue-9);
+    background: var(--cf-gray-9);
   }
 }
 </style>

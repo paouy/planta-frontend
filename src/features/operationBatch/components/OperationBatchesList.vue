@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { CfDataTable, CfFilledButton } from '../../../components/index.js'
+import { CfDataTable, CfOutlinedButton } from '../../../components/index.js'
 
 const emit = defineEmits(['action'])
 
@@ -33,22 +33,14 @@ const columns = [
 
 const computedData = computed(() => {
   return props.data.map(batch => {
-    let actions
+    let actions = ['Start', 'Remove']
     
-    if (batch.status === 'OPEN') {
-      actions = ['Start', 'View', 'Remove']
-
-      if (!batch.jobCount) {
-        actions = ['Remove']
-      }
+    if (!batch.jobCount) {
+      actions = ['Remove']
     }
 
     if (batch.status === 'IN_PROGRESS') {
-      actions = ['Add report', 'View']
-    }
-
-    if (batch.status === 'CLOSED') {
-      actions = ['Archive']
+      actions = ['Add report']
     }
 
     return {
@@ -69,9 +61,9 @@ const computedData = computed(() => {
     @item-action="$event => emit('action', $event)"
   >
     <template #action>
-      <CfFilledButton @click="emit('action', { action: 'CREATE' })">
+      <CfOutlinedButton @click="emit('action', { action: 'CREATE' })">
         Add batch
-      </CfFilledButton>
+      </CfOutlinedButton>
     </template>
   </CfDataTable>
 </template>

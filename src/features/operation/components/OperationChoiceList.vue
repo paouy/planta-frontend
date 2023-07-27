@@ -15,16 +15,23 @@ const props = defineProps({
 const { operations } = useOperationStore()
 
 const choices = computed(() => {
-  return operations.value
-    .map(({ id, name, seq }) => ({ label: name, value: { id, name }, seq }))
+  return operations.value.map(({ id, name, seq }) => ({
+    label: name,
+    value: { id, name, seq }
+  }))
 })
 
 const computedValue = computed({
-  get() {
-    return props.modelValue
-  },
-  set(value) {
-    emit('update:modelValue', value.sort((a, b) => a.seq - b.seq))
+  get: () => props.modelValue.map(operation => {
+    const { seq } = operations.value.find(({ id }) => operation.id === id)
+    return { seq, ...operation }
+  }),
+  set: (value) => {
+    const sortedValue = value
+      .sort((a, b) => a.seq - b.seq)
+      .map(({ seq, ...operation }) => operation)
+
+    emit('update:modelValue', sortedValue)
   }
 })
 </script>

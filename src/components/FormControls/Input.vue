@@ -39,6 +39,7 @@ const computedValue = computed({
         :step="props.step"
         :max="props.max"
         :min="props.min"
+        :autofocus="props.autofocus"
       >
       <div v-if="props.suffix">{{ props.suffix }}</div>
     </div>

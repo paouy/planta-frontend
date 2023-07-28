@@ -4,7 +4,8 @@ const commonProps = {
   label: String,
   disabled: Boolean,
   required: Boolean,
-  helper: String
+  helper: String,
+  autofocus: Boolean
 }
 
 export default commonProps

@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { addProductionOrder } from '../api/index.js'
 import { getProducts } from '../../product/api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
 import CollectionSelect from '../../collection/components/CollectionSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -71,22 +71,20 @@ onMounted(async () => {
           type="products"
           v-if="!props.product"
         />
-        <CfField
+        <CfSelect
           v-model="product"
           label="Product"
-          type="select"
           :options="productOptions"
           required
           v-if="!props.product"
         />
-        <CfField
+        <CfInput
           label="Product"
-          type="text"
           :value="`[${product.sku}] ${product.name}`"
           disabled
           v-else
         />
-        <CfField
+        <CfInput
           v-model="productionOrder.qty"
           label="Quantity"
           type="number"
@@ -94,7 +92,7 @@ onMounted(async () => {
           :suffix="product.uom"
           required
         />
-        <CfField
+        <CfInput
           v-model="productionOrder.dueDate"
           label="Due date"
           type="date"

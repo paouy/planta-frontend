@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { incrementProduct } from '../api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -41,20 +41,18 @@ const onSubmit = async () => {
   >
     <template #body>
       <form id="incrementProduct" @submit.prevent="onSubmit">
-        <CfField
+        <CfInput
           label="Product"
-          type="text"
           :value="props.data.name"
           disabled
         />
-        <CfField
+        <CfInput
           label="Available quantity"
-          type="text"
           :suffix="props.data.uom"
           :value="props.data.qtyAvailable"
           disabled
         />
-        <CfField
+        <CfInput
           v-model.number="qtyIncrement"
           label="Adjustment"
           type="number"
@@ -62,9 +60,8 @@ const onSubmit = async () => {
           :suffix="props.data.uom"
           required
         />
-        <CfField
+        <CfInput
           label="New quantity"
-          type="text"
           :suffix="props.data.uom"
           :value="qtyNew"
           disabled

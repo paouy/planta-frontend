@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { CfDialog, CfField, CfSwitch, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfSwitch, CfFilledButton } from '../../../components/index.js'
 import { addOperation } from '../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -37,13 +37,12 @@ const onSubmit = async () => {
   <CfDialog title="Add operation" @close="emit('cancel')">
     <template #body>
       <form id="addOperation" @submit.prevent="onSubmit">
-        <CfField
+        <CfInput
           v-model="operation.name"
           label="Name"
-          type="text"
           required
         />
-        <CfField
+        <CfInput
           v-model.number="operation.timePerCycleMins"
           label="Cycle time"
           type="number"
@@ -59,10 +58,9 @@ const onSubmit = async () => {
           v-model="operation.isBatch"
           label="Run by batch"
         />
-        <CfField
+        <CfInput
           v-model="operation.batchSizeParameter"
           label="Batch size parameter"
-          type="text"
           required
           v-if="operation.isBatch"
         />

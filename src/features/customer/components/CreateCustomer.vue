@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { addCustomer } from '../api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -31,12 +31,12 @@ const onSubmit = async () => {
   <CfDialog title="Add customer" @close="emit('cancel')">
     <template #body>
       <form id="addCustomer" @submit.prevent="onSubmit">
-        <CfField
+        <CfInput
           v-model="customer.name"
           label="Name"
           required
         />
-        <CfField
+        <CfInput
           v-model="customer.shortName"
           label="Short name"
           required

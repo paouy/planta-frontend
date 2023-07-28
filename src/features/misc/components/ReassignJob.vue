@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { replaceProductionOrderWorkstation } from '../../productionOrder/api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -45,10 +45,9 @@ const onSubmit = async () => {
   <CfDialog :title="dialogTitle" @close="emit('cancel')">
     <template #body>
       <form id="reassignProductionJobs" @submit.prevent="onSubmit">
-        <CfField
+        <CfInput
           label="Job"
           :value="`${data.productionOrder.friendlyId} — ${data.productName}`"
-          type="text"
           disabled
         />
         <WorkstationSelect

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { addProduct } from '../api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import CollectionSelect from '../../collection/components/CollectionSelect.vue'
 import OperationChoiceList from '../../operation/components/OperationChoiceList.vue'
 
@@ -40,22 +40,19 @@ const onSubmit = async () => {
           v-model="product.collection"
           type="products"
         />
-        <CfField
+        <CfInput
           v-model="product.sku"
           label="SKU"
-          type="text"
           required
         />
-        <CfField
+        <CfInput
           v-model="product.name"
           label="Name"
-          type="text"
           required
         />
-        <CfField
+        <CfInput
           v-model="product.uom"
           label="UOM"
-          type="text"
           required
         />
         <OperationChoiceList v-model="product.operations"/>

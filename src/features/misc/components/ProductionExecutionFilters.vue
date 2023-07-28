@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { CfField, CfSwitch } from '../../../components/index.js'
+import { CfSelect, CfSwitch } from '../../../components/index.js'
 import OperationSelect from '../../operation/components/OperationSelect.vue'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 
@@ -46,10 +46,9 @@ const listType = computed({
       :keys="['id', 'name', 'isBatch']"
       @input="workstation = null"
     />
-    <CfField
+    <CfSelect
       v-model="listType"
       label="Display"
-      type="select"
       :options="[{ label: 'Batches', value: 'BATCH' }, { label: 'Jobs', value: 'JOB' }]"
       required
       v-if="operation.isBatch"

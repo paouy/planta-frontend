@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { addWorkstation } from '../api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import OperationSelect from '../../operation/components/OperationSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -33,10 +33,9 @@ const onSubmit = async () => {
     <template #body>
       <form id="addWorkstation" @submit.prevent="onSubmit">
         <OperationSelect v-model="workstation.operation"/>
-        <CfField
+        <CfInput
           v-model="workstation.name"
           label="Name"
-          type="text"
           required
         />
       </form>

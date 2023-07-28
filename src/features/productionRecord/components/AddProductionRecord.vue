@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 import EquipmentSelect from '../../equipment/components/EquipmentSelect.vue'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
 import { addProductionRecord } from '../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -64,9 +64,8 @@ const onSubmit = async () => {
   <CfDialog :title="dialogTitle" @close="emit('cancel')">
     <template #body>
       <form id="addProductionRecord" @submit.prevent="onSubmit">
-        <CfField
+        <CfInput
           label="Job"
-          type="text"
           :value="`${props.job.productionOrder.friendlyId} — ${props.job.productName}`"
           disabled
         />
@@ -76,10 +75,9 @@ const onSubmit = async () => {
           :keys="['id']"
           required
         />
-        <CfField
+        <CfSelect
           v-model="productionRecord.type"
           label="Type"
-          type="select"
           :options="productionRecordTypeOptions"
           required
         />
@@ -89,14 +87,14 @@ const onSubmit = async () => {
           :keys="['id']"
           required
         />
-        <CfField
+        <CfInput
           v-model.number="productionRecord.qty"
           label="Quantity"
           type="number"
           step="any"
           required
         />
-        <CfField
+        <CfInput
           v-model.number="productionRecord.timeTakenMins"
           label="Duration"
           suffix="mins"

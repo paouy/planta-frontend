@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
 import { updateCollection } from '../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -39,16 +39,14 @@ const onSubmit = async () => {
   <CfDialog title="Edit collection" @close="emit('cancel')">
     <template #body>
       <form id="updateCollection" @submit.prevent="onSubmit">
-        <CfField
+        <CfInput
           v-model="collection.name"
           label="Name"
-          type="text"
           required
         />
-        <CfField
+        <CfSelect
           v-model="collection.type"
           label="Type"
-          type="select"
           :options="collectionTypeOptions"
           required
         />

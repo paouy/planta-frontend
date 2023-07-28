@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { addProductionOrderWorkstation } from '../../productionOrder/api/index.js'
 import { addOperationBatchJob } from '../../operationBatchJob/api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfSelect, CfFilledButton } from '../../../components/index.js'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -89,10 +89,9 @@ const onSubmit = async () => {
   <CfDialog :title="dialogTitle" @close="emit('cancel')">
     <template #body>
       <form id="assignProductionJobs" @submit.prevent="onSubmit">
-        <CfField
+        <CfSelect
           v-model="assignment.productionOrderId"
           label="Job"
-          type="select"
           :options="jobOptions"
           required
         />
@@ -102,10 +101,9 @@ const onSubmit = async () => {
           required
           v-if="!props.operation.isBatch"
         />
-        <CfField
+        <CfSelect
           v-model="assignment.batch"
           label="Batch"
-          type="select"
           :options="operationBatchesOptions"
           required
           v-else

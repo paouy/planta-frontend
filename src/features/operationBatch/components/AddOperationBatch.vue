@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 import EquipmentSelect from '../../equipment/components/EquipmentSelect.vue'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import { addOperationBatch } from '../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -51,7 +51,7 @@ const onSubmit = async () => {
           :keys="['id']"
           required
         />
-        <CfField
+        <CfInput
           v-model="operationBatch.schedule"
           label="Schedule"
           type="date"

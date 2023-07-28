@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { updateProductionOrder } from '../api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({
@@ -44,15 +44,14 @@ const onSubmit = async () => {
   <CfDialog title="Reprioritize production order" @close="emit('cancel')">
     <template #body>
       <form id="updateProductionOrderPriority" @submit.prevent="onSubmit">
-        <CfField
+        <CfInput
           label="ID"
           :value="props.data.friendlyId"
           disabled
         />
-        <CfField
+        <CfSelect
           v-model="position"
           label="Position"
-          type="select"
           :options="positionOptions"
           required
         />

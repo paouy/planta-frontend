@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
 import { addOperationBatchReport } from '../api/index.js'
-import { CfField, CfSwitch, CfFilledButton } from '../../../components'
+import { CfInput, CfSwitch, CfFilledButton } from '../../../components'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -94,28 +94,20 @@ watchEffect(() => {
       <tbody>
         <tr v-for="(job, index) in props.operationBatch.jobs" :key="index">
           <td>
-            <CfField
-              :value="job.productionOrder.friendlyId"
-              type="text"
-              disabled
-            />
+            <CfInput :value="job.productionOrder.friendlyId" disabled/>
           </td>
           <td>
-            <CfField
-              :value="job.productName"
-              type="text"
-              disabled
-            />
+            <CfInput :value="job.productName" disabled/>
           </td>
           <td>
-            <CfField
+            <CfInput
               :value="pseudoRecords[index].qtyOutput - pseudoRecords[index].qtyReject"
               type="number"
               disabled
             />
           </td>
           <td>
-            <CfField
+            <CfInput
               v-model.number="pseudoRecords[index].qtyReject"
               type="number"
               step="any"

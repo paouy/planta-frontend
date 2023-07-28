@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { updateWorkstation } from '../api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import OperationSelect from '../../operation/components/OperationSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -38,10 +38,9 @@ onMounted(() => Object.assign(workstation.value, props.data))
     <template #body>
       <form id="updateWorkstation" @submit.prevent="onSubmit">
         <OperationSelect v-model="workstation.operation"/>
-        <CfField
+        <CfInput
           v-model="workstation.name"
           label="Name"
-          type="text"
           required
         />
       </form>

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useCollectionStore } from '../store.js'
-import { CfField } from '../../../components/index.js'
+import { CfSelect } from '../../../components/index.js'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -34,10 +34,9 @@ const computedValue = computed({
 </script>
 
 <template>
-  <CfField
+  <CfSelect
     v-model="computedValue"
     label="Collection"
-    type="select"
     :options="options"
     :disabled="props.disabled"
     :required="props.required"

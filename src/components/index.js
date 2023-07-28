@@ -17,10 +17,11 @@ import Dialog from './Dialog/Dialog.vue'
 import Dropdown from './Dropdown/Dropdown.vue'
 import DropdownItem from './Dropdown/DropdownItem.vue'
 import DropZone from './DropZone/DropZone.vue'
-import Field from './Field/Field.vue'
 import FilePicker from './FilePicker/FilePicker.vue'
 import Header from './Header/Header.vue'
+import Input from './FormControls/Input.vue'
 import Progress from './Progress/Progress.vue'
+import Select from './FormControls/Select.vue'
 import Sidebar from './Sidebar/Sidebar.vue'
 import SidebarLink from './Sidebar/SidebarLink.vue'
 import Spinner from './Spinner/Spinner.vue'
@@ -49,10 +50,11 @@ export {
   Dropdown as CfDropdown,
   DropdownItem as CfDropdownItem,
   DropZone as CfDropZone,
-  Field as CfField,
   FilePicker as CfFilePicker,
   Header as CfHeader,
+  Input as CfInput,
   Progress as CfProgress,
+  Select as CfSelect,
   Sidebar as CfSidebar,
   SidebarLink as CfSidebarLink,
   Spinner as CfSpinner,

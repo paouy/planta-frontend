@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { addMaterial } from '../api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import CollectionSelect from '../../collection/components/CollectionSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -37,16 +37,14 @@ const onSubmit = async () => {
           v-model="material.collection"
           type="materials"
         />
-        <CfField
+        <CfInput
           v-model="material.name"
           label="Name"
-          type="text"
           required
         />
-        <CfField
+        <CfInput
           v-model="material.uom"
           label="UOM"
-          type="text"
           required
         />
       </form>

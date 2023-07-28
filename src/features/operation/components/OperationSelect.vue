@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted } from 'vue'
 import { useOperationStore } from '../store.js'
-import { CfField } from '../../../components/index.js'
+import { CfSelect } from '../../../components/index.js'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -57,10 +57,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <CfField
+  <CfSelect
     v-model="computedValue"
     label="Operation"
-    type="select"
     :options="options"
     :disabled="props.disabled"
     :required="props.required"

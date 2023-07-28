@@ -2,7 +2,7 @@
 import { useSlots, ref, computed } from 'vue'
 import { useFuse } from '@vueuse/integrations/useFuse'
 import { getProperty } from 'dot-prop'
-import Field from '../Field/Field.vue'
+import Input from '../FormControls/Input.vue'
 
 const slots = useSlots()
 
@@ -147,7 +147,7 @@ const onItemAction = (action, item) => {
         {{ props.description }}
       </div>
       <div class="cf-data-table-search" v-if="props.searchable">
-        <field v-model="searchText" type="text" label="Search"/>
+        <Input v-model="searchText" label="Search"/>
       </div>
       <div class="cf-data-table-action" v-if="slots.action">
         <slot name="action"></slot>

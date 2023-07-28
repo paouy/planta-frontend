@@ -11,6 +11,8 @@ import ProductionOrdersView from '../features/productionOrder/views/ProductionOr
 import ProductionExecutionView from '../features/misc/views/ProductionExecutionView.vue'
 import AddOperationBatchReportView from '../features/operationBatch/views/AddOperationBatchReportView.vue'
 import CustomersView from '../features/customer/views/CustomersView.vue'
+import SalesOrdersView from '../features/salesOrder/views/SalesOrdersView.vue'
+import CreateSalesOrderView from '../features/salesOrder/views/CreateSalesOrderView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +21,19 @@ const router = createRouter({
       path: '/sales',
       children: [
         {
+          path: 'orders',
+          children: [
+            {
+              path: '',
+              name: 'SalesOrders',
+              component: SalesOrdersView
+            }, {
+              path: 'create',
+              name: 'CreateSalesOrder',
+              component: CreateSalesOrderView
+            }
+          ]
+        }, {
           path: 'customers',
           name: 'Customers',
           component: CustomersView

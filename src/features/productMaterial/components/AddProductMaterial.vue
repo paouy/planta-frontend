@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { addProductMaterial } from '../api/index.js'
 import { getMaterials } from '../../material/api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
 import CollectionSelect from '../../collection/components/CollectionSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -57,14 +57,13 @@ onMounted(async () => materials.value = await getMaterials())
           v-model="collection"
           type="materials"
         />
-        <CfField
+        <CfSelect
           v-model="productMaterial.reference"
           label="Name"
-          type="select"
           :options="materialOptions"
           required
         />
-        <CfField
+        <CfInput
           v-model="productMaterial.qty"
           label="Quantity"
           type="number"

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { updateEquipment } from '../api/index.js'
-import { CfDialog, CfField, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import OperationChoiceList from '../../operation/components/OperationChoiceList.vue'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -37,10 +37,9 @@ onMounted(() => Object.assign(equipment.value, props.data))
   <CfDialog title="Edit equipment" @close="emit('cancel')">
     <template #body>
       <form id="updateEquipment" @submit.prevent="onSubmit">
-        <CfField
+        <CfInput
           v-model="equipment.name"
           label="Name"
-          type="text"
           required
         />
         <OperationChoiceList v-model="equipment.operations"/>

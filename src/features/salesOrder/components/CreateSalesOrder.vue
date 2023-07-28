@@ -101,6 +101,7 @@ onMounted(async () => {
         v-model="salesOrder.customerId"
         label="Customer"
         :options="customerOptions"
+        autofocus
         required
       />
       <CfInput

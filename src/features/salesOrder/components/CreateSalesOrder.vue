@@ -31,8 +31,8 @@ const productOptions = computed(() => {
     .map(({ product }) => product.id)
     .filter(id => id)
 
-  return products.value.map(({ id, sku, name, uom }) => ({
-    label: `[${sku}] ${name}`,
+  return products.value.map(({ id, normalizedName, uom }) => ({
+    label: normalizedName,
     value: { id, uom },
     disabled: selectedProductIds.includes(id)
   }))
@@ -70,7 +70,7 @@ const invoke = async () => {
 
     await createSalesOrder(order)
 
-    router.push({ name: 'SalesOrders' })
+    router.push({ normalizedName: 'SalesOrders' })
   } catch (error) {
     alert(error)
   } finally {
@@ -88,7 +88,7 @@ onMounted(async () => {
 
   getProducts().then(data => {
     products.value = data.map(
-      ({ id, sku, name, uom }) => ({ id, sku, name, uom })
+      ({ id, normalizedName, uom }) => ({ id, normalizedName, uom })
     )
   })
 })
@@ -162,7 +162,7 @@ onMounted(async () => {
       <CfFilledButton
         color="gray"
         :disabled="isLoading"
-        @click="router.push({ name: 'SalesOrders' })"
+        @click="router.push({ normalizedName: 'SalesOrders' })"
       >
         Cancel
       </CfFilledButton>

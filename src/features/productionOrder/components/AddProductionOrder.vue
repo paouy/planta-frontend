@@ -27,7 +27,7 @@ const productionOrder = ref({
 const productOptions = computed(() => {
   return products.value
     .filter(product => product.collection.id === collection.value.id)
-    .map(product => ({ label: `[${product.sku}] ${product.name}`, value: product }))
+    .map(product => ({ label: product.normalizedName, value: product }))
 })
 
 const onSubmit = async () => {
@@ -60,7 +60,7 @@ onMounted(async () => {
 
 <template>
   <CfDialog
-    title="Add production order"
+    title="Create production order"
     @close="emit('cancel')"
     v-if="!props.product ? products.length : true"
   >
@@ -80,7 +80,7 @@ onMounted(async () => {
         />
         <CfInput
           label="Product"
-          :value="`[${product.sku}] ${product.name}`"
+          :value="product.name"
           disabled
           v-else
         />
@@ -104,7 +104,7 @@ onMounted(async () => {
         type="submit"
         form="addProductionOrder"
         :loading="isLoading"
-      >Save</CfFilledButton>
+      >Create</CfFilledButton>
       <CfFilledButton
         color="gray"
         :disabled="isLoading"

@@ -4,7 +4,7 @@ const customers = ref([])
 
 export const useCustomerStore = () => {
   const sortCustomers = () => {
-    customers.value.sort((a, b) => a.name.toLocaleCompare(b.name))
+    customers.value.sort((a, b) => a.name.localeCompare(b.name))
   }
   
   const set = (data) => {

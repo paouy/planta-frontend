@@ -1,5 +1,7 @@
 import createSalesOrder from './createSalesOrder.js'
+import getSalesOrders from './getSalesOrders.js'
 
 export {
-  createSalesOrder
+  createSalesOrder,
+  getSalesOrders
 }

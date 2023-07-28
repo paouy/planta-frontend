@@ -13,8 +13,14 @@ const columns = [
     label: 'Customer',
     key: 'customer.shortName'
   }, {
+    label: 'Item Count',
+    key: 'itemCount'
+  }, {
     label: 'Date',
     key: 'date'
+  }, {
+    label: 'Status',
+    key: 'status'
   }
 ]
 </script>

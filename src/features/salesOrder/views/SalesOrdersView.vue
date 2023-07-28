@@ -1,9 +1,12 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { getSalesOrders } from '../api/index.js'
 import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
 import SalesOrdersList from '../components/SalesOrdersList.vue'
 
 const salesOrders = ref([])
+
+onMounted(() => getSalesOrders().then(data => salesOrders.value = data))
 </script>
 
 <template>

@@ -1,29 +1,33 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { createSalesOrder } from '../api/index.js'
 import { getCustomers } from '../../customer/api/index.js'
 import { getProducts } from '../../product/api/index.js'
 import { CfInput, CfSelect, CfOutlinedButton, CfFilledButton } from '../../../components/index.js'
 
+const router = useRouter()
+
+const isLoading = ref(false)
+const customerOptions = ref([])
+const products = ref([])
 const salesOrder = ref({
   customFriendlyId: '',
   customerId: '',
-  date: '',
-  items: [
-    {
-      product: {
-        id: '',
-        uom: ''
-      },
-      qty: null
-    }
-  ]
+  date: ''
 })
-
-const customerOptions = ref([])
-const products = ref([])
+const salesOrderItems = ref([
+  {
+    product: {
+      id: '',
+      uom: ''
+    },
+    qty: null
+  }
+])
 
 const productOptions = computed(() => {
-  const selectedProductIds = salesOrder.value.items
+  const selectedProductIds = salesOrderItems.value
     .map(({ product }) => product.id)
     .filter(id => id)
 
@@ -37,7 +41,7 @@ const productOptions = computed(() => {
 const hasSelectableProductOption = computed(() => productOptions.value.some(({ disabled }) => !disabled))
 
 const addItem = () => {
-  salesOrder.value.items.push({
+  salesOrderItems.value.push({
     product: {
       id: '',
       uom: ''
@@ -47,7 +51,31 @@ const addItem = () => {
 }
 
 const removeItem = (index) => {
-  salesOrder.value.items.splice(index, 1)
+  salesOrderItems.value.splice(index, 1)
+}
+
+const invoke = async () => {
+  try {
+    isLoading.value = true
+
+    const order = {
+      ...salesOrder.value,
+      items: salesOrderItems.value.map(({ product, qty }) => ({
+        productId: product.id,
+        qty
+      }))
+    }
+
+    // console.log(JSON.stringify(order, null, 2))
+
+    await createSalesOrder(order)
+
+    router.push({ name: 'SalesOrders' })
+  } catch (error) {
+    alert(error)
+  } finally {
+    isLoading.value = false
+  }
 }
 
 onMounted(async () => {
@@ -67,7 +95,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <form id="createSalesOrder">
+  <form id="createSalesOrder" @submit.prevent="invoke">
     <fieldset>
       <CfSelect
         v-model="salesOrder.customerId"
@@ -92,10 +120,10 @@ onMounted(async () => {
         <col v-for="n in 3">
       </colgroup>
       <tbody>
-        <tr v-for="(item, index) in salesOrder.items" :key="index">
+        <tr v-for="(item, index) in salesOrderItems" :key="index">
           <td>
             <CfSelect
-              v-model="salesOrder.items[index].product"
+              v-model="salesOrderItems[index].product"
               label="Product"
               :options="productOptions"
               required
@@ -103,9 +131,9 @@ onMounted(async () => {
           </td>
           <td>
             <CfInput
-              v-model.number="salesOrder.items[index].qty"
+              v-model.number="salesOrderItems[index].qty"
               label="Qty"
-              :suffix="salesOrder.items[index].product.uom"
+              :suffix="salesOrderItems[index].product.uom"
               type="number"
               step="any"
               min="1"
@@ -116,7 +144,7 @@ onMounted(async () => {
             <button
               type="button"
               @click="removeItem(index)"
-              v-if="salesOrder.items.length > 1"
+              v-if="salesOrderItems.length > 1"
             >
               <span class="material-symbols-outlined">close</span>
             </button>
@@ -129,8 +157,14 @@ onMounted(async () => {
     </CfOutlinedButton>
     <hr>
     <footer>
-      <CfFilledButton type="submit">Create</CfFilledButton>
-      <CfFilledButton color="gray">Cancel</CfFilledButton>
+      <CfFilledButton type="submit" :loading="isLoading">Create</CfFilledButton>
+      <CfFilledButton
+        color="gray"
+        :disabled="isLoading"
+        @click="router.push({ name: 'SalesOrders' })"
+      >
+        Cancel
+      </CfFilledButton>
       <p>When you create a sales order, it does not immediately allocate stock or create production orders.</p>
     </footer>
   </form>

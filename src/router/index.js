@@ -8,6 +8,7 @@ import WorkstationsView from '../features/workstation/views/WorkstationsView.vue
 import EquipmentsView from '../features/equipment/views/EquipmentsView.vue'
 import CollectionsView from '../features/collection/views/CollectionsView.vue'
 import ProductionOrdersView from '../features/productionOrder/views/ProductionOrdersView.vue'
+import ProductionOrderView from '../features/productionOrder/views/ProductionOrderView.vue'
 import ProductionExecutionView from '../features/misc/views/ProductionExecutionView.vue'
 import AddOperationBatchReportView from '../features/operationBatch/views/AddOperationBatchReportView.vue'
 import CustomersView from '../features/customer/views/CustomersView.vue'
@@ -44,8 +45,18 @@ const router = createRouter({
       children: [
         {
           path: 'overview',
-          name: 'ProductionOrders',
-          component: ProductionOrdersView
+          children: [
+            {
+              path: '',
+              name: 'ProductionOrders',
+              component: ProductionOrdersView
+            }, {
+              path: ':productionOrderId',
+              name: 'ProductionOrder',
+              component: ProductionOrderView,
+              props: true
+            }
+          ]
         }, {
           path: 'execution',
           name: 'ProductionExecution',

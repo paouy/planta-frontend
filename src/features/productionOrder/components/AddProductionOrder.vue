@@ -7,7 +7,10 @@ import CollectionSelect from '../../collection/components/CollectionSelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
-const props = defineProps({ product: Object })
+const props = defineProps({
+  product: Object,
+  salesOrderItemId: String
+})
 
 const isLoading = ref(false)
 const collection = ref({ id: '' })
@@ -55,6 +58,10 @@ onMounted(async () => {
   } else {
     product.value = props.product
   }
+
+  if (props.salesOrderItemId) {
+    productionOrder.value.salesOrderItemId = props.salesOrderItemId
+  }
 })
 </script>
 
@@ -80,7 +87,7 @@ onMounted(async () => {
         />
         <CfInput
           label="Product"
-          :value="product.name"
+          :value="product.normalizedName"
           disabled
           v-else
         />

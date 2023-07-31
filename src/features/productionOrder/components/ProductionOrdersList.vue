@@ -19,7 +19,7 @@ const columns = [
     label: 'Product',
     key: 'product.name'
   }, {
-    label: 'Expected',
+    label: 'Demand',
     key: 'qty'
   }, {
     label: 'Produced',

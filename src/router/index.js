@@ -32,7 +32,8 @@ const router = createRouter({
             }, {
               path: ':salesOrderId',
               name: 'SalesOrder',
-              component: SalesOrderView
+              component: SalesOrderView,
+              props: true
             }, {
               path: 'create',
               name: 'CreateSalesOrder',

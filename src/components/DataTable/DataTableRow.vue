@@ -13,10 +13,12 @@ const props = defineProps({
 })
 
 const hasMenu = computed(() => props.forceMenu || props.data.actions.length > 1)
-const primaryActionLabel = computed(() => hasMenu.value ? '•••' : props.data.actions[0])
+
 const actions = computed(() => props.data.actions.map(action => {
   const name = action.name || action
   const key = name.toUpperCase().replaceAll(' ', '_')
+  const invoke = () => emit('action', { action: key, data: props.data })
+
   let component = 'button'
 
   if (action.to) {
@@ -32,9 +34,16 @@ const actions = computed(() => props.data.actions.map(action => {
     to: action.to,
     href: action.href,
     key,
+    invoke,
     component
   }
 }))
+
+const primaryAction = computed(() => {
+  return hasMenu.value
+    ? { component: 'button', label: '•••', invoke: null }
+    : actions.value[0]
+})
 </script>
 
 <template>
@@ -56,7 +65,14 @@ const actions = computed(() => props.data.actions.map(action => {
     </slot>
 
     <td data-table-row-actions v-if="props.data.actions">
-      <button>{{ primaryActionLabel }}</button>
+      <component
+        :is="primaryAction.component"
+        :to="primaryAction.to"
+        :href="primaryAction.href"
+        @click="primaryAction.invoke"
+      >
+        {{ primaryAction.label }}
+      </component>
       <div v-if="hasMenu">
         <component
           v-for="action in actions"
@@ -64,7 +80,7 @@ const actions = computed(() => props.data.actions.map(action => {
           :is="action.component"
           :to="action.to"
           :href="action.href"
-          @click="emit('action', { action: action.key, data: props.data })"
+          @click="action.invoke"
         >
           {{ action.label }}
         </component>

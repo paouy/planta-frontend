@@ -328,7 +328,7 @@ const onColumnSort = (key) => {
 
     &:focus-within,
     &:has(a:hover) {
-      > button {
+      > button:not(:only-child) {
         background: var(--cf-gray-9);
       }
       

@@ -27,10 +27,10 @@ const columns = [
 
 <template>
   <CfDataTable
-    searchable
     :columns="columns"
     :data="props.data"
-    :item-actions="['View']"
-    @item-action="$event => emit('action', $event)"
+    searchable
+    :row-actions="['View']"
+    @row-action="$event => emit('action', $event)"
   />
 </template>

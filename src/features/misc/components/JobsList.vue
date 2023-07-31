@@ -70,8 +70,8 @@ const computedData = computed(() => {
     :columns="columns"
     :data="computedData"
     searchable
-    item-actions
-    force-item-actions-menu
-    @item-action="$event => emit('action', $event)"
+    force-row-menu
+    row-actions
+    @row-action="$event => emit('action', $event)"
   />
 </template>

@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { useProductionOrderStore } from '../store.js'
 import { getProductionOrders } from '../api/index.js'
 import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
@@ -11,23 +10,12 @@ import RemoveProductionOrder from '../components/RemoveProductionOrder.vue'
 import UpdateProductionOrderPriority from '../components/UpdateProductionOrderPriority.vue'
 import ReleaseProductionOrder from '../components/ReleaseProductionOrder.vue'
 
-const router = useRouter()
-
 const { productionOrders, ...productionOrderStore } = useProductionOrderStore()
 const productionOrder = ref(null)
 const currentAction = ref(null)
 
-const onProductionOrderAction = ({ action, item }) => {
-  if (action === 'VIEW') {
-    router.push({
-      name: 'ProductionOrder',
-      params: {
-        productionOrderId: item.id
-      }
-    })
-  }
-
-  productionOrder.value = item
+const onProductionOrderAction = ({ action, data }) => {
+  productionOrder.value = data
   currentAction.value = action
 }
 

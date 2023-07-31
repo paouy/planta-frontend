@@ -28,27 +28,27 @@ if (!isInitialized.value && !isInitializing.value) {
 const operation = ref(null)
 const currentAction = ref(null)
 
-const onOperationsListAction = ({ action, item }) => {
+const onOperationsListAction = ({ action, data }) => {
   if (action === 'MOVE_UP') {
-    const { id, seq } = operations.value[item.index - 1]
+    const { id, seq } = operations.value[data.index - 1]
 
     updateOperation({ id, seq: seq + 1})
-    updateOperation({ id: item.id, seq: item.seq - 1 })
+    updateOperation({ id: data.id, seq: data.seq - 1 })
     
-    return operationStore.moveUp(item.index)
+    return operationStore.moveUp(data.index)
   }
 
   if (action === 'MOVE_DOWN') {
-    const { id, seq } = operations.value[item.index + 1]
+    const { id, seq } = operations.value[data.index + 1]
     
     updateOperation({ id, seq: seq - 1})
-    updateOperation({ id: item.id, seq: item.seq + 1 })
+    updateOperation({ id: data.id, seq: data.seq + 1 })
 
-    return operationStore.moveDown(item.index)
+    return operationStore.moveDown(data.index)
   }
 
   currentAction.value = action
-  operation.value = item
+  operation.value = data
 }
 </script>
 

@@ -13,6 +13,7 @@ import ProductionExecutionView from '../features/misc/views/ProductionExecutionV
 import AddOperationBatchReportView from '../features/operationBatch/views/AddOperationBatchReportView.vue'
 import CustomersView from '../features/customer/views/CustomersView.vue'
 import SalesOrdersView from '../features/salesOrder/views/SalesOrdersView.vue'
+import SalesOrderView from '../features/salesOrder/views/SalesOrderView.vue'
 import CreateSalesOrderView from '../features/salesOrder/views/CreateSalesOrderView.vue'
 
 const router = createRouter({
@@ -28,6 +29,10 @@ const router = createRouter({
               path: '',
               name: 'SalesOrders',
               component: SalesOrdersView
+            }, {
+              path: ':salesOrderId',
+              name: 'SalesOrder',
+              component: SalesOrderView
             }, {
               path: 'create',
               name: 'CreateSalesOrder',

@@ -21,16 +21,15 @@ const columns = [
 
 <template>
   <CfDataTable
-    custom-template
     :columns="columns"
     :data="props.data"
-    :item-actions="['Edit', 'Remove']"
-    @item-action="$event => emit('action', $event)"
+    :row-actions="['Edit', 'Remove']"
+    @row-action="$event => emit('action', $event)"
   >
-    <template v-slot="{item}">
-      <td>{{ item.reference.collectionName }}</td>
-      <td>{{ item.reference.name }}</td>
-      <td>{{ `${item.qty} ${item.reference.uom}` }}</td>
+    <template v-slot:row="{data}">
+      <td>{{ data.reference.collectionName }}</td>
+      <td>{{ data.reference.name }}</td>
+      <td>{{ `${data.qty} ${data.reference.uom}` }}</td>
     </template>
   </CfDataTable>
 </template>

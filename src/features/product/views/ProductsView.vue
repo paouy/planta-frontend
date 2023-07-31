@@ -15,7 +15,7 @@ const showAddProduct = ref(false)
 const showAddProductionOrder = ref(false)
 const showIncrementProduct = ref(false)
 
-const onProductsListAction = ({ action, item }) => { 
+const onProductsListAction = ({ action, data }) => { 
   if (action === 'MAKE') {
     showAddProductionOrder.value = true
   }
@@ -27,11 +27,11 @@ const onProductsListAction = ({ action, item }) => {
   if (action === 'VIEW') {
     router.push({
       name: 'Product',
-      params: { productId: item.id }
+      params: { productId: data.id }
     })
   }
 
-  product.value = item
+  product.value = data
 }
 
 const onAddProductSuccess = (addedProduct) => {

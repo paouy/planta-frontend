@@ -54,7 +54,7 @@ const showAddProductMaterial = ref(false)
 const showUpdateProductMaterial = ref(false)
 const showRemoveProductMaterial = ref(false)
 
-const onProductMaterialsListAction = ({ action, item }) => {
+const onProductMaterialsListAction = ({ action, data }) => {
   if (action === 'EDIT') {
     showUpdateProductMaterial.value = true
   }
@@ -63,7 +63,7 @@ const onProductMaterialsListAction = ({ action, item }) => {
     showRemoveProductMaterial.value = true
   }
 
-  productMaterial.value = item
+  productMaterial.value = data
 }
 
 const onAddProductMaterialSuccess = (addedMaterial) => {

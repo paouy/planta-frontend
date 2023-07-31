@@ -28,9 +28,9 @@ if (!isInitialized.value && !isInitializing.value) {
 const workstation = ref(null)
 const currentAction = ref(null)
 
-const onWorkstationsListAction = ({ action, item }) => {
+const onWorkstationsListAction = ({ action, data }) => {
   currentAction.value = action
-  workstation.value = item
+  workstation.value = data
 }
 </script>
 

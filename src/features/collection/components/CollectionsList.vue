@@ -19,8 +19,8 @@ const columns = [
 <template>
   <CfDataTable
     :columns="columns"
-    :item-actions="['Edit', 'Remove']"
     :data="props.data"
-    @item-action="$event => emit('action', $event)"
+    :row-actions="['Edit', 'Remove']"
+    @row-action="$event => emit('action', $event)"
   />
 </template>

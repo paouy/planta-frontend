@@ -28,9 +28,9 @@ if (!isInitialized.value && !isInitializing.value) {
 const equipment = ref(null)
 const currentAction = ref(null)
 
-const onEquipmentsListAction = ({ action, item }) => {
+const onEquipmentsListAction = ({ action, data }) => {
   currentAction.value = action
-  equipment.value = item
+  equipment.value = data
 }
 </script>
 

@@ -40,24 +40,24 @@ const job = ref(null)
 const operationBatchAction = ref(null)
 const operationBatch = ref(null)
 
-const onJobAction = ({ action, item }) => {
+const onJobAction = ({ action, data }) => {
   jobAction.value = action
-  job.value = item
+  job.value = data
 }
 
-const onOperationBatchAction = ({ action, item }) => {
+const onOperationBatchAction = ({ action, data }) => {
   if (action === 'ADD_REPORT') {
     router.push({
       name: 'AddOperationBatchReport',
       params: {
         operationSlug: toSlug(operation.value.name),
-        operationBatchId: item.id
+        operationBatchId: data.id
       }
     })
   }
 
   operationBatchAction.value = action
-  operationBatch.value = item
+  operationBatch.value = data
 }
 
 watch(operation, ({ name }) => router.push(`/production/execution/${toSlug(name)}`))

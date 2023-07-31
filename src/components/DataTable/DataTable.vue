@@ -1,12 +1,11 @@
 <script setup>
-import { useSlots, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useFuse } from '@vueuse/integrations/useFuse'
 import { getProperty } from 'dot-prop'
-import Input from '../FormControls/Input.vue'
+import DataTableHeader from './DataTableHeader.vue'
+import DataTableRow from './DataTableRow.vue'
 
-const slots = useSlots()
-
-const emit = defineEmits(['update:selection', 'item-action'])
+const emit = defineEmits(['update:selection', 'row-action'])
 
 const props = defineProps({
   title: String,
@@ -23,8 +22,8 @@ const props = defineProps({
     type: Array,
     default: []
   },
-  itemActions: [Boolean, Array],
-  forceItemActionsMenu: Boolean,
+  rowActions: [Boolean, Array],
+  forceRowMenu: Boolean,
   customTemplate: Boolean,
   selectable: Boolean,
   sortable: Boolean,
@@ -56,7 +55,7 @@ const data = computed(() => {
   }
 })
 
-const computedData = computed(() => {
+const computedRows = computed(() => {
   return data.value
     .map(result => result.item || result)
     .sort((a, b) => {
@@ -76,7 +75,7 @@ const computedData = computed(() => {
     .map((item, index) => {
       const selectable = item.selectable ?? true
       const selected = props.selection.includes(item.id)
-      const actions = item.actions ?? props.itemActions
+      const actions = item.actions ?? props.rowActions
 
       return {
         ...item,
@@ -89,30 +88,31 @@ const computedData = computed(() => {
 })
 
 const isTableSelectable = computed(() => {
-  return computedData.value.some(item => item.selectable)
+  return computedRows.value.some(item => item.selectable)
 })
 
-const isTableSelected = computed(() => {
-  const selectable = computedData.value
-    .filter(item => item.selectable)
-    .length
+const isTableSelected = computed({
+  get: () => {
+    const selectableRows = computedRows.value
+      .filter(item => item.selectable)
+      .length
 
-  return selectable >= 1 && (selectable === props.selection.length)
-})
+    return selectableRows >= 1 && (selectableRows === props.selection.length)
+  },
+  set: (value) => {
+    let selection = []
 
-const onToggleTable = (event) => {
-  let selection = []
-
-  if (event.target.checked) {
-    selection = computedData.value
-      .filter(item => !item.disabled && item.selectable)
-      .map(item => item.id)
+    if (value === true) {
+      selection = computedRows.value
+        .filter(item => !item.disabled && item.selectable)
+        .map(item => item.id)
+    }
+    
+    emit('update:selection', selection)
   }
+})
 
-  emit('update:selection', selection)
-}
-
-const onToggleItem = (itemId) => {
+const onRowToggle = (itemId) => {
   const selection = props.selection.includes(itemId)
     ? props.selection.slice().filter(id => id !== itemId)
     : props.selection.concat(itemId)
@@ -120,7 +120,7 @@ const onToggleItem = (itemId) => {
   emit('update:selection', selection)
 }
 
-const onSort = (key) => {
+const onColumnSort = (key) => {
   if (sortKey.value === key) {
     sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
   } else {
@@ -128,117 +128,57 @@ const onSort = (key) => {
     sortOrder.value = 'asc'
   }
 }
-
-const onItemAction = (action, item) => {
-  emit('item-action', {
-    action: action.toUpperCase().replaceAll(' ', '_'),
-    item
-  })
-}
 </script>
 
 <template>
   <div class="cf-data-table">
-    <header v-if="props.title || props.description || props.searchable || slots.action">
-      <div class="cf-data-table-title" v-if="props.title">
-        {{ props.title }}
-      </div>
-      <div class="cf-data-table-description" v-if="props.description">
-        {{ props.description }}
-      </div>
-      <div class="cf-data-table-search" v-if="props.searchable">
-        <Input v-model="searchText" label="Search"/>
-      </div>
-      <div class="cf-data-table-action" v-if="slots.action">
-        <slot name="action"></slot>
-      </div>
-    </header>
+    <DataTableHeader
+      v-model:search="searchText"
+      :title="props.title"
+      :description="props.description"
+      :searchable="props.searchable"
+    >
+      <slot name="header"></slot>
+    </DataTableHeader>
     <table>
       <colgroup>
-        <col style="--w: 3rem" v-if="props.selectable">
-        <col
-          v-for="column in props.columns"
-          :key="column.key"
-          :style="{ '--w': column.width }"
-        >
-        <col style="--w: 4rem" v-if="props.itemActions">
+        <col v-if="props.selectable" style="--w: 3rem">
+        <col v-for="c in props.columns" :key="c.key" :style="{ '--w': c.width }">
+        <col v-if="props.rowActions" style="--w: 4rem">
       </colgroup>
       <thead>
         <tr>
           <th data-table-checkbox v-if="props.selectable">
             <input
+              v-model="isTableSelected"
               type="checkbox"
-              :checked="isTableSelected"
               :disabled="!isTableSelectable"
-              @change="onToggleTable"
             >
           </th>
           <th v-for="column in props.columns" :key="column.key">
-            <button @click="onSort(column.key)" v-if="props.sortable">
+            <button @click="onColumnSort(column.key)" v-if="props.sortable">
               {{ column.label }}
             </button>
             <div v-else>
               {{ column.label }}
             </div>
           </th>
-          <th data-table-item-actions v-if="props.itemActions"></th>
+          <th v-if="props.rowActions"></th>
         </tr>
       </thead>
-      <tbody v-if="!props.customTemplate">
-        <tr v-for="item in computedData" :key="item.id">
-          <td data-table-checkbox v-if="props.selectable">
-            <input
-              type="checkbox"
-              :value="item.id"
-              :checked="item.selected"
-              :disabled="!item.selectable"
-              @change="onToggleItem(item.id)"
-            >
-          </td>
-          <td v-for="column in columns" :key="column.key">
-            {{ getProperty(item, column.key)?.toLocaleString() }}
-          </td>
-          <td data-table-item-actions v-if="item.actions">
-            <button>
-              {{ props.forceItemActionsMenu || item.actions.length > 1 ? '•••' : item.actions[0] }}
-            </button>
-            <div v-if="props.forceItemActionsMenu || item.actions.length > 1">
-              <button
-                v-for="action in item.actions"
-                @click="onItemAction(action, item)"
-              >
-                {{ action }}
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-      <tbody v-else>
-        <tr v-for="item in computedData" :key="item.id">
-          <td data-table-checkbox v-if="props.selectable">
-            <input
-              type="checkbox"
-              :value="item.id"
-              :checked="item.selected"
-              :disabled="!item.selectable"
-              @change="onToggleItem(item.id)"
-            >
-          </td>
-          <slot :item="item"></slot>
-          <td data-table-item-actions v-if="item.actions">
-            <button>
-              {{ props.forceItemActionsMenu || item.actions.length > 1 ? '•••' : item.actions[0] }}
-            </button>
-            <div v-if="props.forceItemActionsMenu || item.actions.length > 1">
-              <button
-                v-for="action in item.actions"
-                @click="onItemAction(action, item)"
-              >
-                {{ action }}
-              </button>
-            </div>
-          </td>
-        </tr>
+      <tbody>
+        <DataTableRow
+          v-for="data in computedRows"
+          :key="data.id"
+          :data="data"
+          :columns="props.columns"
+          :include-checkbox="props.selectable"
+          :force-menu="props.forceRowMenu"
+          @toggle="onRowToggle(data.id)"
+          @action="$event => emit('row-action', $event)"
+        >
+          <slot name="row" :data="data"></slot>
+        </DataTableRow>
       </tbody>
     </table>
   </div>
@@ -322,7 +262,7 @@ const onItemAction = (action, item) => {
     td {
       padding: 0.5rem 1rem;
 
-      &:not([data-table-item-actions], [data-table-checkbox]) {
+      &:not([data-table-row-actions], [data-table-checkbox]) {
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
@@ -330,10 +270,11 @@ const onItemAction = (action, item) => {
     }
   }
 
-  tbody [data-table-item-actions] {
+  tbody [data-table-row-actions] {
     position: relative;
 
-    > button {
+    > button,
+    > a {
       &:only-child {
         float: right;
         color: var(--cf-blue-4);
@@ -370,8 +311,10 @@ const onItemAction = (action, item) => {
       z-index: 1;
       overflow: hidden;
 
-      button {
+      button,
+      a {
         padding: 0.5rem 1rem;
+        cursor: pointer;
 
         &:hover {
           background: var(--cf-gray-9);
@@ -383,7 +326,8 @@ const onItemAction = (action, item) => {
       }
     }
 
-    &:focus-within {
+    &:focus-within,
+    &:has(a:hover) {
       > button {
         background: var(--cf-gray-9);
       }

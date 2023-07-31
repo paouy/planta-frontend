@@ -28,7 +28,7 @@ const computedData = computed(() => {
   <CfDataTable
     :columns="columns"
     :data="computedData"
-    :item-actions="['Edit', 'Remove']"
-    @item-action="$event => emit('action', $event)"
+    :row-actions="['Edit', 'Remove']"
+    @row-action="$event => emit('action', $event)"
   />
 </template>

@@ -37,7 +37,15 @@ const computedData = computed(() => {
   const isNotAlone = props.data.length > 1
 
   return props.data.map(order => {
-    const actions = ['View']
+    const actions = [{
+      name: 'View',
+      to: {
+        name: 'ProductionOrder',
+        params: {
+          productionOrderId: order.id
+        }
+      }
+    }]
 
     if (isNotAlone && order.status !== 'CLOSED') {
       actions.push('Reprioritize')
@@ -61,24 +69,23 @@ const computedData = computed(() => {
 
 <template>
   <CfDataTable
-    custom-template
+    :columns="columns"
+    :data="computedData"
     searchable
     sortable
     default-sort-key="seq"
-    :columns="columns"
-    :data="computedData"
-    item-actions
-    force-item-actions-menu
-    @item-action="$event => emit('action', $event)"
+    row-actions
+    force-row-menu
+    @row-action="$event => emit('action', $event)"
   >
-    <template v-slot="{item}">
-      <td>{{ item.seq }}</td>
-      <td>{{ item.friendlyId }}</td>
-      <td>{{ item.product.name }}</td>
-      <td>{{ `${item.qty} ${item.product.uom}` }}</td>
-      <td>{{ `${item.qtyProduced} ${item.product.uom}` }}</td>
-      <td>{{ item.status }}</td>
-      <td>{{ item.dueDate }}</td>
+    <template v-slot:row="{ data }">
+      <td>{{ data.seq }}</td>
+      <td>{{ data.friendlyId }}</td>
+      <td>{{ data.product.name }}</td>
+      <td>{{ `${data.qty} ${data.product.uom}` }}</td>
+      <td>{{ `${data.qtyProduced} ${data.product.uom}` }}</td>
+      <td>{{ data.status }}</td>
+      <td>{{ data.dueDate }}</td>
     </template>
   </CfDataTable>
 </template>

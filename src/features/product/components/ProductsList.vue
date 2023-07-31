@@ -27,19 +27,18 @@ const columns = [
 
 <template>
   <CfDataTable
-    custom-template
-    searchable
     :columns="columns"
     :data="props.data"
-    :item-actions="['Make', 'Adjust', 'View']"
-    @item-action="$event => emit('action', $event)"
+    searchable
+    :row-actions="['Make', 'Adjust', 'View']"
+    @row-action="$event => emit('action', $event)"
   >
-    <template v-slot="{item}">
-      <td>{{ item.normalizedName }}</td>
-      <td>{{ item.collection.name }}</td>
-      <td>{{ `${item.qtyAvailable} ${item.uom}` }}</td>
-      <td>{{ `${item.qtyCommitted} ${item.uom}` }}</td>
-      <td>{{ `${item.qtyExpected} ${item.uom}` }}</td>
+    <template v-slot:row="{data}">
+      <td>{{ data.normalizedName }}</td>
+      <td>{{ data.collection.name }}</td>
+      <td>{{ `${data.qtyAvailable} ${data.uom}` }}</td>
+      <td>{{ `${data.qtyCommitted} ${data.uom}` }}</td>
+      <td>{{ `${data.qtyExpected} ${data.uom}` }}</td>
     </template>
   </CfDataTable>
 </template>

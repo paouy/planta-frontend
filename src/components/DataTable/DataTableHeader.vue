@@ -20,7 +20,7 @@ const search = computed({
 </script>
 
 <template>
-  <header v-if="props.title || props.description || props.searchable || slots.default">
+  <header>
     <div class="cf-data-table-title" v-if="props.title">
       {{ props.title }}
     </div>

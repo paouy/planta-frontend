@@ -1,9 +1,11 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { useSlots, ref, computed } from 'vue'
 import { useFuse } from '@vueuse/integrations/useFuse'
 import { getProperty } from 'dot-prop'
 import DataTableHeader from './DataTableHeader.vue'
 import DataTableRow from './DataTableRow.vue'
+
+const slots = useSlots()
 
 const emit = defineEmits(['update:selection', 'row-action'])
 
@@ -137,6 +139,7 @@ const onColumnSort = (key) => {
       :title="props.title"
       :description="props.description"
       :searchable="props.searchable"
+      v-if="props.title || props.description || props.searchable || slots.header"
     >
       <slot name="header"></slot>
     </DataTableHeader>

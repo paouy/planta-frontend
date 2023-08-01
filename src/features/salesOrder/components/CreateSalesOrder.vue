@@ -60,13 +60,8 @@ const invoke = async () => {
 
     const order = {
       ...salesOrder.value,
-      items: salesOrderItems.value.map(({ product, qty }) => ({
-        productId: product.id,
-        qty
-      }))
+      items: salesOrderItems.value
     }
-
-    // console.log(JSON.stringify(order, null, 2))
 
     await createSalesOrder(order)
 

@@ -47,8 +47,8 @@ const onAddProductionOrder = ({ salesOrderItemId, qty }) => {
   item.qtyWip = item.qtyWip + qty
 }
 
-const onCreateAllocationOrder = ({ salesOrderItemId, qty }) => {
-  const item = salesOrder.value.items.find(({ id }) => salesOrderItemId === id)
+const onCreateAllocationOrder = ({ salesOrderItem, qty }) => {
+  const item = salesOrder.value.items.find(({ id }) => salesOrderItem.id === id)
   item.qtyAllocated = item.qtyAllocated + qty
 }
 /**

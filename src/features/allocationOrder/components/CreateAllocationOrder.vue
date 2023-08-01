@@ -19,7 +19,9 @@ const product = ref({
 })
 
 const allocationOrder = ref({
-  salesOrderItemId: props.salesOrderItemId,
+  salesOrderItem: {
+    id: props.salesOrderItemId
+  },
   qty: null
 })
 
@@ -57,7 +59,7 @@ onMounted(async () => product.value = await getProduct(props.product.id))
           type="number"
           step="any"
           min="1"
-          :max="product.qtyAvailable"
+          :max="product.qtyAvailable - product.qtyAllocated"
           :disabled="!product.qtyAvailable"
           required
         />

@@ -14,6 +14,15 @@ const product = ref(null)
 const currentAction = ref(null)
 
 const onProductsListAction = ({ action, data }) => { 
+  if (action === 'VIEW') {
+    router.push({
+      name: 'Product',
+      params: {
+        productId: data.id
+      }
+    })
+  }
+
   currentAction.value = action
   product.value = data
 }

@@ -47,7 +47,7 @@ onMounted(() => getProductionOrders().then(productionOrderStore.initialize))
   <RemoveProductionOrder
     :data="productionOrder"
     @success="productionOrderStore.remove"
-    @cancel="currentAction = null"
+    @cancel="currentAction = productionOrder = null"
     v-if="currentAction === 'REMOVE'"
   />
 
@@ -55,7 +55,7 @@ onMounted(() => getProductionOrders().then(productionOrderStore.initialize))
     :data="productionOrder"
     :production-orders="productionOrders"
     @success="productionOrderStore.reprioritize"
-    @cancel="currentAction = null"
+    @cancel="currentAction = productionOrder = null"
     v-if="currentAction === 'REPRIORITIZE'"
   />
 

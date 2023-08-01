@@ -11,48 +11,28 @@ import IncrementProduct from '../components/IncrementProduct.vue'
 const router = useRouter()
 const products = ref([])
 const product = ref(null)
-const showAddProduct = ref(false)
-const showAddProductionOrder = ref(false)
-const showIncrementProduct = ref(false)
+const currentAction = ref(null)
 
 const onProductsListAction = ({ action, data }) => { 
-  if (action === 'MAKE') {
-    showAddProductionOrder.value = true
-  }
-  
-  if (action === 'ADJUST') {
-    showIncrementProduct.value = true
-  }
-
-  if (action === 'VIEW') {
-    router.push({
-      name: 'Product',
-      params: { productId: data.id }
-    })
-  }
-
+  currentAction.value = action
   product.value = data
 }
 
-const onAddProductSuccess = (addedProduct) => {
+const onAddProduct = ({ id: productId }) => {
   router.push({
     name: 'Product',
-    params: { productId: addedProduct.id }
+    params: { productId }
   })
 }
 
-const onAddProductionOrderSuccess = (productionOrder) => {
-  const productIndex = products.value
-    .findIndex(({ id }) => id === productionOrder.product.id)
-
-  products.value[productIndex].qtyExpected += productionOrder.qty
+const onAddProductionOrder = (productionOrder) => {
+  const product = products.value.find(({ id }) => productionOrder.product.id === id)
+  product.qtyWip += productionOrder.qty
 }
 
-const onIncrementProductSucess = (incrementedProduct) => {
-  const productIndex = products.value
-    .findIndex(({ id }) => id === incrementedProduct.id)
-
-  Object.assign(products.value[productIndex], incrementedProduct)
+const onIncrement = (incrementedProduct) => {
+  const index = products.value.findIndex(({ id }) => incrementedProduct.id === id)
+  Object.assign(products.value[index], incrementedProduct)
 }
 
 onMounted(async () => products.value = await getProducts())
@@ -62,7 +42,7 @@ onMounted(async () => products.value = await getProducts())
   <CfAppView>
     <CfAppViewHeader surtitle="Inventory" title="Products">
       <template #actions>
-        <CfOutlinedButton @click="showAddProduct = true">
+        <CfOutlinedButton @click="currentAction = 'ADD'">
           Add product
         </CfOutlinedButton>
       </template>
@@ -71,22 +51,25 @@ onMounted(async () => products.value = await getProducts())
       :data="products"
       @action="onProductsListAction"
     />
-    <AddProduct
-      @success="onAddProductSuccess"
-      @cancel="showAddProduct = false"
-      v-if="showAddProduct"
-    />
-    <AddProductionOrder
-      :product="product"
-      @success="onAddProductionOrderSuccess"
-      @cancel="showAddProductionOrder = false"
-      v-if="showAddProductionOrder"
-    />
-    <IncrementProduct
-      :data="product"
-      @success="onIncrementProductSucess"
-      @cancel="showIncrementProduct = false"
-      v-if="showIncrementProduct"
-    />
   </CfAppView>
+
+  <AddProduct
+    @success="onAddProduct"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'ADD'"
+  />
+
+  <AddProductionOrder
+    :product="product"
+    @success="onAddProductionOrder"
+    @cancel="currentAction = product = null"
+    v-if="currentAction === 'MAKE'"
+  />
+
+  <IncrementProduct
+    :data="product"
+    @success="onIncrement"
+    @cancel="currentAction = product = null"
+    v-if="currentAction === 'ADJUST'"
+  />
 </template>

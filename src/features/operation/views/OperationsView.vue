@@ -66,23 +66,26 @@ const onOperationsListAction = ({ action, data }) => {
       :data="operations"
       @action="onOperationsListAction"
     />
-    <AddOperation
-      :last-seq="operations[operations.length - 1].seq"
-      @success="operationStore.add"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'ADD'"
-    />
-    <UpdateOperation
-      :data="operation"
-      @success="operationStore.update"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'EDIT'"
-    />
-    <RemoveOperation
-      :data="operation"
-      @success="operationStore.remove"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'REMOVE'"
-    />
   </CfAppView>
+
+  <AddOperation
+    :last-seq="operations[operations.length - 1].seq"
+    @success="operationStore.add"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'ADD'"
+  />
+
+  <UpdateOperation
+    :data="operation"
+    @success="operationStore.update"
+    @cancel="currentAction = operation = null"
+    v-if="currentAction === 'EDIT'"
+  />
+
+  <RemoveOperation
+    :data="operation"
+    @success="operationStore.remove"
+    @cancel="currentAction = operation = null"
+    v-if="currentAction === 'REMOVE'"
+  />
 </template>

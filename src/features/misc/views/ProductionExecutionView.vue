@@ -119,21 +119,21 @@ onMounted(async () => {
   <ReassignJob
     :data="job"
     @success="productionExecution.updateJob"
-    @cancel="jobAction = null"
+    @cancel="jobAction = job = null"
     v-if="jobAction === 'REASSIGN'"
   />
 
   <AddProductionRecord
     :job="job"
     @success="productionExecution.addProductionRecord"
-    @cancel="jobAction = null"
+    @cancel="jobAction = job = null"
     v-if="jobAction === 'ADD_RECORD'"
   />
 
   <AddShortfallProductionRecord
     :job="job"
     @success="productionExecution.addProductionRecord"
-    @cancel="jobAction = null"
+    @cancel="jobAction = job = null"
     v-if="jobAction === 'CLOSE'"
   />
 
@@ -147,14 +147,14 @@ onMounted(async () => {
   <StartOperationBatch
     :data="operationBatch"
     @success="productionExecution.startOperationBatch"
-    @cancel="operationBatchAction = null"
+    @cancel="operationBatchAction = operationBatch = null"
     v-if="operationBatchAction === 'START'"
   />
 
   <RemoveOperationBatch
     :data="operationBatch"
     @success="productionExecution.removeOperationBatch"
-    @cancel="operationBatchAction = null"
+    @cancel="operationBatchAction = operationBatch = null"
     v-if="operationBatchAction === 'REMOVE'"
   />
 </template>

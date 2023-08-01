@@ -12,13 +12,13 @@ import UpdateProductMaterial from '../../productMaterial/components/UpdateProduc
 import RemoveProductMaterial from '../../productMaterial/components/RemoveProductMaterial.vue'
 
 const breadcrumbs = [{ name: 'Products', path: '/inventory/products' }]
-
+const router = useRouter()
 const props = defineProps({ productId: String })
 
-const router = useRouter()
-
-const showUpdateProduct = ref(false)
-const showRemoveProduct = ref(false)
+const currentAction = ref({
+  product: null,
+  materials: null
+})
 const product = ref({
   id: '',
   name: '',
@@ -29,6 +29,8 @@ const product = ref({
     name: ''
   }
 })
+const productMaterials = ref([])
+const productMaterial = ref(null)
 
 const productSummary = computed(() => {
   return [
@@ -48,48 +50,24 @@ const productSummary = computed(() => {
   ]
 })
 
-const productMaterials = ref([])
-const productMaterial = ref(null)
-const showAddProductMaterial = ref(false)
-const showUpdateProductMaterial = ref(false)
-const showRemoveProductMaterial = ref(false)
+onMounted(() => {
+  getProduct(props.productId).then(data => product.value = data)
+  getProductMaterials(props.productId).then(data => productMaterials.value = data)
+})
 
-const onProductMaterialsListAction = ({ action, data }) => {
-  if (action === 'EDIT') {
-    showUpdateProductMaterial.value = true
-  }
-  
-  if (action === 'REMOVE') {
-    showRemoveProductMaterial.value = true
-  }
+const productMaterialActions = {
+  add: (data) => productMaterials.value.push(data),
+  update: (data) => {
+    const index = productMaterials.value.findIndex(({ id }) => data.id === id)
+    Object.assign(productMaterials.value[index], data)
+  },
+  remove: (index) => productMaterials.value.splice(index, 1)
+}
 
+const onProductMaterialListAction = ({ action, data }) => {
+  currentAction.value.materials = action
   productMaterial.value = data
 }
-
-const onAddProductMaterialSuccess = (addedMaterial) => {
-  productMaterials.value.push(addedMaterial)
-}
-
-const onUpdateProductMaterialSuccess = (updatedMaterial) => {
-  const materialIndex = productMaterials.value
-    .findIndex(({ id }) => id === updatedMaterial.id)
-
-  Object.assign(productMaterials.value[materialIndex], updatedMaterial)
-}
-
-const onRemoveProductMaterialSuccess = (materialIndex) => {
-  productMaterials.value.splice(materialIndex, 1)
-}
-
-onMounted(async () => {
-  const [_product, materials] = await Promise.all([
-    getProduct(props.productId),
-    getProductMaterials(props.productId)
-  ])
-
-  product.value = _product
-  productMaterials.value = materials
-})
 </script>
 
 <template>
@@ -97,7 +75,7 @@ onMounted(async () => {
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader :title="product.name">
       <template #actions>
-        <CfOutlinedButton @click="showUpdateProduct = true">
+        <CfOutlinedButton @click="currentAction.product = 'EDIT'">
           Edit product
         </CfOutlinedButton>
       </template>
@@ -108,14 +86,14 @@ onMounted(async () => {
 
     <CfHeader title="Product materials" subtitle="Materials required to produce a single unit of the product.">
       <template #action>
-        <CfOutlinedButton @click="showAddProductMaterial = true">
+        <CfOutlinedButton @click="currentAction.materials = 'ADD'">
           Add material
         </CfOutlinedButton>
       </template>
     </CfHeader>
     <ProductMaterialsList
       :data="productMaterials"
-      @action="onProductMaterialsListAction"
+      @action="onProductMaterialListAction"
     />
 
     <CfHeader title="Remove product"/>
@@ -124,7 +102,7 @@ onMounted(async () => {
         Removing this product is permanent. You will no longer be able to make orders for this product.
       </template>
       <template #action>
-        <CfOutlinedButton color="red" @click="showRemoveProduct = true">
+        <CfOutlinedButton color="red" @click="currentAction.product = 'REMOVE'">
           Remove
         </CfOutlinedButton>
       </template>
@@ -134,33 +112,33 @@ onMounted(async () => {
   <UpdateProduct
     :data="product"
     @success="updatedProduct => product = updatedProduct"
-    @cancel="showUpdateProduct = false"
-    v-if="showUpdateProduct"
+    @cancel="currentAction.product = null"
+    v-if="currentAction.product === 'EDIT'"
   />
   <RemoveProduct
     :data="product"
     @success="router.push({ name: 'Products' })"
-    @cancel="showRemoveProduct = false"
-    v-if="showRemoveProduct"
+    @cancel="currentAction.product = null"
+    v-if="currentAction.product === 'REMOVE'"
   />
 
   <AddProductMaterial
     :product-id="product.id"
     :product-materials="productMaterials"
-    @success="onAddProductMaterialSuccess"
-    @cancel="showAddProductMaterial = false"
-    v-if="showAddProductMaterial"
+    @success="productMaterialActions.add"
+    @cancel="currentAction.materials = null"
+    v-if="currentAction.materials === 'ADD'"
   />
   <UpdateProductMaterial
     :data="productMaterial"
-    @success="onUpdateProductMaterialSuccess"
-    @cancel="showUpdateProductMaterial = false"
-    v-if="showUpdateProductMaterial"
+    @success="productMaterialActions.update"
+    @cancel="currentAction.materials = productMaterial = null"
+    v-if="currentAction.materials === 'EDIT'"
   />
   <RemoveProductMaterial
     :data="productMaterial"
-    @success="onRemoveProductMaterialSuccess"
-    @cancel="showRemoveProductMaterial = false"
-    v-if="showRemoveProductMaterial"
+    @success="productMaterialActions.remove"
+    @cancel="currentAction.materials = productMaterial = null"
+    v-if="currentAction.materials === 'REMOVE'"
   />
 </template>

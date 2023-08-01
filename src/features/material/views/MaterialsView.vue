@@ -14,20 +14,10 @@ import IncrementMaterial from '../components/IncrementMaterial.vue'
 
 const materials = ref([])
 const material = ref(null)
-const showAddMaterial = ref(false)
-const showUpdateMaterial = ref(false)
-const showRemoveMaterial = ref(false)
-const showIncrementMaterial = ref(false)
+const currentAction = ref(null)
 
 const onMaterialsListAction = ({ action, data }) => {
-  if (action === 'EDIT') {
-    showUpdateMaterial.value = true
-  } else if (action === 'REMOVE') {
-    showRemoveMaterial.value = true
-  } else {
-    showIncrementMaterial.value = true
-  }
-
+  currentAction.value = action
   material.value = data
 }
 
@@ -60,7 +50,7 @@ onMounted(async () => materials.value = await getMaterials())
   <CfAppView>
     <CfAppViewHeader surtitle="Inventory" title="Materials">
       <template #actions>
-        <CfOutlinedButton @click="showAddMaterial = true">
+        <CfOutlinedButton @click="currentAction = 'ADD'">
           Add material
         </CfOutlinedButton>
       </template>
@@ -69,28 +59,32 @@ onMounted(async () => materials.value = await getMaterials())
       :data="materials"
       @action="onMaterialsListAction"
     />
-    <AddMaterial
-      @success="onAddMaterialSuccess"
-      @cancel="showAddMaterial = false"
-      v-if="showAddMaterial"
-    />
-    <UpdateMaterial
-      :data="material"
-      @success="onUpdateMaterialSuccess"
-      @cancel="showUpdateMaterial = false"
-      v-if="showUpdateMaterial"
-    />
-    <RemoveMaterial
-      :data="material"
-      @success="onRemoveMaterialSuccess"
-      @cancel="showRemoveMaterial = false"
-      v-if="showRemoveMaterial"
-    />
-    <IncrementMaterial
-      :data="material"
-      @success="onIncrementMaterialSucess"
-      @cancel="showIncrementMaterial = false"
-      v-if="showIncrementMaterial"
-    />
   </CfAppView>
+
+  <AddMaterial
+    @success="onAddMaterialSuccess"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'ADD'"
+  />
+
+  <UpdateMaterial
+    :data="material"
+    @success="onUpdateMaterialSuccess"
+    @cancel="currentAction = material = null"
+    v-if="currentAction === 'EDIT'"
+  />
+
+  <RemoveMaterial
+    :data="material"
+    @success="onRemoveMaterialSuccess"
+    @cancel="currentAction = material = null"
+    v-if="currentAction === 'REMOVE'"
+  />
+
+  <IncrementMaterial
+    :data="material"
+    @success="onIncrementMaterialSucess"
+    @cancel="currentAction = material = null"
+    v-if="currentAction === 'ADJUST'"
+  />
 </template>

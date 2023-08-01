@@ -1,8 +1,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { getOperationBatch } from '../api/index.js'
 import { CfAppView, CfBreadcrumbs, CfAppViewHeader } from '../../../components/index.js'
 import AddOperationBatchReport from '../components/AddOperationBatchReport.vue'
+
+const router = useRouter()
 
 const props = defineProps({
   operationSlug: String,
@@ -35,8 +38,8 @@ onMounted(async () => operationBatch.value = await getOperationBatch(props.opera
     </dl>
     <AddOperationBatchReport
       :operation-batch="operationBatch"
-      @success=""
-      @cancel=""
+      @success="router.push(breadcrumbs[0].path)"
+      @cancel="router.push(breadcrumbs[0].path)"
       v-if="operationBatch"
     />
   </CfAppView>

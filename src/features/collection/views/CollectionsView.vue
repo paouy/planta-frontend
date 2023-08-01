@@ -48,22 +48,25 @@ const onCollectionsListAction = ({ action, data }) => {
       :data="collections"
       @action="onCollectionsListAction"
     />
-    <AddCollection
-      @success="collectionStore.add"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'ADD'"
-    />
-    <UpdateCollection
-      :data="collection"
-      @success="collectionStore.update"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'EDIT'"
-    />
-    <RemoveCollection
-      :data="collection"
-      @success="collectionStore.remove"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'REMOVE'"
-    />
   </CfAppView>
+
+  <AddCollection
+    @success="collectionStore.add"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'ADD'"
+  />
+
+  <UpdateCollection
+    :data="collection"
+    @success="collectionStore.update"
+    @cancel="currentAction = collection = null"
+    v-if="currentAction === 'EDIT'"
+  />
+  
+  <RemoveCollection
+    :data="collection"
+    @success="collectionStore.remove"
+    @cancel="currentAction = collection = null"
+    v-if="currentAction === 'REMOVE'"
+  />
 </template>

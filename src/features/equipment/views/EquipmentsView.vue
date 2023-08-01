@@ -48,22 +48,25 @@ const onEquipmentsListAction = ({ action, data }) => {
       :data="equipments"
       @action="onEquipmentsListAction"
     />
-    <AddEquipment
-      @success="equipmentStore.add"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'ADD'"
-    />
-    <UpdateEquipment
-      :data="equipment"
-      @success="equipmentStore.update"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'EDIT'"
-    />
-    <RemoveEquipment
-      :data="equipment"
-      @success="equipmentStore.remove"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'REMOVE'"
-    />
   </CfAppView>
+
+  <AddEquipment
+    @success="equipmentStore.add"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'ADD'"
+  />
+
+  <UpdateEquipment
+    :data="equipment"
+    @success="equipmentStore.update"
+    @cancel="currentAction = equipment = null"
+    v-if="currentAction === 'EDIT'"
+  />
+  
+  <RemoveEquipment
+    :data="equipment"
+    @success="equipmentStore.remove"
+    @cancel="currentAction = equipment = null"
+    v-if="currentAction === 'REMOVE'"
+  />
 </template>

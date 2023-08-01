@@ -45,14 +45,14 @@ const onAction = ({ action, data }) => {
   <UpdateCustomer
     :data="customer"
     @success="customerStore.update"
-    @cancel="currentAction = null"
+    @cancel="currentAction = customer = null"
     v-if="currentAction === 'EDIT'"
   />
 
   <DeleteCustomer
     :data="customer"
     @success="customerStore.remove"
-    @cancel="currentAction = null"
+    @cancel="currentAction = customer = null"
     v-if="currentAction === 'DELETE'"
   />
 </template>

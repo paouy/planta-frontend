@@ -48,22 +48,25 @@ const onWorkstationsListAction = ({ action, data }) => {
       :data="workstations"
       @action="onWorkstationsListAction"
     />
-    <AddWorkstation
-      @success="workstationStore.add"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'ADD'"
-    />
-    <UpdateWorkstation
-      :data="workstation"
-      @success="workstationStore.update"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'EDIT'"
-    />
-    <RemoveWorkstation
-      :data="workstation"
-      @success="workstationStore.remove"
-      @cancel="currentAction = null"
-      v-if="currentAction === 'REMOVE'"
-    />
   </CfAppView>
+
+  <AddWorkstation
+    @success="workstationStore.add"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'ADD'"
+  />
+
+  <UpdateWorkstation
+    :data="workstation"
+    @success="workstationStore.update"
+    @cancel="currentAction = workstation = null"
+    v-if="currentAction === 'EDIT'"
+  />
+
+  <RemoveWorkstation
+    :data="workstation"
+    @success="workstationStore.remove"
+    @cancel="currentAction = workstation = null"
+    v-if="currentAction === 'REMOVE'"
+  />
 </template>

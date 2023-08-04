@@ -64,8 +64,8 @@ const productMaterialActions = {
   remove: (index) => productMaterials.value.splice(index, 1)
 }
 
-const onProductMaterialListAction = ({ action, data }) => {
-  currentAction.value.materials = action
+const onProductMaterialListAction = ({ key, data }) => {
+  currentAction.value.materials = key
   productMaterial.value = data
 }
 </script>

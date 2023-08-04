@@ -61,7 +61,7 @@ const computedData = computed(() => {
     @row-action="$event => emit('action', $event)"
   >
     <template v-slot:header>
-      <CfOutlinedButton @click="emit('action', { action: 'CREATE' })">
+      <CfOutlinedButton @click="emit('action', { key: 'CREATE' })">
         Add batch
       </CfOutlinedButton>
     </template>

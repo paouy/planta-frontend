@@ -28,8 +28,8 @@ if (!isInitialized.value && !isInitializing.value) {
 const equipment = ref(null)
 const currentAction = ref(null)
 
-const onEquipmentsListAction = ({ action, data }) => {
-  currentAction.value = action
+const onEquipmentsListAction = ({ key, data }) => {
+  currentAction.value = key
   equipment.value = data
 }
 </script>

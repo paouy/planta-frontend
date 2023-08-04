@@ -28,8 +28,8 @@ if (!isInitialized.value && !isInitializing.value) {
 const workstation = ref(null)
 const currentAction = ref(null)
 
-const onWorkstationsListAction = ({ action, data }) => {
-  currentAction.value = action
+const onWorkstationsListAction = ({ key, data }) => {
+  currentAction.value = key
   workstation.value = data
 }
 </script>

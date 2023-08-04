@@ -28,8 +28,8 @@ if (!isInitialized.value && !isInitializing.value) {
 const operation = ref(null)
 const currentAction = ref(null)
 
-const onOperationsListAction = ({ action, data }) => {
-  if (action === 'MOVE_UP') {
+const onOperationsListAction = ({ key, data }) => {
+  if (key === 'MOVE_UP') {
     const { id, seq } = operations.value[data.index - 1]
 
     updateOperation({ id, seq: seq + 1})
@@ -38,7 +38,7 @@ const onOperationsListAction = ({ action, data }) => {
     return operationStore.moveUp(data.index)
   }
 
-  if (action === 'MOVE_DOWN') {
+  if (key === 'MOVE_DOWN') {
     const { id, seq } = operations.value[data.index + 1]
     
     updateOperation({ id, seq: seq - 1})
@@ -47,7 +47,7 @@ const onOperationsListAction = ({ action, data }) => {
     return operationStore.moveDown(data.index)
   }
 
-  currentAction.value = action
+  currentAction.value = key
   operation.value = data
 }
 </script>

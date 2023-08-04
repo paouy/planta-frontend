@@ -28,8 +28,8 @@ if (!isInitialized.value && !isInitializing.value) {
 const collection = ref(null)
 const currentAction = ref(null)
 
-const onCollectionsListAction = ({ action, data }) => {
-  currentAction.value = action
+const onCollectionsListAction = ({ key, data }) => {
+  currentAction.value = key
   collection.value = data
 }
 </script>

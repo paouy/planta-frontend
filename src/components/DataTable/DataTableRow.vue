@@ -16,8 +16,8 @@ const hasMenu = computed(() => props.forceMenu || props.data.actions.length > 1)
 
 const actions = computed(() => props.data.actions.map(action => {
   const name = action.name || action
-  const key = name.toUpperCase().replaceAll(' ', '_')
-  const invoke = () => emit('action', { action: key, data: props.data })
+  const key = action.key || name.toUpperCase().replaceAll(' ', '_')
+  const invoke = () => emit('action', { key, data: props.data })
 
   let component = 'button'
 

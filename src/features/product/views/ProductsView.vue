@@ -13,8 +13,8 @@ const products = ref([])
 const product = ref(null)
 const currentAction = ref(null)
 
-const onProductsListAction = ({ action, data }) => { 
-  if (action === 'VIEW') {
+const onProductsListAction = ({ key, data }) => { 
+  if (key === 'VIEW') {
     router.push({
       name: 'Product',
       params: {
@@ -23,7 +23,7 @@ const onProductsListAction = ({ action, data }) => {
     })
   }
 
-  currentAction.value = action
+  currentAction.value = key
   product.value = data
 }
 

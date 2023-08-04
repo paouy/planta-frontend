@@ -14,9 +14,9 @@ const { productionOrders, ...productionOrderStore } = useProductionOrderStore()
 const productionOrder = ref(null)
 const currentAction = ref(null)
 
-const onProductionOrderAction = ({ action, data }) => {
+const onProductionOrderAction = ({ key, data }) => {
   productionOrder.value = data
-  currentAction.value = action
+  currentAction.value = key
 }
 
 onMounted(() => getProductionOrders().then(productionOrderStore.initialize))

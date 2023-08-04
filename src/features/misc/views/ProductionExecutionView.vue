@@ -40,13 +40,13 @@ const job = ref(null)
 const operationBatchAction = ref(null)
 const operationBatch = ref(null)
 
-const onJobAction = ({ action, data }) => {
-  jobAction.value = action
+const onJobAction = ({ key, data }) => {
+  jobAction.value = key
   job.value = data
 }
 
-const onOperationBatchAction = ({ action, data }) => {
-  if (action === 'ADD_REPORT') {
+const onOperationBatchAction = ({ key, data }) => {
+  if (key === 'ADD_REPORT') {
     router.push({
       name: 'AddOperationBatchReport',
       params: {
@@ -56,7 +56,7 @@ const onOperationBatchAction = ({ action, data }) => {
     })
   }
 
-  operationBatchAction.value = action
+  operationBatchAction.value = key
   operationBatch.value = data
 }
 

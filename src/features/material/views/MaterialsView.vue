@@ -16,8 +16,8 @@ const materials = ref([])
 const material = ref(null)
 const currentAction = ref(null)
 
-const onMaterialsListAction = ({ action, data }) => {
-  currentAction.value = action
+const onMaterialsListAction = ({ key, data }) => {
+  currentAction.value = key
   material.value = data
 }
 

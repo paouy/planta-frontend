@@ -15,8 +15,8 @@ onMounted(() => getCustomers().then(customerStore.set))
 const customer = ref(null)
 const currentAction = ref(null)
 
-const onAction = ({ action, data }) => {
-  currentAction.value = action
+const onAction = ({ key, data }) => {
+  currentAction.value = key
   customer.value = data
 }
 </script>

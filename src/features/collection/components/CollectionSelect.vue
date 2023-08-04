@@ -6,8 +6,13 @@ import { CfSelect } from '../../../components/index.js'
 const emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({
-  modelValue: Object,
+  modelValue: [Object, String],
   type: String,
+  defaultOption: Boolean,
+  keys: {
+    type: Array,
+    default: () => ['id', 'name']
+  },
   disabled: Boolean,
   required: {
     type: Boolean,
@@ -19,9 +24,23 @@ const { collections } = useCollectionStore()
 
 const options = computed(() => {
   return collections.value
-    .filter(({ type }) => type === props.type.toUpperCase())
-    .map(({ id, name }) => ({ label: name, value: { id, name } }))
+    .filter(({ type }) => props.type.toUpperCase() === type)
+    .map(collection => {
+      let value = {}
+
+      if (props.keys.length > 1) {
+        props.keys.forEach(key => value[key] = collection[key])
+      } else {
+        value = collection[props.keys.at(0)]
+      } 
+
+      return {
+        label: collection.name,
+        value
+      }
+    })
 })
+
 
 const computedValue = computed({
   get() {

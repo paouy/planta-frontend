@@ -8,7 +8,7 @@ import SalesOrdersList from '../components/SalesOrdersList.vue'
 const router = useRouter()
 const salesOrders = ref([])
 
-const onView = ({ action, data }) => {
+const onView = ({ data }) => {
   router.push({
     name: 'SalesOrder',
     params: {

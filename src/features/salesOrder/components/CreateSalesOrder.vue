@@ -1,12 +1,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { createSalesOrder } from '../api/index.js'
 import { getCustomers } from '../../customer/api/index.js'
 import { getProducts } from '../../product/api/index.js'
 import { CfInput, CfSelect, CfOutlinedButton, CfFilledButton } from '../../../components/index.js'
 
-const router = useRouter()
+const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
 const customerOptions = ref([])
@@ -14,7 +13,7 @@ const products = ref([])
 const salesOrder = ref({
   customFriendlyId: '',
   customerId: '',
-  date: ''
+  date: new Date().toLocaleDateString('en-CA')
 })
 const salesOrderItems = ref([
   {
@@ -63,9 +62,9 @@ const invoke = async () => {
       items: salesOrderItems.value
     }
 
-    await createSalesOrder(order)
+    const createdSalesOrder = await createSalesOrder(order)
 
-    router.push({ normalizedName: 'SalesOrders' })
+    emit('success', createdSalesOrder)
   } catch (error) {
     alert(error)
   } finally {
@@ -153,12 +152,10 @@ onMounted(async () => {
     </CfOutlinedButton>
     <hr>
     <footer>
-      <CfFilledButton type="submit" :loading="isLoading">Create</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="router.push({ normalizedName: 'SalesOrders' })"
-      >
+      <CfFilledButton type="submit" :loading="isLoading">
+        Create
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
         Cancel
       </CfFilledButton>
       <p>When you create a sales order, it does not immediately allocate stock or create production orders.</p>

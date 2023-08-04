@@ -47,7 +47,7 @@ const onSubmit = async () => {
           disabled
         />
         <CfInput
-          label="Available quantity"
+          label="Available"
           :suffix="props.data.uom"
           :value="props.data.qtyAvailable"
           disabled
@@ -61,7 +61,7 @@ const onSubmit = async () => {
           required
         />
         <CfInput
-          label="New quantity"
+          label="Result"
           :suffix="props.data.uom"
           :value="qtyNew"
           disabled

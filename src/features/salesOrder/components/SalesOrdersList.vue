@@ -8,7 +8,7 @@ const props = defineProps({ data: Array })
 const columns = [
   {
     label: 'ID',
-    key: 'friendlyId'
+    key: 'customFriendlyId'
   }, {
     label: 'Customer',
     key: 'customer.shortName'

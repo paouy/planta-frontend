@@ -4,7 +4,6 @@ import { useOperationStore } from '../store.js'
 import { CfSelect } from '../../../components/index.js'
 
 const emit = defineEmits(['update:modelValue'])
-
 const props = defineProps({
   modelValue: [Object, String],
   defaultOption: Boolean,

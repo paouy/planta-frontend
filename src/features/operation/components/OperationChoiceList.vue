@@ -4,7 +4,6 @@ import { useOperationStore } from '../store.js'
 import { CfChoiceList } from '../../../components/index.js'
 
 const emit = defineEmits(['update:modelValue'])
-
 const props = defineProps({
   modelValue: {
     type: Array,

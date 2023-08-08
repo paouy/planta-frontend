@@ -2,12 +2,12 @@
 import { ref } from 'vue'
 import { useOperationStore } from '../store.js'
 import { useMiscStore } from '../../misc/store.js'
-import { getOperations, updateOperation } from '../api/index.js'
 import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
 import OperationsList from '../components/OperationsList.vue'
-import AddOperation from '../components/AddOperation.vue'
+import CreateOperation from '../components/CreateOperation.vue'
 import UpdateOperation from '../components/UpdateOperation.vue'
-import RemoveOperation from '../components/RemoveOperation.vue'
+import DeleteOperation from '../components/DeleteOperation.vue'
+import api from '../../../api/index.js'
 
 const breadcrumbs = [
   {
@@ -22,7 +22,7 @@ const { isInitialized, isInitializing } = useMiscStore()
 const { operations, ...operationStore } = useOperationStore()
 
 if (!isInitialized.value && !isInitializing.value) {
-  getOperations().then(operationStore.set)
+  api.operation.getAll().then(operationStore.set)
 }
 
 const operation = ref(null)
@@ -32,8 +32,8 @@ const onOperationsListAction = ({ key, data }) => {
   if (key === 'MOVE_UP') {
     const { id, seq } = operations.value[data.index - 1]
 
-    updateOperation({ id, seq: seq + 1})
-    updateOperation({ id: data.id, seq: data.seq - 1 })
+    api.operation.updateOne({ id, seq: seq + 1})
+    api.operation.updateOne({ id: data.id, seq: data.seq - 1 })
     
     return operationStore.moveUp(data.index)
   }
@@ -41,8 +41,8 @@ const onOperationsListAction = ({ key, data }) => {
   if (key === 'MOVE_DOWN') {
     const { id, seq } = operations.value[data.index + 1]
     
-    updateOperation({ id, seq: seq - 1})
-    updateOperation({ id: data.id, seq: data.seq + 1 })
+    api.operation.updateOne({ id, seq: seq - 1})
+    api.operation.updateOne({ id: data.id, seq: data.seq + 1 })
 
     return operationStore.moveDown(data.index)
   }
@@ -57,7 +57,7 @@ const onOperationsListAction = ({ key, data }) => {
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader title="Operations" description="Configure the operations in your production.">
       <template #actions>
-        <CfFilledButton @click="currentAction = 'ADD'">
+        <CfFilledButton @click="currentAction = 'CREATE'">
           Add operation
         </CfFilledButton>
       </template>
@@ -68,11 +68,11 @@ const onOperationsListAction = ({ key, data }) => {
     />
   </CfAppView>
 
-  <AddOperation
-    :last-seq="operations[operations.length - 1].seq"
+  <CreateOperation
+    :last-seq="operations[operations.length - 1]?.seq"
     @success="operationStore.add"
     @cancel="currentAction = null"
-    v-if="currentAction === 'ADD'"
+    v-if="currentAction === 'CREATE'"
   />
 
   <UpdateOperation
@@ -82,7 +82,7 @@ const onOperationsListAction = ({ key, data }) => {
     v-if="currentAction === 'EDIT'"
   />
 
-  <RemoveOperation
+  <DeleteOperation
     :data="operation"
     @success="operationStore.remove"
     @cancel="currentAction = operation = null"

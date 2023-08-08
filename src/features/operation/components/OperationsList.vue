@@ -1,11 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { CfDataTable } from '../../../components'
+import { CfDataTable } from '../../../components/index.js'
 
 const emit = defineEmits(['action'])
-
 const props = defineProps({ data: Array })
-
 const columns = [
   {
     label: 'Name',

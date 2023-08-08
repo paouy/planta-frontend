@@ -1,29 +1,28 @@
 <script setup>
 import { ref } from 'vue'
 import { CfDialog, CfInput, CfSwitch, CfFilledButton } from '../../../components/index.js'
-import { addOperation } from '../api/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
-
-const props = defineProps({ lastSeq: Number })
+const props = defineProps({ lastSeq })
 
 const isLoading = ref(false)
-const operation = ref({
+const ctx = ref({
   name: '',
-  seq: props.lastSeq + 1,
+  seq: (props.lastSeq || 0) + 1,
   timePerCycleMins: null,
   allowsRework: true,
   isBatch: false,
   batchSizeParameter: null
 })
 
-const onSubmit = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    const addedOperation = await addOperation(operation.value)
+    const operation = await api.operation.createOne(ctx.value)
 
-    emit('success', addedOperation)
+    emit('success', operation)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -36,14 +35,14 @@ const onSubmit = async () => {
 <template>
   <CfDialog title="Add operation" @close="emit('cancel')">
     <template #body>
-      <form id="addOperation" @submit.prevent="onSubmit">
+      <form id="createOperation" @submit.prevent="invoke">
         <CfInput
-          v-model="operation.name"
+          v-model="ctx.name"
           label="Name"
           required
         />
         <CfInput
-          v-model.number="operation.timePerCycleMins"
+          v-model.number="ctx.timePerCycleMins"
           label="Cycle time"
           type="number"
           suffix="mins"
@@ -51,38 +50,34 @@ const onSubmit = async () => {
           required
         />
         <CfSwitch
-          v-model="operation.allowsRework"
+          v-model="ctx.allowsRework"
           label="Allow rework"
         />
         <CfSwitch
-          v-model="operation.isBatch"
+          v-model="ctx.isBatch"
           label="Run by batch"
         />
         <CfInput
-          v-model="operation.batchSizeParameter"
+          v-model="ctx.batchSizeParameter"
           label="Batch size parameter"
           required
-          v-if="operation.isBatch"
+          v-if="ctx.isBatch"
         />
       </form>
     </template>
     <template #footer>
-      <CfFilledButton
-        type="submit"
-        form="addOperation"
-        :loading="isLoading"
-      >Save</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="emit('cancel')"
-      >Cancel</CfFilledButton>
+      <CfFilledButton type="submit" form="createOperation" :loading="isLoading">
+        Save
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
+        Cancel
+      </CfFilledButton>
     </template>
   </CfDialog>
 </template>
 
-<style lang="scss">
-#addOperation {
+<style>
+#createOperation {
   display: grid;
   gap: 1rem;
 }

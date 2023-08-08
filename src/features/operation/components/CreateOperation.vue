@@ -4,7 +4,7 @@ import { CfDialog, CfInput, CfSwitch, CfFilledButton } from '../../../components
 import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
-const props = defineProps({ lastSeq })
+const props = defineProps({ lastSeq: Number })
 
 const isLoading = ref(false)
 const ctx = ref({

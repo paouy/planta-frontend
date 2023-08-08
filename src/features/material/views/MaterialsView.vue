@@ -1,16 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getMaterials } from '../api/index.js'
-import {
-  CfAppView,
-  CfAppViewHeader,
-  CfOutlinedButton
-} from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
 import MaterialsList from '../components/MaterialsList.vue'
-import AddMaterial from '../components/AddMaterial.vue'
+import CreateMaterial from '../components/CreateMaterial.vue'
 import UpdateMaterial from '../components/UpdateMaterial.vue'
-import RemoveMaterial from '../components/RemoveMaterial.vue'
+import DeleteMaterial from '../components/DeleteMaterial.vue'
 import IncrementMaterial from '../components/IncrementMaterial.vue'
+import api from '../../../api/index.js'
 
 const materials = ref([])
 const material = ref(null)
@@ -21,36 +17,32 @@ const onMaterialsListAction = ({ key, data }) => {
   material.value = data
 }
 
-const onAddMaterialSuccess = (addedMaterial) => {
-  materials.value.push(addedMaterial)
+const onCreateMaterial = (data) => {
+  materials.value.push(data)
 }
 
-const onUpdateMaterialSuccess = (updatedMaterial) => {
-  const materialIndex = materials.value
-    .findIndex(({ id }) => id === updatedMaterial.id)
-
-  materials.value[materialIndex] = updatedMaterial
+const onUpdateMaterial = (data) => {
+  const index = materials.value.findIndex(({ id }) => id === data.id)
+  materials.value[index] = data
 }
 
-const onRemoveMaterialSuccess = (materialIndex) => {
-  materials.value.splice(materialIndex, 1)
+const onDeleteMaterial = (index) => {
+  materials.value.splice(index, 1)
 }
 
-const onIncrementMaterialSucess = (incrementedMaterial) => {
-  const materialIndex = materials.value
-    .findIndex(({ id }) => id === incrementedMaterial.id)
-
-  Object.assign(materials.value[materialIndex], incrementedMaterial)
+const onIncrementMaterial = (data) => {
+  const index = materials.value.findIndex(({ id }) => id === data.id)
+  Object.assign(materials.value[index], data)
 }
 
-onMounted(async () => materials.value = await getMaterials())
+onMounted(async () => materials.value = await api.material.getAll())
 </script>
 
 <template>
   <CfAppView>
     <CfAppViewHeader surtitle="Inventory" title="Materials">
       <template #actions>
-        <CfOutlinedButton @click="currentAction = 'ADD'">
+        <CfOutlinedButton @click="currentAction = 'CREATE'">
           Add material
         </CfOutlinedButton>
       </template>
@@ -61,29 +53,29 @@ onMounted(async () => materials.value = await getMaterials())
     />
   </CfAppView>
 
-  <AddMaterial
-    @success="onAddMaterialSuccess"
+  <CreateMaterial
+    @success="onCreateMaterial"
     @cancel="currentAction = null"
-    v-if="currentAction === 'ADD'"
+    v-if="currentAction === 'CREATE'"
   />
 
   <UpdateMaterial
     :data="material"
-    @success="onUpdateMaterialSuccess"
+    @success="onUpdateMaterial"
     @cancel="currentAction = material = null"
     v-if="currentAction === 'EDIT'"
   />
 
-  <RemoveMaterial
+  <DeleteMaterial
     :data="material"
-    @success="onRemoveMaterialSuccess"
+    @success="onDeleteMaterial"
     @cancel="currentAction = material = null"
     v-if="currentAction === 'REMOVE'"
   />
 
   <IncrementMaterial
     :data="material"
-    @success="onIncrementMaterialSucess"
+    @success="onIncrementMaterial"
     @cancel="currentAction = material = null"
     v-if="currentAction === 'ADJUST'"
   />

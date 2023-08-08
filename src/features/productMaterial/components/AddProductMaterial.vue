@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { addProductMaterial } from '../api/index.js'
-import { getMaterials } from '../../material/api/index.js'
 import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
 import CategorySelect from '../../category/components/CategorySelect.vue'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -46,7 +46,7 @@ const onSubmit = async () => {
   }
 }
 
-onMounted(async () => materials.value = await getMaterials())
+onMounted(async () => materials.value = await api.material.getAll())
 </script>
 
 <template>

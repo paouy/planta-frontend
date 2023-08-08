@@ -1,16 +1,17 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { updateMaterial } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import CategorySelect from '../../category/components/CategorySelect.vue'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
-const material = ref({
+const ctx = ref({
   id: '',
+  sku: '',
   name: '',
   uom: '',
   category: {}
@@ -20,9 +21,14 @@ const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    await updateMaterial(material.value)
+    await api.material.updateOne(ctx.value)
 
-    emit('success', material.value)
+    const material = {
+      ...ctx.value,
+      normalizedName: `[${ctx.value.sku}] ${ctx.value.name}`
+    }
+
+    emit('success', material)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -31,7 +37,7 @@ const onSubmit = async () => {
   }
 }
 
-onMounted(() => Object.assign(material.value, props.data))
+onMounted(() => Object.assign(ctx.value, props.data))
 </script>
 
 <template>
@@ -39,37 +45,38 @@ onMounted(() => Object.assign(material.value, props.data))
     <template #body>
       <form id="updateMaterial" @submit.prevent="onSubmit">
         <CategorySelect
-          v-model="material.category"
+          v-model="ctx.category"
           type="materials"
         />
         <CfInput
-          v-model="material.name"
+          v-model="ctx.sku"
+          label="SKU"
+          required
+        />
+        <CfInput
+          v-model="ctx.name"
           label="Name"
           required
         />
         <CfInput
-          v-model="material.uom"
+          v-model="ctx.uom"
           label="UOM"
           required
         />
       </form>
     </template>
     <template #footer>
-      <CfFilledButton
-        type="submit"
-        form="updateMaterial"
-        :loading="isLoading"
-      >Save</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="emit('cancel')"
-      >Cancel</CfFilledButton>
+      <CfFilledButton type="submit" form="updateMaterial" :loading="isLoading">
+        Save
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
+        Cancel
+      </CfFilledButton>
     </template>
   </CfDialog>
 </template>
 
-<style lang="scss">
+<style>
 #updateMaterial {
   display: grid;
   gap: 1rem;

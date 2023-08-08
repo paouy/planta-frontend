@@ -1,33 +1,31 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { incrementMaterial } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
-
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
-
-const qtyIncrement = ref(0)
-
-const qtyAdjusted = computed(() => {
-  return props.data.qtyAvailable + qtyIncrement.value
+const ctx = ref({
+  id: props.data.id,
+  qty: 0
 })
 
-const onSubmit = async () => {
+const result = computed(() => props.data.qtyAvailable + ctx.value.qty)
+
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    await incrementMaterial({
-      id: props.data.id,
-      value: qtyIncrement.value
-    })
+    await api.material.increment(ctx.value)
 
-    emit('success', {
+    const material = {
       id: props.data.id,
-      qtyAvailable: qtyAdjusted.value
-    })
+      qtyAvailable: result.value
+    }
+
+    emit('success', material)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -43,7 +41,7 @@ const onSubmit = async () => {
     @close="emit('cancel')"
   >
     <template #body>
-      <form id="incrementMaterial" @submit.prevent="onSubmit">
+      <form id="incrementMaterial" @submit.prevent="invoke">
         <CfInput
           :value="props.data.name"
           label="Material"
@@ -56,7 +54,7 @@ const onSubmit = async () => {
           disabled
         />
         <CfInput
-          v-model.number="qtyIncrement"
+          v-model.number="ctx.qty"
           label="Adjustment"
           type="number"
           step="any"
@@ -64,8 +62,8 @@ const onSubmit = async () => {
           required
         />
         <CfInput
-          :value="qtyAdjusted"
           label="Result"
+          :value="result"
           :suffix="props.data.uom"
           disabled
         />

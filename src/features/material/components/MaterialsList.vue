@@ -7,7 +7,7 @@ const props = defineProps({ data: Array })
 
 const columns = [
   {
-    key: 'name',
+    key: 'normalizedName',
     label: 'Name'
   }, {
     key: 'category.name',
@@ -31,7 +31,7 @@ const columns = [
     @row-action="$event => emit('action', $event)"
   >
     <template v-slot:row="{ data }">
-      <td>{{ data.name }}</td>
+      <td>{{ data.normalizedName }}</td>
       <td>{{ data.category.name }}</td>
       <td>{{ `${data.qtyAvailable} ${data.uom}` }}</td>
       <td>{{ `${data.qtyAllocated} ${data.uom}` }}</td>

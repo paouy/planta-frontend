@@ -1,12 +1,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { addProductMaterial } from '../api/index.js'
 import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
 import CategorySelect from '../../category/components/CategorySelect.vue'
 import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
-
 const props = defineProps({
   productId: String,
   productMaterials: Array
@@ -14,34 +12,46 @@ const props = defineProps({
 
 const isLoading = ref(false)
 const materials = ref([])
-const category = ref({ id: '' })
-
-const productMaterial = ref({
+const categoryId = ref(null)
+const ctx = ref({
   productId: props.productId,
-  reference: {},
+  material: {},
   qty: null
 })
 
 const materialOptions = computed(() => {
-  const referenceIds = props.productMaterials.map(({ reference }) => reference.id)
+  const materialIds = props.productMaterials.map(({ material }) => material.id)
 
-  return materials.value
-    .filter(material => !referenceIds.includes(material.id))
-    .filter(material => material.category.id === category.value.id)
-    .map(material => ({ label: material.name, value: material }))
+  const filteredMaterials = materials.value
+    .filter(({ id }) => !materialIds.includes(id))
+    .filter(({ category }) => categoryId.value === category.id)
+  
+  const options = filteredMaterials.map(({ id, normalizedName, category, uom }) => {
+    return {
+      label: normalizedName,
+      value: {
+        id,
+        normalizedName,
+        uom,
+        categoryName: category.name
+      }
+    }
+  })
+
+  return options
 })
 
-const onSubmit = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    const addedProductMaterial = await addProductMaterial(productMaterial.value)
+    await api.productMaterial.createOne(ctx.value)
 
-    emit('success', addedProductMaterial)
+    emit('success', ctx.value)
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
@@ -52,44 +62,41 @@ onMounted(async () => materials.value = await api.material.getAll())
 <template>
   <CfDialog title="Add product material" @close="emit('cancel')">
     <template #body>
-      <form id="addProductMaterial" @submit.prevent="onSubmit">
+      <form id="createProductMaterial" @submit.prevent="invoke">
         <CategorySelect
-          v-model="category"
+          v-model="categoryId"
           type="materials"
+          :keys="['id']"
         />
         <CfSelect
-          v-model="productMaterial.reference"
+          v-model="ctx.material"
           label="Name"
           :options="materialOptions"
           required
         />
         <CfInput
-          v-model="productMaterial.qty"
+          v-model="ctx.qty"
           label="Quantity"
           type="number"
           step="any"
-          :suffix="productMaterial.reference?.uom"
+          :suffix="ctx.material?.uom"
           required
         />
       </form>
     </template>
     <template #footer>
-      <CfFilledButton
-        type="submit"
-        form="addProductMaterial"
-        :loading="isLoading"
-      >Save</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="emit('cancel')"
-      >Cancel</CfFilledButton>
+      <CfFilledButton type="submit" form="createProductMaterial" :loading="isLoading">
+        Save
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
+        Cancel
+      </CfFilledButton>
     </template>
   </CfDialog>
 </template>
 
-<style lang="scss">
-#addProductMaterial {
+<style>
+#createProductMaterial {
   display: grid;
   gap: 1rem;
 }

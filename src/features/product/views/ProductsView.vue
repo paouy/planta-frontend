@@ -1,14 +1,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getProducts } from '../api/index.js'
 import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
 import ProductsList from '../components/ProductsList.vue'
-import AddProduct from '../components/AddProduct.vue'
+import CreateProduct from '../components/CreateProduct.vue'
 import AddProductionOrder from '../../productionOrder/components/AddProductionOrder.vue'
 import IncrementProduct from '../components/IncrementProduct.vue'
+import api from '../../../api/index.js'
 
 const router = useRouter()
+
 const products = ref([])
 const product = ref(null)
 const currentAction = ref(null)
@@ -27,7 +28,7 @@ const onProductsListAction = ({ key, data }) => {
   product.value = data
 }
 
-const onAddProduct = ({ id: productId }) => {
+const onCreateProduct = ({ id: productId }) => {
   router.push({
     name: 'Product',
     params: { productId }
@@ -39,19 +40,19 @@ const onAddProductionOrder = (productionOrder) => {
   product.qtyWip += productionOrder.qty
 }
 
-const onIncrement = (incrementedProduct) => {
-  const index = products.value.findIndex(({ id }) => incrementedProduct.id === id)
-  Object.assign(products.value[index], incrementedProduct)
+const onIncrementProduct = (data) => {
+  const index = products.value.findIndex(({ id }) => data.id === id)
+  Object.assign(products.value[index], data)
 }
 
-onMounted(async () => products.value = await getProducts())
+onMounted(async () => products.value = await api.product.getAll())
 </script>
 
 <template>
   <CfAppView>
     <CfAppViewHeader surtitle="Inventory" title="Products">
       <template #actions>
-        <CfOutlinedButton @click="currentAction = 'ADD'">
+        <CfOutlinedButton @click="currentAction = 'CREATE'">
           Add product
         </CfOutlinedButton>
       </template>
@@ -62,10 +63,10 @@ onMounted(async () => products.value = await getProducts())
     />
   </CfAppView>
 
-  <AddProduct
-    @success="onAddProduct"
+  <CreateProduct
+    @success="onCreateProduct"
     @cancel="currentAction = null"
-    v-if="currentAction === 'ADD'"
+    v-if="currentAction === 'CREATE'"
   />
 
   <AddProductionOrder
@@ -77,7 +78,7 @@ onMounted(async () => products.value = await getProducts())
 
   <IncrementProduct
     :data="product"
-    @success="onIncrement"
+    @success="onIncrementProduct"
     @cancel="currentAction = product = null"
     v-if="currentAction === 'ADJUST'"
   />

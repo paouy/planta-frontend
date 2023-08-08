@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { addProductionOrder } from '../api/index.js'
-import { getProducts } from '../../product/api/index.js'
 import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
 import CategorySelect from '../../category/components/CategorySelect.vue'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -54,7 +54,7 @@ const onSubmit = async () => {
 
 onMounted(async () => {
   if (!props.product) {
-    products.value = await getProducts()
+    products.value = await api.product.getAll()
   } else {
     product.value = props.product
   }

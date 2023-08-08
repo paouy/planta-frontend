@@ -7,10 +7,10 @@ const props = defineProps({ data: Array })
 
 const columns = [
   {
-    key: 'reference.categoryName',
+    key: 'material.categoryName',
     label: 'Category'
   }, {
-    key: 'name',
+    key: 'material.normalizedName',
     label: 'Name'
   }, {
     key: 'qty',
@@ -27,9 +27,9 @@ const columns = [
     @row-action="$event => emit('action', $event)"
   >
     <template v-slot:row="{data}">
-      <td>{{ data.reference.categoryName }}</td>
-      <td>{{ data.reference.name }}</td>
-      <td>{{ `${data.qty} ${data.reference.uom}` }}</td>
+      <td>{{ data.material.categoryName }}</td>
+      <td>{{ data.material.normalizedName }}</td>
+      <td>{{ `${data.qty} ${data.material.uom}` }}</td>
     </template>
   </CfDataTable>
 </template>

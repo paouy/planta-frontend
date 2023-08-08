@@ -1,25 +1,24 @@
 <script setup>
 import { ref } from 'vue'
-import { removeProductMaterial } from '../api/index.js'
 import { CfDialog, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
-
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
 
-const onClick = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    await removeProductMaterial(props.data.id)
+    await api.productMaterial.deleteOne(props.data)
 
     emit('success', props.data.index)
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
@@ -31,16 +30,12 @@ const onClick = async () => {
       <p>Are you sure you want to remove <b>{{ props.data?.name }}</b> as product material?</p>
     </template>
     <template #footer>
-      <CfFilledButton
-        color="red"
-        :loading="isLoading"
-        @click="onClick"
-      >Remove</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="emit('cancel')"
-      >Cancel</CfFilledButton>
+      <CfFilledButton color="red" :loading="isLoading" @click="invoke">
+        Remove
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
+        Cancel
+      </CfFilledButton>
     </template>
   </CfDialog>
 </template>

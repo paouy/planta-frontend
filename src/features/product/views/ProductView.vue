@@ -1,15 +1,14 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { getProduct } from '../api/index.js'
-import { getProductMaterials } from '../../productMaterial/api/index.js'
 import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfOutlinedButton, CfHeader, CfSummaryList, CfActionCard } from '../../../components/index.js'
 import UpdateProduct from '../components/UpdateProduct.vue'
-import RemoveProduct from '../components/RemoveProduct.vue'
+import DeleteProduct from '../components/DeleteProduct.vue'
 import ProductMaterialsList from '../../productMaterial/components/ProductMaterialsList.vue'
-import AddProductMaterial from '../../productMaterial/components/AddProductMaterial.vue'
+import CreateProductMaterial from '../../productMaterial/components/CreateProductMaterial.vue'
 import UpdateProductMaterial from '../../productMaterial/components/UpdateProductMaterial.vue'
-import RemoveProductMaterial from '../../productMaterial/components/RemoveProductMaterial.vue'
+import DeleteProductMaterial from '../../productMaterial/components/DeleteProductMaterial.vue'
+import api from '../../../api/index.js'
 
 const breadcrumbs = [{ name: 'Products', path: '/inventory/products' }]
 const router = useRouter()
@@ -45,14 +44,9 @@ const productSummary = computed(() => {
       value: product.value.uom
     }, {
       label: 'Operations',
-      value: product.value.operations.map(({name}) => name).join(', ')
+      value: product.value.operationIds.length
     }
   ]
-})
-
-onMounted(() => {
-  getProduct(props.productId).then(data => product.value = data)
-  getProductMaterials(props.productId).then(data => productMaterials.value = data)
 })
 
 const productMaterialActions = {
@@ -68,6 +62,9 @@ const onProductMaterialListAction = ({ key, data }) => {
   currentAction.value.materials = key
   productMaterial.value = data
 }
+
+api.product.getOne(props.productId).then(data => product.value = data)
+api.productMaterial.getAll(props.productId).then(data => productMaterials.value = data)
 </script>
 
 <template>
@@ -115,14 +112,14 @@ const onProductMaterialListAction = ({ key, data }) => {
     @cancel="currentAction.product = null"
     v-if="currentAction.product === 'EDIT'"
   />
-  <RemoveProduct
+  <DeleteProduct
     :data="product"
     @success="router.push({ name: 'Products' })"
     @cancel="currentAction.product = null"
     v-if="currentAction.product === 'REMOVE'"
   />
 
-  <AddProductMaterial
+  <CreateProductMaterial
     :product-id="product.id"
     :product-materials="productMaterials"
     @success="productMaterialActions.add"
@@ -135,7 +132,7 @@ const onProductMaterialListAction = ({ key, data }) => {
     @cancel="currentAction.materials = productMaterial = null"
     v-if="currentAction.materials === 'EDIT'"
   />
-  <RemoveProductMaterial
+  <DeleteProductMaterial
     :data="productMaterial"
     @success="productMaterialActions.remove"
     @cancel="currentAction.materials = productMaterial = null"

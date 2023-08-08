@@ -1,30 +1,32 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { incrementProduct } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
-const qtyIncrement = ref(0)
+const ctx = ref({
+  id: props.data.id,
+  qty: 0
+})
 
-const qtyNew = computed(() => props.data.qtyAvailable + qtyIncrement.value)
+const result = computed(() => props.data.qtyAvailable + ctx.value.qty)
 
 const onSubmit = async () => {
   try {
     isLoading.value = true
 
-    await incrementProduct({
-      id: props.data.id,
-      value: qtyIncrement.value
-    })
+    await api.product.increment(ctx.value)
 
-    emit('success', {
+    const product = {
       id: props.data.id,
-      qtyAvailable: qtyNew.value
-    })
+      qtyAvailable: result.value
+    }
+
+    emit('success', product)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -53,7 +55,7 @@ const onSubmit = async () => {
           disabled
         />
         <CfInput
-          v-model.number="qtyIncrement"
+          v-model.number="ctx.qty"
           label="Adjustment"
           type="number"
           step="any"
@@ -62,8 +64,8 @@ const onSubmit = async () => {
         />
         <CfInput
           label="Result"
+          :value="result"
           :suffix="props.data.uom"
-          :value="qtyNew"
           disabled
         />
       </form>

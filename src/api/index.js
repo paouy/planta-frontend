@@ -3,6 +3,8 @@ import * as equipment from './equipment.js'
 import * as material from './material.js'
 import * as misc from './misc.js'
 import * as operation from './operation.js'
+import * as product from './product.js'
+import * as productMaterial from './productMaterial.js'
 import * as workstation from './workstation.js'
 
 const api = {
@@ -11,6 +13,8 @@ const api = {
   material,
   misc,
   operation,
+  product,
+  productMaterial,
   workstation
 }
 

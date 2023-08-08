@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { createAllocationOrder } from '../api/index.js'
-import { getProduct } from '../../product/api/index.js'
 import { CfDialog, CfFilledButton, CfInput } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -40,7 +40,7 @@ const invoke = async () => {
   }
 }
 
-onMounted(async () => product.value = await getProduct(props.product.id))
+onMounted(async () => product.value = await api.product.getOne(props.product.id))
 </script>
 
 <template>

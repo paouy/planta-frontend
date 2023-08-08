@@ -1,32 +1,32 @@
 <script setup>
 import { ref } from 'vue'
-import { addProduct } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import CategorySelect from '../../category/components/CategorySelect.vue'
 import OperationChoiceList from '../../operation/components/OperationChoiceList.vue'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
-const product = ref({
+const ctx = ref({
   sku: '',
   name: '',
   uom: '',
   category: {},
-  operations: []
+  operationIds: []
 })
 
-const onSubmit = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    const addedProduct = await addProduct(product.value)
+    const product = await api.product.createOne(ctx.value)
 
-    emit('success', addedProduct)
+    emit('success', product)
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
@@ -35,46 +35,42 @@ const onSubmit = async () => {
 <template>
   <CfDialog title="Add product" @close="emit('cancel')">
     <template #body>
-      <form id="addProduct" @submit.prevent="onSubmit">
+      <form id="createProduct" @submit.prevent="invoke">
         <CategorySelect
-          v-model="product.category"
+          v-model="ctx.category"
           type="products"
         />
         <CfInput
-          v-model="product.sku"
+          v-model="ctx.sku"
           label="SKU"
           required
         />
         <CfInput
-          v-model="product.name"
+          v-model="ctx.name"
           label="Name"
           required
         />
         <CfInput
-          v-model="product.uom"
+          v-model="ctx.uom"
           label="UOM"
           required
         />
-        <OperationChoiceList v-model="product.operations"/>
+        <OperationChoiceList v-model="ctx.operationIds"/>
       </form>
     </template>
     <template #footer>
-      <CfFilledButton
-        type="submit"
-        form="addProduct"
-        :loading="isLoading"
-      >Save</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="emit('cancel')"
-      >Cancel</CfFilledButton>
+      <CfFilledButton type="submit" form="createProduct" :loading="isLoading">
+        Save
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
+        Cancel
+      </CfFilledButton>
     </template>
   </CfDialog>
 </template>
 
-<style lang="scss">
-#addProduct {
+<style>
+#createProduct {
   display: grid;
   gap: 1rem;
 }

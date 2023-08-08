@@ -1,77 +1,70 @@
 <script setup>
 import { ref } from 'vue'
-import { updateProductMaterial } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
-
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
-const productMaterial = ref({
-  id: props.data.id,
+const ctx = ref({
+  productId: props.data.productId,
+  material: props.data.material,
   qty: props.data.qty
 })
 
-const onSubmit = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    await updateProductMaterial(productMaterial.value)
+    await api.productMaterial.updateOne(ctx.value)
 
-    emit('success', productMaterial.value)
+    emit('success', ctx.value)
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
 </script>
 
 <template>
-  <CfDialog
-    title="Update product material"
-    @close="emit('cancel')"
-  >
+  <CfDialog title="Update product material" @close="emit('cancel')">
     <template #body>
-      <form id="updateProductMaterial" @submit.prevent="onSubmit">
+      <form id="updateProductMaterial" @submit.prevent="invoke">
         <CfInput
           label="Category"
-          :value="props.data.reference.categoryName"
+          :value="props.data.material.categoryName"
           disabled
         />
         <CfInput
           label="Name"
-          :value="props.data.reference.name"
+          :value="props.data.material.normalizedName"
           disabled
         />
         <CfInput
-          v-model="productMaterial.qty"
+          v-model="ctx.qty"
           label="Quantity"
           type="number"
           step="any"
-          :suffix="props.data.reference.uom"
+          :suffix="props.data.material.uom"
           required
         />
       </form>
     </template>
     <template #footer>
-      <CfFilledButton
-        type="submit"
-        form="updateProductMaterial"
-        :loading="isLoading"
-      >Save</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="emit('cancel')"
-      >Cancel</CfFilledButton>
+      <CfFilledButton type="submit" form="updateProductMaterial" :loading="isLoading">
+        Save
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
+        Cancel
+      </CfFilledButton>
     </template>
   </CfDialog>
 </template>
 
-<style lang="scss">
+<style>
 #updateProductMaterial {
   display: grid;
   gap: 1rem;

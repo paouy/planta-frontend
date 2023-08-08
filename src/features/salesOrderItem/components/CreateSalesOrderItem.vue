@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { createSalesOrderItem } from '../api/index.js'
-import { getProducts } from '../../product/api/index.js'
 import { CfDialog, CfSelect, CfInput, CfFilledButton } from '../../../components/index.js'
 import CategorySelect from '../../category/components/CategorySelect.vue'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ salesOrder: Object })
@@ -54,7 +54,7 @@ const invoke = async () => {
 }
 
 onMounted(async () => {
-  const products = await getProducts()
+  const products = await api.product.getAll()
 
   productOptions.value = products.map(({ id, normalizedName, uom, category }) => ({
     label: normalizedName,

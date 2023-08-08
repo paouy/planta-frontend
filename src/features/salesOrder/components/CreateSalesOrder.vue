@@ -2,8 +2,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { createSalesOrder } from '../api/index.js'
 import { getCustomers } from '../../customer/api/index.js'
-import { getProducts } from '../../product/api/index.js'
 import { CfInput, CfSelect, CfOutlinedButton, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -80,7 +80,7 @@ onMounted(async () => {
     }))
   })
 
-  getProducts().then(data => {
+  api.product.getAll().then(data => {
     products.value = data.map(
       ({ id, normalizedName, uom }) => ({ id, normalizedName, uom })
     )

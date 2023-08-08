@@ -20,7 +20,7 @@ export const useWorkstationStore = () => {
     workstations.value = data
   }
 
-  const add = (workstation) => {
+  const create = (workstation) => {
     workstations.value.push(workstation)
 
     sortWorkstations()
@@ -41,7 +41,7 @@ export const useWorkstationStore = () => {
   return {
     workstations: readonly(workstations),
     set,
-    add,
+    create,
     remove,
     update
   }

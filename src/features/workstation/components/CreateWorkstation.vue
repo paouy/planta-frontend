@@ -1,24 +1,24 @@
 <script setup>
 import { ref } from 'vue'
-import { addWorkstation } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import OperationSelect from '../../operation/components/OperationSelect.vue'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
-const workstation = ref({
+const ctx = ref({
   name: '',
   operation: {}
 })
 
-const onSubmit = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    const addedWorkstation = await addWorkstation(workstation.value)
+    const workstation = await api.workstation.createOne(ctx.value)
 
-    emit('success', addedWorkstation)
+    emit('success', workstation)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -31,32 +31,28 @@ const onSubmit = async () => {
 <template>
   <CfDialog title="Add workstation" @close="emit('cancel')">
     <template #body>
-      <form id="addWorkstation" @submit.prevent="onSubmit">
-        <OperationSelect v-model="workstation.operation"/>
+      <form id="createWorkstation" @submit.prevent="invoke">
+        <OperationSelect v-model="ctx.operation"/>
         <CfInput
-          v-model="workstation.name"
+          v-model="ctx.name"
           label="Name"
           required
         />
       </form>
     </template>
     <template #footer>
-      <CfFilledButton
-        type="submit"
-        form="addWorkstation"
-        :loading="isLoading"
-      >Save</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="emit('cancel')"
-      >Cancel</CfFilledButton>
+      <CfFilledButton type="submit" form="createWorkstation" :loading="isLoading">
+        Save
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
+        Cancel
+      </CfFilledButton>
     </template>
   </CfDialog>
 </template>
 
-<style lang="scss">
-#addWorkstation {
+<style>
+#createWorkstation {
   display: grid;
   gap: 1rem;
 }

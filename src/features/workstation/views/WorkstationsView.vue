@@ -2,12 +2,12 @@
 import { ref } from 'vue'
 import { useWorkstationStore } from '../store.js'
 import { useMiscStore } from '../../misc/store.js'
-import { getWorkstations } from '../api/index.js'
 import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
 import WorkstationsList from '../components/WorkstationsList.vue'
-import AddWorkstation from '../components/AddWorkstation.vue'
+import CreateWorkstation from '../components/CreateWorkstation.vue'
 import UpdateWorkstation from '../components/UpdateWorkstation.vue'
-import RemoveWorkstation from '../components/RemoveWorkstation.vue'
+import DeleteWorkstation from '../components/DeleteWorkstation.vue'
+import api from '../../../api/index.js'
 
 const breadcrumbs = [
   {
@@ -22,7 +22,7 @@ const { isInitialized, isInitializing } = useMiscStore()
 const { workstations, ...workstationStore } = useWorkstationStore()
 
 if (!isInitialized.value && !isInitializing.value) {
-  getWorkstations().then(workstationStore.set)
+  api.workstation.getAll().then(workstationStore.set)
 }
 
 const workstation = ref(null)
@@ -39,7 +39,7 @@ const onWorkstationsListAction = ({ key, data }) => {
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader title="Workstations" description="Configure the workstations in your facility.">
       <template #actions>
-        <CfFilledButton @click="currentAction = 'ADD'">
+        <CfFilledButton @click="currentAction = 'CREATE'">
           Add workstation
         </CfFilledButton>
       </template>
@@ -50,10 +50,10 @@ const onWorkstationsListAction = ({ key, data }) => {
     />
   </CfAppView>
 
-  <AddWorkstation
-    @success="workstationStore.add"
+  <CreateWorkstation
+    @success="workstationStore.create"
     @cancel="currentAction = null"
-    v-if="currentAction === 'ADD'"
+    v-if="currentAction === 'CREATE'"
   />
 
   <UpdateWorkstation
@@ -63,7 +63,7 @@ const onWorkstationsListAction = ({ key, data }) => {
     v-if="currentAction === 'EDIT'"
   />
 
-  <RemoveWorkstation
+  <DeleteWorkstation
     :data="workstation"
     @success="workstationStore.remove"
     @cancel="currentAction = workstation = null"

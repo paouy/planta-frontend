@@ -45,10 +45,10 @@ const computedValue = computed({
 
         const { seq } = operations.value.find(({ id }) => operationId === id)
 
-        return [seq, operation]
+        return [operation, seq]
       })
-      .sort((a, b) => a[0] - b[0])
-      .map(([seq, operation]) => operation)
+      .sort((a, b) => a[1] - b[1])
+      .map(([operation]) => operation)
 
     emit('update:modelValue', sortedValue)
   }

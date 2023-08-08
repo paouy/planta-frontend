@@ -10,8 +10,8 @@ const columns = [
     key: 'normalizedName',
     label: 'Name'
   }, {
-    key: 'collection.name',
-    label: 'Collection'
+    key: 'category.name',
+    label: 'Category'
   }, {
     key: 'qtyAvailable',
     label: 'Available'
@@ -35,7 +35,7 @@ const columns = [
   >
     <template v-slot:row="{data}">
       <td>{{ data.normalizedName }}</td>
-      <td>{{ data.collection.name }}</td>
+      <td>{{ data.category.name }}</td>
       <td>{{ `${data.qtyAvailable} ${data.uom}` }}</td>
       <td>{{ `${data.qtyWip} ${data.uom}` }}</td>
       <td>{{ `${data.qtyAllocated} ${data.uom}` }}</td>

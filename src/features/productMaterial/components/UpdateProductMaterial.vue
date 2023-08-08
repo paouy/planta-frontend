@@ -37,8 +37,8 @@ const onSubmit = async () => {
     <template #body>
       <form id="updateProductMaterial" @submit.prevent="onSubmit">
         <CfInput
-          label="Collection"
-          :value="props.data.reference.collectionName"
+          label="Category"
+          :value="props.data.reference.categoryName"
           disabled
         />
         <CfInput

@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { updateMaterial } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
-import CollectionSelect from '../../collection/components/CollectionSelect.vue'
+import CategorySelect from '../../category/components/CategorySelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -13,7 +13,7 @@ const material = ref({
   id: '',
   name: '',
   uom: '',
-  collection: {}
+  category: {}
 })
 
 const onSubmit = async () => {
@@ -38,8 +38,8 @@ onMounted(() => Object.assign(material.value, props.data))
   <CfDialog title="Update material" @close="emit('cancel')">
     <template #body>
       <form id="updateMaterial" @submit.prevent="onSubmit">
-        <CollectionSelect
-          v-model="material.collection"
+        <CategorySelect
+          v-model="material.category"
           type="materials"
         />
         <CfInput

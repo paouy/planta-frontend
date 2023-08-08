@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { addMaterial } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
-import CollectionSelect from '../../collection/components/CollectionSelect.vue'
+import CategorySelect from '../../category/components/CategorySelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -10,7 +10,7 @@ const isLoading = ref(false)
 const material = ref({
   name: '',
   uom: '',
-  collection: {}
+  category: {}
 })
 
 const onSubmit = async () => {
@@ -33,8 +33,8 @@ const onSubmit = async () => {
   <CfDialog title="Add material" @close="emit('cancel')">
     <template #body>
       <form id="addMaterial" @submit.prevent="onSubmit">
-        <CollectionSelect
-          v-model="material.collection"
+        <CategorySelect
+          v-model="material.category"
           type="materials"
         />
         <CfInput

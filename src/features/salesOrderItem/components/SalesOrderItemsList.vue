@@ -33,6 +33,9 @@ const computedColumns = computed(() => {
       }, {
         label: 'Allocated',
         key: 'qtyAllocated'
+      }, {
+        label: 'Fulfilled',
+        key: 'qtyFulfilled'
       }
     )
   }
@@ -68,6 +71,7 @@ const data = computed(() => {
       <td>{{ data.qty }} {{ data.product.uom }}</td>
       <td v-if="!props.updateOnly">{{ data.qtyWip }} {{ data.product.uom }}</td>
       <td v-if="!props.updateOnly">{{ data.qtyAllocated }} {{ data.product.uom }}</td>
+      <td v-if="!props.updateOnly">{{ data.qtyFulfilled }} {{ data.product.uom }}</td>
     </template>
   </CfDataTable>
 </template>

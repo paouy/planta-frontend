@@ -7,8 +7,8 @@ const props = defineProps({ data: Array })
 
 const columns = [
   {
-    key: 'reference.collectionName',
-    label: 'Collection'
+    key: 'reference.categoryName',
+    label: 'Category'
   }, {
     key: 'name',
     label: 'Name'
@@ -27,7 +27,7 @@ const columns = [
     @row-action="$event => emit('action', $event)"
   >
     <template v-slot:row="{data}">
-      <td>{{ data.reference.collectionName }}</td>
+      <td>{{ data.reference.categoryName }}</td>
       <td>{{ data.reference.name }}</td>
       <td>{{ `${data.qty} ${data.reference.uom}` }}</td>
     </template>

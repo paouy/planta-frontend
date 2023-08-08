@@ -24,7 +24,7 @@ const product = ref({
   name: '',
   sku: '',
   uom: '',
-  collection: {
+  category: {
     id: '',
     name: ''
   }
@@ -35,8 +35,8 @@ const productMaterial = ref(null)
 const productSummary = computed(() => {
   return [
     {
-      label: 'Collection',
-      value: product.value.collection.name
+      label: 'Category',
+      value: product.value.category.name
     }, {
       label: 'SKU',
       value: product.value.sku

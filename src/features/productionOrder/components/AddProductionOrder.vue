@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { addProductionOrder } from '../api/index.js'
 import { getProducts } from '../../product/api/index.js'
 import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
-import CollectionSelect from '../../collection/components/CollectionSelect.vue'
+import CategorySelect from '../../category/components/CategorySelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -13,7 +13,7 @@ const props = defineProps({
 })
 
 const isLoading = ref(false)
-const collection = ref({ id: '' })
+const category = ref({ id: '' })
 const products = ref([])
 const product = ref({
   id: '',
@@ -29,7 +29,7 @@ const productionOrder = ref({
 
 const productOptions = computed(() => {
   return products.value
-    .filter(product => product.collection.id === collection.value.id)
+    .filter(product => product.category.id === category.value.id)
     .map(product => ({ label: product.normalizedName, value: product }))
 })
 
@@ -73,8 +73,8 @@ onMounted(async () => {
   >
     <template #body>
       <form id="addProductionOrder" @submit.prevent="onSubmit">
-        <CollectionSelect
-          v-model="collection"
+        <CategorySelect
+          v-model="category"
           type="products"
           v-if="!props.product"
         />

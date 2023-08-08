@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { addProductMaterial } from '../api/index.js'
 import { getMaterials } from '../../material/api/index.js'
 import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
-import CollectionSelect from '../../collection/components/CollectionSelect.vue'
+import CategorySelect from '../../category/components/CategorySelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 
@@ -14,7 +14,7 @@ const props = defineProps({
 
 const isLoading = ref(false)
 const materials = ref([])
-const collection = ref({ id: '' })
+const category = ref({ id: '' })
 
 const productMaterial = ref({
   productId: props.productId,
@@ -27,7 +27,7 @@ const materialOptions = computed(() => {
 
   return materials.value
     .filter(material => !referenceIds.includes(material.id))
-    .filter(material => material.collection.id === collection.value.id)
+    .filter(material => material.category.id === category.value.id)
     .map(material => ({ label: material.name, value: material }))
 })
 
@@ -53,8 +53,8 @@ onMounted(async () => materials.value = await getMaterials())
   <CfDialog title="Add product material" @close="emit('cancel')">
     <template #body>
       <form id="addProductMaterial" @submit.prevent="onSubmit">
-        <CollectionSelect
-          v-model="collection"
+        <CategorySelect
+          v-model="category"
           type="materials"
         />
         <CfSelect

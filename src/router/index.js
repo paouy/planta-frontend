@@ -6,7 +6,7 @@ import ConfigurationsView from '../features/misc/views/ConfigurationsView.vue'
 import OperationsView from '../features/operation/views/OperationsView.vue'
 import WorkstationsView from '../features/workstation/views/WorkstationsView.vue'
 import EquipmentsView from '../features/equipment/views/EquipmentsView.vue'
-import CollectionsView from '../features/collection/views/CollectionsView.vue'
+import CategoriesView from '../features/category/views/CategoriesView.vue'
 import ProductionOrdersView from '../features/productionOrder/views/ProductionOrdersView.vue'
 import ProductionOrderView from '../features/productionOrder/views/ProductionOrderView.vue'
 import ProductionExecutionView from '../features/misc/views/ProductionExecutionView.vue'
@@ -124,9 +124,9 @@ const router = createRouter({
           name: 'Equipment',
           component: EquipmentsView
         }, {
-          path: 'collections',
-          name: 'Collections',
-          component: CollectionsView
+          path: 'categories',
+          name: 'Categories',
+          component: CategoriesView
         }
       ]
     }

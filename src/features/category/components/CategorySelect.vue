@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useCollectionStore } from '../store.js'
+import { useCategoryStore } from '../store.js'
 import { CfSelect } from '../../../components/index.js'
 
 const emit = defineEmits(['update:modelValue'])
@@ -20,22 +20,22 @@ const props = defineProps({
   }
 })
 
-const { collections } = useCollectionStore()
+const { categories } = useCategoryStore()
 
 const options = computed(() => {
-  return collections.value
+  return categories.value
     .filter(({ type }) => props.type.toUpperCase() === type)
-    .map(collection => {
+    .map(category => {
       let value = {}
 
       if (props.keys.length > 1) {
-        props.keys.forEach(key => value[key] = collection[key])
+        props.keys.forEach(key => value[key] = category[key])
       } else {
-        value = collection[props.keys.at(0)]
+        value = category[props.keys.at(0)]
       } 
 
       return {
-        label: collection.name,
+        label: category.name,
         value
       }
     })
@@ -55,7 +55,7 @@ const computedValue = computed({
 <template>
   <CfSelect
     v-model="computedValue"
-    label="Collection"
+    label="Category"
     :options="options"
     :disabled="props.disabled"
     :required="props.required"

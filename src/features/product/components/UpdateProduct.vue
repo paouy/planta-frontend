@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { updateProduct } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
-import CollectionSelect from '../../collection/components/CollectionSelect.vue'
+import CategorySelect from '../../category/components/CategorySelect.vue'
 import OperationChoiceList from '../../operation/components/OperationChoiceList.vue'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -15,7 +15,7 @@ const product = ref({
   sku: '',
   name: '',
   uom: '',
-  collection: {},
+  category: {},
   operations: []
 })
 
@@ -41,8 +41,8 @@ onMounted(() => Object.assign(product.value, props.data))
   <CfDialog title="Edit product" @close="emit('cancel')">
     <template #body>
       <form id="updateProduct" @submit.prevent="onSubmit">
-        <CollectionSelect
-          v-model="product.collection"
+        <CategorySelect
+          v-model="product.category"
           type="products"
         />
         <CfInput

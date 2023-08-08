@@ -3,14 +3,14 @@ import { ref, computed, onMounted } from 'vue'
 import { createSalesOrderItem } from '../api/index.js'
 import { getProducts } from '../../product/api/index.js'
 import { CfDialog, CfSelect, CfInput, CfFilledButton } from '../../../components/index.js'
-import CollectionSelect from '../../collection/components/CollectionSelect.vue'
+import CategorySelect from '../../category/components/CategorySelect.vue'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ salesOrder: Object })
 
 const isLoading = ref(false)
 const productOptions = ref([])
-const collectionId = ref('')
+const categoryId = ref('')
 const ctx = ref({
   salesOrderId: props.salesOrder.id,
   product: {
@@ -25,7 +25,7 @@ const computedProductOptions = computed(() => {
   const productIds = props.salesOrder.items.map(({ product }) => product.id)
 
   return productOptions.value
-    .filter(option => collectionId.value === option.collectionId)
+    .filter(option => categoryId.value === option.categoryId)
     .map(option => ({ ...option, disabled: productIds.includes(option.value.id) }))
 })
 
@@ -56,10 +56,10 @@ const invoke = async () => {
 onMounted(async () => {
   const products = await getProducts()
 
-  productOptions.value = products.map(({ id, normalizedName, uom, collection }) => ({
+  productOptions.value = products.map(({ id, normalizedName, uom, category }) => ({
     label: normalizedName,
     value: { id, normalizedName, uom },
-    collectionId: collection.id
+    categoryId: category.id
   }))
 })
 </script>
@@ -68,8 +68,8 @@ onMounted(async () => {
   <CfDialog title="Add sales order item" @close="emit('cancel')">
     <template #body>
       <form id="createSalesOrderItem" @submit.prevent="invoke">
-        <CollectionSelect
-          v-model="collectionId"
+        <CategorySelect
+          v-model="categoryId"
           type="products"
           :keys="['id']"
         />

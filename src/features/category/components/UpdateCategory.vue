@@ -1,31 +1,29 @@
 <script setup>
 import { ref } from 'vue'
 import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
-import { updateCollection } from '../api/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
-
 const props = defineProps({ data: Object })
-
-const collectionTypeOptions = [
+const categoryTypeOptions = [
   { label: 'Materials', value: 'MATERIALS' },
   { label: 'Products', value: 'PRODUCTS' }
 ]
 
 const isLoading = ref(false)
-const collection = ref({
+const ctx = ref({
   id: props.data.id,
   name: props.data.name,
   type: props.data.type
 })
 
-const onSubmit = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    await updateCollection(collection.value)
+    await api.category.updateOne(ctx.value)
 
-    emit('success', collection.value)
+    emit('success', ctx.value)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -36,39 +34,35 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <CfDialog title="Edit collection" @close="emit('cancel')">
+  <CfDialog title="Edit category" @close="emit('cancel')">
     <template #body>
-      <form id="updateCollection" @submit.prevent="onSubmit">
+      <form id="updateCategory" @submit.prevent="invoke">
         <CfInput
-          v-model="collection.name"
+          v-model="ctx.name"
           label="Name"
           required
         />
         <CfSelect
-          v-model="collection.type"
+          v-model="ctx.type"
           label="Type"
-          :options="collectionTypeOptions"
+          :options="categoryTypeOptions"
           required
         />
       </form>
     </template>
     <template #footer>
-      <CfFilledButton
-        type="submit"
-        form="updateCollection"
-        :loading="isLoading"
-      >Save</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="emit('cancel')"
-      >Cancel</CfFilledButton>
+      <CfFilledButton type="submit" form="updateCategory" :loading="isLoading">
+        Save
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
+        Cancel
+      </CfFilledButton>
     </template>
   </CfDialog>
 </template>
 
-<style lang="scss">
-#updateCollection {
+<style>
+#updateCategory {
   display: grid;
   gap: 1rem;
 }

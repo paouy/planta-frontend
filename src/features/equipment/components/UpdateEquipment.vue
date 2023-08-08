@@ -1,27 +1,27 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { updateEquipment } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import OperationChoiceList from '../../operation/components/OperationChoiceList.vue'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
-const equipment = ref({
+const ctx = ref({
   id: '',
   name: '',
-  operations: []
+  operationIds: []
 })
 
-const onSubmit = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    await updateEquipment(equipment.value)
+    await api.equipment.updateOne(ctx.value)
 
-    emit('success', equipment.value)
+    emit('success', ctx.value)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -30,37 +30,33 @@ const onSubmit = async () => {
   }
 }
 
-onMounted(() => Object.assign(equipment.value, props.data))
+onMounted(() => Object.assign(ctx.value, props.data))
 </script>
 
 <template>
   <CfDialog title="Edit equipment" @close="emit('cancel')">
     <template #body>
-      <form id="updateEquipment" @submit.prevent="onSubmit">
+      <form id="updateEquipment" @submit.prevent="invoke">
         <CfInput
-          v-model="equipment.name"
+          v-model="ctx.name"
           label="Name"
           required
         />
-        <OperationChoiceList v-model="equipment.operations"/>
+        <OperationChoiceList v-model="ctx.operationIds"/>
       </form>
     </template>
     <template #footer>
-      <CfFilledButton
-        type="submit"
-        form="updateEquipment"
-        :loading="isLoading"
-      >Save</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="emit('cancel')"
-      >Cancel</CfFilledButton>
+      <CfFilledButton type="submit" form="updateEquipment" :loading="isLoading">
+        Save
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
+        Cancel
+      </CfFilledButton>
     </template>
   </CfDialog>
 </template>
 
-<style lang="scss">
+<style>
 #updateEquipment {
   display: grid;
   gap: 1rem;

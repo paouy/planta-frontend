@@ -2,12 +2,12 @@
 import { ref } from 'vue'
 import { useEquipmentStore } from '../store.js'
 import { useMiscStore } from '../../misc/store.js'
-import { getEquipments } from '../api/index.js'
 import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
 import EquipmentsList from '../components/EquipmentsList.vue'
-import AddEquipment from '../components/AddEquipment.vue'
+import CreateEquipment from '../components/CreateEquipment.vue'
 import UpdateEquipment from '../components/UpdateEquipment.vue'
-import RemoveEquipment from '../components/RemoveEquipment.vue'
+import DeleteEquipment from '../components/DeleteEquipment.vue'
+import api from '../../../api/index.js'
 
 const breadcrumbs = [
   {
@@ -22,7 +22,7 @@ const { isInitialized, isInitializing } = useMiscStore()
 const { equipments, ...equipmentStore } = useEquipmentStore()
 
 if (!isInitialized.value && !isInitializing.value) {
-  getEquipments().then(equipmentStore.set)
+  api.equipment.getAll().then(equipmentStore.set)
 }
 
 const equipment = ref(null)
@@ -39,7 +39,7 @@ const onEquipmentsListAction = ({ key, data }) => {
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader title="Equipment" description="Configure the equipment used in your production.">
       <template #actions>
-        <CfFilledButton @click="currentAction = 'ADD'">
+        <CfFilledButton @click="currentAction = 'CREATE'">
           Add equipment
         </CfFilledButton>
       </template>
@@ -50,10 +50,10 @@ const onEquipmentsListAction = ({ key, data }) => {
     />
   </CfAppView>
 
-  <AddEquipment
+  <CreateEquipment
     @success="equipmentStore.add"
     @cancel="currentAction = null"
-    v-if="currentAction === 'ADD'"
+    v-if="currentAction === 'CREATE'"
   />
 
   <UpdateEquipment
@@ -63,7 +63,7 @@ const onEquipmentsListAction = ({ key, data }) => {
     v-if="currentAction === 'EDIT'"
   />
   
-  <RemoveEquipment
+  <DeleteEquipment
     :data="equipment"
     @success="equipmentStore.remove"
     @cancel="currentAction = equipment = null"

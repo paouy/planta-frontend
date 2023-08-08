@@ -8,27 +8,47 @@ const props = defineProps({
   modelValue: {
     type: Array,
     default: () => []
+  },
+  keys: {
+    type: Array,
+    default: () => ['id']
   }
 })
 
 const { operations } = useOperationStore()
 
 const choices = computed(() => {
-  return operations.value.map(({ id, name, seq }) => ({
-    label: name,
-    value: { id, name, seq }
-  }))
+  return operations.value.map(operation => {
+    let value = {}
+
+    if (props.keys.length > 1) {
+      props.keys.forEach(key => value[key] = operation[key])
+    } else {
+      value = operation[props.keys[0]]
+    } 
+
+    return {
+      label: operation.name,
+      value
+    }
+  })
 })
 
 const computedValue = computed({
-  get: () => props.modelValue.map(operation => {
-    const { seq } = operations.value.find(({ id }) => operation.id === id)
-    return { seq, ...operation }
-  }),
+  get: () => props.modelValue,
   set: (value) => {
     const sortedValue = value
-      .sort((a, b) => a.seq - b.seq)
-      .map(({ seq, ...operation }) => operation)
+      .map(operation => {
+        const operationId = typeof operation !== 'object'
+          ? operation
+          : operation.id
+
+        const { seq } = operations.value.find(({ id }) => operationId === id)
+
+        return [seq, operation]
+      })
+      .sort((a, b) => a[0] - b[0])
+      .map(([seq, operation]) => operation)
 
     emit('update:modelValue', sortedValue)
   }

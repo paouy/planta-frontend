@@ -8,18 +8,18 @@ const props = defineProps({ data: Array })
 
 const columns = [
   {
-    key: 'name',
-    label: 'Name'
+    label: 'Name',
+    key: 'name'
   }, {
-    key: 'normalizedOperations',
-    label: 'Operations'
+    label: 'Operations',
+    key: 'operationCount'
   }
 ]
 
 const computedData = computed(() => {
   return props.data.map(equipment => ({
     ...equipment,
-    normalizedOperations: equipment.operations.map(({ name }) => name).join(', ')
+    operationCount: equipment.operationIds.length
   }))
 })
 </script>

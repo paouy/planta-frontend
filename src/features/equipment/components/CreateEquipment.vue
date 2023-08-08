@@ -1,24 +1,24 @@
 <script setup>
 import { ref } from 'vue'
-import { addEquipment } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
 import OperationChoiceList from '../../operation/components/OperationChoiceList.vue'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
-const equipment = ref({
+const ctx = ref({
   name: '',
-  operations: []
+  operationIds: []
 })
 
-const onSubmit = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    const addedEquipment = await addEquipment(equipment.value)
+    const equipment = await api.equipment.createOne(ctx.value)
 
-    emit('success', addedEquipment)
+    emit('success', equipment)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -31,32 +31,28 @@ const onSubmit = async () => {
 <template>
   <CfDialog title="Add equipment" @close="emit('cancel')">
     <template #body>
-      <form id="addEquipment" @submit.prevent="onSubmit">
+      <form id="createEquipment" @submit.prevent="invoke">
         <CfInput
-          v-model="equipment.name"
+          v-model="ctx.name"
           label="Name"
           required
         />
-        <OperationChoiceList v-model="equipment.operations"/>
+        <OperationChoiceList v-model="ctx.operationIds"/>
       </form>
     </template>
     <template #footer>
-      <CfFilledButton
-        type="submit"
-        form="addEquipment"
-        :loading="isLoading"
-      >Save</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="emit('cancel')"
-      >Cancel</CfFilledButton>
+      <CfFilledButton type="submit" form="createEquipment" :loading="isLoading">
+        Save
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
+        Cancel
+      </CfFilledButton>
     </template>
   </CfDialog>
 </template>
 
-<style lang="scss">
-#addEquipment {
+<style>
+#createEquipment {
   display: grid;
   gap: 1rem;
 }

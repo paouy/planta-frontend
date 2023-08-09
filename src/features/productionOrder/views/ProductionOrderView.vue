@@ -7,7 +7,6 @@ import ProductionOrderTally from '../components/ProductionOrderTally.vue'
 import ProductionRecordsList from '../../productionRecord/components/ProductionRecordsList.vue'
 
 const breadcrumbs = [{ name: 'Overview', path: '/production/overview' }]
-
 const props = defineProps({ productionOrderId: String })
 
 const productionOrder = ref({

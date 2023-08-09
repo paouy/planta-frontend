@@ -64,7 +64,7 @@ onMounted(() => {
       <form id="createProductionOrder" @submit.prevent="invoke">
         <CfInput
           v-model="ctx.publicId"
-          label="Order number"
+          label="ID"
           required
           v-if="!props.salesOrderItemId"
         />

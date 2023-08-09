@@ -12,25 +12,44 @@ const props = defineProps({
 const isLoading = ref(false)
 const position = ref(props.data.seq)
 
-const index = computed(() => position.value - 1)
-const positionOptions = computed(() => Array.from({ length: props.productionOrders.length }, (_, i) => i + 1))
-const productionOrders = computed(() => props.productionOrders.filter(({ id }) => props.data.id !== id))
+const productionOrder = computed(() => {
+  const index = position.value - 1
+  const productionOrders = props.productionOrders
+    .filter(({ id }) => props.data.id !== id)
+    .map(({ publicId, priority, product }) => {
+      return {
+        productNormalizedName: product.normalizedName,
+        publicId,
+        priority
+      }
+    })
 
-const prev = computed(() => productionOrders.value[index.value - 1])
-const next = computed(() => productionOrders.value[index.value])
+  return {
+    beforePrev: productionOrders[index - 2],
+    prev: productionOrders[index - 1],
+    next: productionOrders[index],
+    afterNext: productionOrders[index + 1]
+  }
+})
+
+const ctx = computed(() => {
+  const prevPriority = productionOrder.value.prev?.priority || -100
+  const nextPriority = productionOrder.value.next?.priority || 100
+  const priority = (prevPriority + nextPriority) / (prevPriority && nextPriority ? 2 : 1)
+
+  return {
+    id: props.data.id,
+    priority
+  }
+})
 
 const invoke = async () => {
   try {
     isLoading.value = true
 
-    const ctx = {
-      id: props.data.id,
-      priority: ((prev.value?.priority || 0) + next.value.priority) / 2
-    }
+    await api.productionOrder.updateOne(ctx.value)
 
-    await api.productionOrder.updateOne(ctx)
-
-    emit('success', productionOrder)
+    emit('success', ctx.value)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -49,30 +68,39 @@ const invoke = async () => {
           :value="props.data.publicId"
           disabled
         />
-        <CfSelect
-          v-model="position"
-          label="Position"
-          :options="positionOptions"
-          required
-        />
+        <CfSelect v-model.number="position" label="Position" required>
+          <option v-for="n in props.productionOrders.length" :value="n">
+            {{ n }}
+          </option>
+        </CfSelect>
       </form>
       <div class="productionOrdersListPreview">
         <h4>Preview</h4>
         <ul>
-          <li v-if="prev">
-            <span>{{ position - 1 }}.</span>
-            <span>{{ prev.publicId }}</span>
-            <span>{{ prev.product.normalizedName }}</span>
+          <li v-if="!productionOrder.next">
+            <span>{{ position - 2 }}.</span>
+            <span>{{ productionOrder.beforePrev.publicId }}</span>
+            <span>{{ productionOrder.beforePrev.productNormalizedName }}</span>
           </li>
-          <li class="currentProductionOrder">
+          <li v-if="productionOrder.prev">
+            <span>{{ position - 1 }}.</span>
+            <span>{{ productionOrder.prev.publicId }}</span>
+            <span>{{ productionOrder.prev.productNormalizedName }}</span>
+          </li>
+          <li class="current">
             <span>{{ position }}.</span>
             <span>{{ props.data.publicId }}</span>
             <span>{{ props.data.product.normalizedName }}</span>
           </li>
-          <li v-if="next">
+          <li v-if="productionOrder.next">
             <span>{{ position + 1 }}.</span>
-            <span>{{ next.publicId }}</span>
-            <span>{{ next.product.normalizedName }}</span>
+            <span>{{ productionOrder.next.publicId }}</span>
+            <span>{{ productionOrder.next.productNormalizedName }}</span>
+          </li>
+          <li v-if="!productionOrder.prev">
+            <span>{{ position + 2 }}.</span>
+            <span>{{ productionOrder.afterNext.publicId }}</span>
+            <span>{{ productionOrder.afterNext.productNormalizedName }}</span>
           </li>
         </ul>
       </div>
@@ -121,7 +149,7 @@ const invoke = async () => {
     padding: 0.5rem;
   }
 
-  .currentProductionOrder {
+  .current {
     background: var(--cf-gray-9);
   }
 }

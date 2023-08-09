@@ -5,7 +5,7 @@ import { getProductionOrders } from '../api/index.js'
 import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
 import ProductionOrdersSummary from '../components/ProductionOrdersSummary.vue'
 import ProductionOrdersList from '../components/ProductionOrdersList.vue'
-import AddProductionOrder from '../components/AddProductionOrder.vue'
+import CreateProductionOrder from '../components/CreateProductionOrder.vue'
 import RemoveProductionOrder from '../components/RemoveProductionOrder.vue'
 import UpdateProductionOrderPriority from '../components/UpdateProductionOrderPriority.vue'
 import ReleaseProductionOrder from '../components/ReleaseProductionOrder.vue'
@@ -38,7 +38,7 @@ onMounted(() => getProductionOrders().then(productionOrderStore.initialize))
     />
   </CfAppView>
 
-  <AddProductionOrder
+  <CreateProductionOrder
     @success="productionOrderStore.add"
     @cancel="currentAction = null"
     v-if="currentAction === 'ADD'"

@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
 import ProductsList from '../components/ProductsList.vue'
 import CreateProduct from '../components/CreateProduct.vue'
-import AddProductionOrder from '../../productionOrder/components/AddProductionOrder.vue'
+import CreateProductionOrder from '../../productionOrder/components/CreateProductionOrder.vue'
 import IncrementProduct from '../components/IncrementProduct.vue'
 import api from '../../../api/index.js'
 
@@ -35,9 +35,9 @@ const onCreateProduct = ({ id: productId }) => {
   })
 }
 
-const onAddProductionOrder = (productionOrder) => {
-  const product = products.value.find(({ id }) => productionOrder.product.id === id)
-  product.qtyWip += productionOrder.qty
+const onCreateProductionOrder = (data) => {
+  const product = products.value.find(({ id }) => data.product.id === id)
+  product.qtyWip += data.qty
 }
 
 const onIncrementProduct = (data) => {
@@ -69,9 +69,9 @@ onMounted(async () => products.value = await api.product.getAll())
     v-if="currentAction === 'CREATE'"
   />
 
-  <AddProductionOrder
+  <CreateProductionOrder
     :product="product"
-    @success="onAddProductionOrder"
+    @success="onCreateProductionOrder"
     @cancel="currentAction = product = null"
     v-if="currentAction === 'MAKE'"
   />

@@ -7,7 +7,7 @@ import ConfirmSalesOrder from '../components/ConfirmSalesOrder.vue'
 import FulfillSalesOrder from '../components/FulfillSalesOrder.vue'
 import RemoveSalesOrder from '../components/RemoveSalesOrder.vue'
 import SalesOrderItemsList from '../../salesOrderItem/components/SalesOrderItemsList.vue'
-import AddProductionOrder from '../../productionOrder/components/AddProductionOrder.vue'
+import CreateProductionOrder from '../../productionOrder/components/CreateProductionOrder.vue'
 import CreateAllocationOrder from '../../allocationOrder/components/CreateAllocationOrder.vue'
 import CreateSalesOrderItem from '../../salesOrderItem/components/CreateSalesOrderItem.vue'
 import UpdateSalesOrderItemQty from '../../salesOrderItem/components/UpdateSalesOrderItemQty.vue'
@@ -158,7 +158,7 @@ onMounted(async () => salesOrder.value = await getSalesOrder(props.salesOrderId)
     v-if="currentAction.salesOrder === 'REMOVE'"
   />
 
-  <AddProductionOrder
+  <CreateProductionOrder
     :product="salesOrderItem?.product"
     :sales-order-item-id="salesOrderItem?.id"
     @success="onCreateProductionOrder"

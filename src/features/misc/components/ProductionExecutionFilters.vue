@@ -7,15 +7,15 @@ import WorkstationSelect from '../../workstation/components/WorkstationSelect.vu
 const emit = defineEmits([
   'update:operation',
   'update:workstation',
-  'update:showAll',
-  'update:listType'
+  'update:show',
+  'update:list'
 ])
 
 const props = defineProps({
   operation: Object,
   workstation: Object,
-  showAll: Boolean,
-  listType: String
+  show: Boolean,
+  list: String
 })
 
 const operation = computed({
@@ -28,14 +28,14 @@ const workstation = computed({
   set: (value) => emit('update:workstation', value)
 })
 
-const showAll = computed({
-  get: () => props.showAll,
-  set: (value) => emit('update:showAll', value)
+const show = computed({
+  get: () => props.show,
+  set: (value) => emit('update:show', value)
 })
 
-const listType = computed({
-  get: () => props.listType,
-  set: (value) => emit('update:listType', value)
+const list = computed({
+  get: () => props.list,
+  set: (value) => emit('update:list', value)
 })
 </script>
 
@@ -47,7 +47,7 @@ const listType = computed({
       @input="workstation = null"
     />
     <CfSelect
-      v-model="listType"
+      v-model="list"
       label="Display"
       :options="[{ label: 'Batches', value: 'BATCH' }, { label: 'Jobs', value: 'JOB' }]"
       required
@@ -60,7 +60,7 @@ const listType = computed({
       :required="false"
     />
     <CfSwitch
-      v-model="showAll"
+      v-model="show"
       label="Show jobs awaiting input"
     />
   </div>

@@ -1,62 +1,63 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { getProductionOrder } from '../api/index.js'
-import { getProductionRecords } from '../../productionRecord/api/index.js'
+import { ref, computed } from 'vue'
 import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfSummaryList } from '../../../components/index.js'
-import ProductionOrderTally from '../components/ProductionOrderTally.vue'
+import JobsList from '../../job/components/JobsList.vue'
 import ProductionRecordsList from '../../productionRecord/components/ProductionRecordsList.vue'
+import api from '../../../api/index.js'
 
 const breadcrumbs = [{ name: 'Overview', path: '/production/overview' }]
 const props = defineProps({ productionOrderId: String })
 
 const productionOrder = ref({
-  friendlyId: '',
-  status: '',
+  publicId: '',
   product: {
-    name: '',
+    normalizedName: '',
     uom: ''
   },
-  dueDate: null,
-  operations: []
+  status: '',
+  qty: null,
+  dueDate: null
 })
+const jobs = ref([])
 const productionRecords = ref([])
 
-const summary = computed(() => {
-  return [
-    {
-      label: 'Status',
-      value: productionOrder.value.status
-    }, {
-      label: 'Product',
-      value: productionOrder.value.product?.name
-    }, {
-      label: 'Quantity',
-      value: `${productionOrder.value.qty} ${productionOrder.value.product?.uom}`
-    }, {
-      label: 'Due Date',
-      value: productionOrder.value.dueDate
-    }
-  ]
-})
+const summary = computed(() => ([
+  {
+    label: 'Status',
+    value: productionOrder.value.status
+  }, {
+    label: 'Product',
+    value: productionOrder.value.product.normalizedName
+  }, {
+    label: 'Quantity',
+    value: `${productionOrder.value.qty} ${productionOrder.value.product.uom}`
+  }, {
+    label: 'Due Date',
+    value: productionOrder.value.dueDate
+  }
+]))
 
-onMounted(() => {
-  getProductionOrder(props.productionOrderId).then(data => productionOrder.value = data)
-  getProductionRecords(props.productionOrderId).then(data => productionRecords.value = data)
-})
+api.productionOrder
+  .getOne(props.productionOrderId)
+  .then(data => productionOrder.value = data)
+
+api.job
+  .getAll({ productionOrderId: props.productionOrderId })
+  .then(data => jobs.value = data)
 </script>
 
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfAppViewHeader :title="productionOrder.friendlyId"/>
+    <CfAppViewHeader :title="productionOrder.publicId"/>
 
     <CfHeader title="Production details"/>
     <CfSummaryList :data="summary"/>
 
-    <CfHeader title="Production tally"/>
-    <ProductionOrderTally :data="productionOrder.operations"/>
+    <CfHeader title="Jobs"/>
+    <JobsList :data="jobs"/>
 
-    <CfHeader title="Production log"/>
+    <CfHeader title="Production records"/>
     <ProductionRecordsList :data="productionRecords"/>
   </CfAppView>
 </template>

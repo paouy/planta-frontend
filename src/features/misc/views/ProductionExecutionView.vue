@@ -4,48 +4,46 @@ import { useRouter } from 'vue-router'
 import { toSlug } from '../../../helpers/index.js'
 import { useProductionExecution } from '../composables/productionExecution.js'
 import { useOperationStore } from '../../operation/store.js'
-import { getProductionOrders } from '../../productionOrder/api/index.js'
-import { getOperationBatches } from '../../operationBatch/api/index.js'
 import { CfAppView, CfAppViewHeader } from '../../../components/index.js'
 import ProductionExecutionFilters from '../components/ProductionExecutionFilters.vue'
-import UnassignedJobsCallout from '../components/UnassignedJobsCallout.vue'
-import JobsList from '../components/JobsList.vue'
-import AssignJob from '../components/AssignJob.vue'
-import ReassignJob from '../components/ReassignJob.vue'
+import ProductionExecutionList from '../components/ProductionExecutionList.vue'
+import UnassignedJobsCallout from '../../job/components/UnassignedJobsCallout.vue'
+import AssignJob from '../../job/components/AssignJob.vue'
 import AddProductionRecord from '../../productionRecord/components/AddProductionRecord.vue'
 import AddShortfallProductionRecord from '../../productionRecord/components/AddShortfallProductionRecord.vue'
 import OperationBatchesList from '../../operationBatch/components/OperationBatchesList.vue'
 import AddOperationBatch from '../../operationBatch/components/AddOperationBatch.vue'
 import StartOperationBatch from '../../operationBatch/components/StartOperationBatch.vue'
 import RemoveOperationBatch from '../../operationBatch/components/RemoveOperationBatch.vue'
+import api from '../../../api/index.js'
 
 const router = useRouter()
+const props = defineProps({ operationSlug: String })
 
 const {
   operation,
   workstation,
   showAllJobs,
   unassignedJobs,
-  jobs,
-  operationBatches,
+  currentJobs,
+  currentOperationBatches,
   ...productionExecution
 } = useProductionExecution()
 
-const props = defineProps({ operationSlug: String })
-
 const listType = ref('BATCH')
-const showAssignJob = ref(false)
-const jobAction = ref(null)
+const action = ref({})
 const job = ref(null)
-const operationBatchAction = ref(null)
 const operationBatch = ref(null)
 
 const onJobAction = ({ key, data }) => {
-  jobAction.value = key
+  action.value.job = key
   job.value = data
 }
 
 const onOperationBatchAction = ({ key, data }) => {
+  action.value.operationBatch = key
+  operationBatch.value = data
+
   if (key === 'ADD_REPORT') {
     router.push({
       name: 'AddOperationBatchReport',
@@ -55,9 +53,6 @@ const onOperationBatchAction = ({ key, data }) => {
       }
     })
   }
-
-  operationBatchAction.value = key
-  operationBatch.value = data
 }
 
 watch(operation, ({ name }) => router.push(`/production/execution/${toSlug(name)}`))
@@ -65,18 +60,18 @@ watch(operation, ({ name }) => router.push(`/production/execution/${toSlug(name)
 onMounted(async () => {
   const { operations } = useOperationStore()
 
-  const { id, name, isBatch } = !!props.operationSlug
+  const { id, name, isBatch } = Boolean(props.operationSlug)
     ? operations.value.find(({ name }) => props.operationSlug === toSlug(name))
     : operations.value[0]
 
   operation.value = { id, name, isBatch }
 
-  const [orders, batches] = await Promise.all([
-    getProductionOrders(),
-    getOperationBatches()
+  const [jobs, operationBatches] = await Promise.all([
+    api.job.getAll(),
+    api.operationBatch.getAllNotClosed()
   ])
 
-  productionExecution.initialize({ orders, batches })
+  productionExecution.initialize(jobs, operationBatches)
 })
 </script>
 
@@ -86,75 +81,69 @@ onMounted(async () => {
     <ProductionExecutionFilters
       v-model:operation="operation"
       v-model:workstation="workstation"
-      v-model:showAll="showAllJobs"
-      v-model:listType="listType"
+      v-model:show="showAllJobs"
+      v-model:list="listType"
     />
     <UnassignedJobsCallout
       :operation="operation"
       :count="unassignedJobs.length"
-      @trigger="showAssignJob = true"
+      @trigger="action.job = 'ASSIGN'"
       v-if="unassignedJobs.length"
     />
-    <JobsList
-      :data="jobs"
+    <ProductionExecutionList
+      :data="currentJobs"
       @action="onJobAction"
       v-if="!operation.isBatch || listType === 'JOB'"
     />
     <OperationBatchesList
-      :data="operationBatches"
+      :data="currentOperationBatches"
       @action="onOperationBatchAction"
       v-else
     />
   </CfAppView>
 
   <AssignJob
-    :data="unassignedJobs"
     :operation="operation"
-    :operation-batches="operationBatches"
+    :job="job"
+    :unassigned-jobs="unassignedJobs"
+    :operation-batches="currentOperationBatches"
     @success="productionExecution.updateJob"
-    @cancel="showAssignJob = false"
-    v-if="showAssignJob"
-  />
-
-  <ReassignJob
-    :data="job"
-    @success="productionExecution.updateJob"
-    @cancel="jobAction = job = null"
-    v-if="jobAction === 'REASSIGN'"
+    @cancel="action.job = job = null"
+    v-if="action.job === 'ASSIGN' || action.job === 'REASSIGN'"
   />
 
   <AddProductionRecord
     :job="job"
-    @success="productionExecution.addProductionRecord"
-    @cancel="jobAction = job = null"
-    v-if="jobAction === 'ADD_RECORD'"
+    @success="productionExecution.createProductionRecord"
+    @cancel="action.job = job = null"
+    v-if="action.job === 'ADD_RECORD'"
   />
 
   <AddShortfallProductionRecord
     :job="job"
-    @success="productionExecution.addProductionRecord"
-    @cancel="jobAction = job = null"
-    v-if="jobAction === 'CLOSE'"
+    @success="productionExecution.createProductionRecord"
+    @cancel="action.job = job = null"
+    v-if="action.job === 'CLOSE'"
   />
 
   <AddOperationBatch
     :operation="operation"
-    @success="productionExecution.addOperationBatch"
-    @cancel="operationBatchAction = null"
-    v-if="operationBatchAction === 'CREATE'"
+    @success="productionExecution.createOperationBatch"
+    @cancel="action.operationBatch = null"
+    v-if="action.operationBatch === 'CREATE'"
   />
 
   <StartOperationBatch
     :data="operationBatch"
     @success="productionExecution.startOperationBatch"
-    @cancel="operationBatchAction = operationBatch = null"
-    v-if="operationBatchAction === 'START'"
+    @cancel="action.operationBatch = operationBatch = null"
+    v-if="action.operationBatch === 'START'"
   />
 
   <RemoveOperationBatch
     :data="operationBatch"
-    @success="productionExecution.removeOperationBatch"
-    @cancel="operationBatchAction = operationBatch = null"
-    v-if="operationBatchAction === 'REMOVE'"
+    @success="productionExecution.deleteOperationBatch"
+    @cancel="action.operationBatch = operationBatch = null"
+    v-if="action.operationBatch === 'REMOVE'"
   />
 </template>

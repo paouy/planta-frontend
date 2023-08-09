@@ -14,11 +14,11 @@ const props = defineProps({
 const columns = [
   {
     label: 'ID',
-    key: 'productionOrder.friendlyId',
+    key: 'productionOrder.publicId',
     width: '12%'
   }, {
     label: 'Product',
-    key: 'productName'
+    key: 'product.normalizedName'
   }, {
     label: 'Qty',
     key: 'qty'
@@ -54,7 +54,9 @@ const computedData = computed(() => {
       actions = false
     }
 
-    const qty = `${job.qtyProduced.toLocaleString()}/${job.qtyExpected.toLocaleString()}`
+    const qtyMade = job.qtyOutput - job.qtyReject + job.qtyRework
+
+    const qty = `${qtyMade.toLocaleString()}/${job.qtyInput.toLocaleString()}`
 
     return {
       ...job,

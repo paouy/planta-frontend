@@ -1,16 +1,17 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useProductionOrderStore } from '../store.js'
-import { getProductionOrders } from '../api/index.js'
 import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
 import ProductionOrdersSummary from '../components/ProductionOrdersSummary.vue'
 import ProductionOrdersList from '../components/ProductionOrdersList.vue'
 import CreateProductionOrder from '../components/CreateProductionOrder.vue'
-import RemoveProductionOrder from '../components/RemoveProductionOrder.vue'
+import DeleteProductionOrder from '../components/DeleteProductionOrder.vue'
 import UpdateProductionOrderPriority from '../components/UpdateProductionOrderPriority.vue'
 import ReleaseProductionOrder from '../components/ReleaseProductionOrder.vue'
+import api from '../../../api/index.js'
 
 const { productionOrders, ...productionOrderStore } = useProductionOrderStore()
+
 const productionOrder = ref(null)
 const currentAction = ref(null)
 
@@ -19,7 +20,7 @@ const onProductionOrderAction = ({ key, data }) => {
   currentAction.value = key
 }
 
-onMounted(() => getProductionOrders().then(productionOrderStore.initialize))
+api.productionOrder.getAllNotReleased().then(productionOrderStore.set)
 </script>
 
 <template>
@@ -39,16 +40,16 @@ onMounted(() => getProductionOrders().then(productionOrderStore.initialize))
   </CfAppView>
 
   <CreateProductionOrder
-    @success="productionOrderStore.add"
+    @success="productionOrderStore.create"
     @cancel="currentAction = null"
     v-if="currentAction === 'ADD'"
   />
 
-  <RemoveProductionOrder
+  <DeleteProductionOrder
     :data="productionOrder"
     @success="productionOrderStore.remove"
     @cancel="currentAction = productionOrder = null"
-    v-if="currentAction === 'REMOVE'"
+    v-if="currentAction === 'DELETE'"
   />
 
   <UpdateProductionOrderPriority

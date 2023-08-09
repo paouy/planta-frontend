@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { updateProductionOrder } from '../api/index.js'
 import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({
@@ -19,16 +19,16 @@ const productionOrders = computed(() => props.productionOrders.filter(({ id }) =
 const prev = computed(() => productionOrders.value[index.value - 1])
 const next = computed(() => productionOrders.value[index.value])
 
-const onSubmit = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    const productionOrder = {
+    const ctx = {
       id: props.data.id,
       priority: ((prev.value?.priority || 0) + next.value.priority) / 2
     }
 
-    await updateProductionOrder(productionOrder)
+    await api.productionOrder.updateOne(ctx)
 
     emit('success', productionOrder)
     emit('cancel')
@@ -43,10 +43,10 @@ const onSubmit = async () => {
 <template>
   <CfDialog title="Reprioritize production order" @close="emit('cancel')">
     <template #body>
-      <form id="updateProductionOrderPriority" @submit.prevent="onSubmit">
+      <form id="updateProductionOrderPriority" @submit.prevent="invoke">
         <CfInput
           label="ID"
-          :value="props.data.friendlyId"
+          :value="props.data.publicId"
           disabled
         />
         <CfSelect
@@ -61,18 +61,18 @@ const onSubmit = async () => {
         <ul>
           <li v-if="prev">
             <span>{{ position - 1 }}.</span>
-            <span>{{ prev.friendlyId }}</span>
-            <span>{{ prev.product.name }}</span>
+            <span>{{ prev.publicId }}</span>
+            <span>{{ prev.product.normalizedName }}</span>
           </li>
           <li class="currentProductionOrder">
             <span>{{ position }}.</span>
-            <span>{{ props.data.friendlyId }}</span>
-            <span>{{ props.data.product.name }}</span>
+            <span>{{ props.data.publicId }}</span>
+            <span>{{ props.data.product.normalizedName }}</span>
           </li>
           <li v-if="next">
             <span>{{ position + 1 }}.</span>
-            <span>{{ next.friendlyId }}</span>
-            <span>{{ next.product.name }}</span>
+            <span>{{ next.publicId }}</span>
+            <span>{{ next.product.normalizedName }}</span>
           </li>
         </ul>
       </div>
@@ -83,12 +83,12 @@ const onSubmit = async () => {
         form="updateProductionOrderPriority"
         :loading="isLoading"
         :disabled="position === props.data.seq"
-      >Save</CfFilledButton>
-      <CfFilledButton
-        color="gray"
-        :disabled="isLoading"
-        @click="emit('cancel')"
-      >Cancel</CfFilledButton>
+      >
+        Save
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
+        Cancel
+      </CfFilledButton>
     </template>
   </CfDialog>
 </template>

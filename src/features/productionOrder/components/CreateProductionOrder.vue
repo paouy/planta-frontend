@@ -22,7 +22,7 @@ const ctx = ref({
 
 const productOptions = computed(() => {
   const filteredProducts = products.value
-    .filter(({ category }) => categoryId.value = category.id)
+    .filter(({ category }) => categoryId.value === category.id)
 
   const options = filteredProducts
     .map(product => ({ label: product.normalizedName, value: product }))

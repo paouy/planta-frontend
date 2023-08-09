@@ -3,21 +3,19 @@ import { ref, readonly } from 'vue'
 const productionOrders = ref([])
 
 export const useProductionOrderStore = () => {
-  const initialize = (data) => {
+  const set = (data) => {
     productionOrders.value = data
   }
 
-  const add = (productionOrder) => {
-    productionOrders.value.push({
-      ...productionOrder,
-      seq: productionOrders.value.length + 1
-    })
+  const create = (data) => {
+    const seq = productionOrders.value.length + 1
+    productionOrders.value.push({ ...data, seq })
   }
 
   const remove = ({ id }) => {
     productionOrders.value = productionOrders.value
       .filter(productionOrder => id !== productionOrder.id)
-      .map((productionOrder, index) => ({ ...productionOrder, seq: index + 1 }))
+      .map((data, index) => ({ ...data, seq: index + 1 }))
   }
 
   const reprioritize = ({ id, priority }) => {
@@ -33,8 +31,8 @@ export const useProductionOrderStore = () => {
 
   return {
     productionOrders: readonly(productionOrders),
-    initialize,
-    add,
+    set,
+    create,
     remove,
     reprioritize
   }

@@ -20,7 +20,8 @@ export const getOne = async (id) => {
 
 export const getAllNotReleased = async (productId) => {
   try {
-    const { data: productionOrders } = await axios.get('/v1/production-orders', { params: { productId } })
+    const params = productId ? { productId } : null
+    const { data: productionOrders } = await axios.get('/v1/production-orders', { params })
     return productionOrders
   } catch (error) {
     throw Error(error.response.data.message)
@@ -44,9 +45,9 @@ export const updateOne = async (data) => {
   }
 }
 
-export const deleteOne = async (data) => {
+export const deleteOne = async (id) => {
   try {
-    await axios.post('/v1/production-orders/delete', data)
+    await axios.delete(`/v1/production-orders/${id}`)
   } catch (error) {
     throw Error(error.response.data.message)
   }

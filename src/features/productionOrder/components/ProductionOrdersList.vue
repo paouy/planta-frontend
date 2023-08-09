@@ -10,23 +10,23 @@ const columns = [
   {
     label: '#',
     key: 'seq',
-    width: '4rem'
+    width: '3.5rem'
   }, {
     label: 'ID',
-    key: 'friendlyId',
-    width: '12%'
+    key: 'publicId'
+  }, {
+    label: 'Status',
+    key: 'status'
   }, {
     label: 'Product',
-    key: 'product.name'
+    key: 'product.normalizedName',
+    width: '27.5%'
   }, {
     label: 'Demand',
     key: 'qty'
   }, {
-    label: 'Produced',
+    label: 'Made',
     key: 'qtyProduced'
-  }, {
-    label: 'Status',
-    key: 'status'
   }, {
     label: 'Due date',
     key: 'dueDate'
@@ -52,7 +52,7 @@ const computedData = computed(() => {
     }
 
     if (order.status === 'OPEN') {
-      actions.push('Remove')
+      actions.push('Delete')
     }
 
     if (order.status === 'CLOSED') {
@@ -80,11 +80,11 @@ const computedData = computed(() => {
   >
     <template v-slot:row="{ data }">
       <td>{{ data.seq }}</td>
-      <td>{{ data.friendlyId }}</td>
-      <td>{{ data.product.name }}</td>
+      <td>{{ data.publicId }}</td>
+      <td>{{ data.status }}</td>
+      <td>{{ data.product.normalizedName }}</td>
       <td>{{ `${data.qty} ${data.product.uom}` }}</td>
       <td>{{ `${data.qtyProduced} ${data.product.uom}` }}</td>
-      <td>{{ data.status }}</td>
       <td>{{ data.dueDate }}</td>
     </template>
   </CfDataTable>

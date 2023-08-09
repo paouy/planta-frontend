@@ -33,8 +33,8 @@ const productionOrder = computed(() => {
 })
 
 const ctx = computed(() => {
-  const prevPriority = productionOrder.value.prev?.priority || -100
-  const nextPriority = productionOrder.value.next?.priority || 100
+  const prevPriority = productionOrder.value.prev?.priority || -1000
+  const nextPriority = productionOrder.value.next?.priority || 1000
   const priority = (prevPriority + nextPriority) / (prevPriority && nextPriority ? 2 : 1)
 
   return {

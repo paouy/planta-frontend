@@ -4,7 +4,6 @@ import { useEquipmentStore } from '../store.js'
 import { CfSelect } from '../../../components/index.js'
 
 const emit = defineEmits(['update:modelValue'])
-
 const props = defineProps({
   modelValue: [Object, String],
   operationId: String,
@@ -24,7 +23,7 @@ const { equipments } = useEquipmentStore()
 
 const options = computed(() => {
   return equipments.value
-    .filter(({ operations }) => operations.map(({ id }) => id).includes(props.operationId))
+    .filter(({ operationIds }) => operationIds.includes(props.operationId))
     .map(equipment => {
       let value = {}
 

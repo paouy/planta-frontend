@@ -59,17 +59,17 @@ const isSubmitDisabled = computed(() => {
   return props.job ? props.job.workstation.id === ctx.value.workstation?.id : false
 })
 
+const setWorkstation = ({ data }) => {
+  const { workstation } = props.operationBatches.find(({ id }) => data === id)
+  ctx.value.workstation = workstation
+}
+
 const invoke = async () => {
   try {
     isLoading.value = true
 
     if (props.operation.isBatch) {
-      const { workstation } = props.operationBatches
-        .find(({ id }) => ctx.value.operationBatchId === id)
-
-      ctx.value.workstation = workstation
-
-      // Implement: await addOperationBatchJob(ctx.value)
+      await api.operationBatchJob.createOne(ctx.value)
     }
 
     await api.job.updateOne(ctx.value)
@@ -129,6 +129,7 @@ onMounted(() => {
           label="Batch"
           :options="operationBatchesOptions"
           required
+          @input="setWorkstation"
           v-else
         />
       </form>

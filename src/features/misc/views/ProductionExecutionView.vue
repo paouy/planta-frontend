@@ -5,16 +5,21 @@ import { toSlug } from '../../../helpers/index.js'
 import { useProductionExecution } from '../composables/productionExecution.js'
 import { useOperationStore } from '../../operation/store.js'
 import { CfAppView, CfAppViewHeader } from '../../../components/index.js'
+
 import ProductionExecutionFilters from '../components/ProductionExecutionFilters.vue'
 import ProductionExecutionList from '../components/ProductionExecutionList.vue'
+
 import UnassignedJobsCallout from '../../job/components/UnassignedJobsCallout.vue'
 import AssignJob from '../../job/components/AssignJob.vue'
-import AddProductionRecord from '../../productionRecord/components/AddProductionRecord.vue'
-import AddShortfallProductionRecord from '../../productionRecord/components/AddShortfallProductionRecord.vue'
+
+import CreateProductionRecord from '../../productionRecord/components/CreateProductionRecord.vue'
+import CreateShortfallProductionRecord from '../../productionRecord/components/CreateShortfallProductionRecord.vue'
+
 import OperationBatchesList from '../../operationBatch/components/OperationBatchesList.vue'
-import AddOperationBatch from '../../operationBatch/components/AddOperationBatch.vue'
+import CreateOperationBatch from '../../operationBatch/components/CreateOperationBatch.vue'
 import StartOperationBatch from '../../operationBatch/components/StartOperationBatch.vue'
 import RemoveOperationBatch from '../../operationBatch/components/RemoveOperationBatch.vue'
+
 import api from '../../../api/index.js'
 
 const router = useRouter()
@@ -31,7 +36,7 @@ const {
 } = useProductionExecution()
 
 const listType = ref('BATCH')
-const action = ref({})
+const action = ref({ job: null, operationBatch: null })
 const job = ref(null)
 const operationBatch = ref(null)
 
@@ -46,7 +51,7 @@ const onOperationBatchAction = ({ key, data }) => {
 
   if (key === 'ADD_REPORT') {
     router.push({
-      name: 'AddOperationBatchReport',
+      name: 'CreateOperationBatchReport',
       params: {
         operationSlug: toSlug(operation.value.name),
         operationBatchId: data.id
@@ -112,21 +117,21 @@ onMounted(async () => {
     v-if="action.job === 'ASSIGN' || action.job === 'REASSIGN'"
   />
 
-  <AddProductionRecord
+  <CreateProductionRecord
     :job="job"
     @success="productionExecution.createProductionRecord"
     @cancel="action.job = job = null"
     v-if="action.job === 'ADD_RECORD'"
   />
 
-  <AddShortfallProductionRecord
+  <CreateShortfallProductionRecord
     :job="job"
     @success="productionExecution.createProductionRecord"
     @cancel="action.job = job = null"
     v-if="action.job === 'CLOSE'"
   />
 
-  <AddOperationBatch
+  <CreateOperationBatch
     :operation="operation"
     @success="productionExecution.createOperationBatch"
     @cancel="action.operationBatch = null"

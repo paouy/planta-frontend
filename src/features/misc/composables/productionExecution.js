@@ -37,10 +37,44 @@ export const useProductionExecution = () => {
   const updateJob = (data) => {
     const index = jobs.value.findIndex(({ id }) => data.id === id)
     Object.assign(jobs.value[index], data)
+
+    if (data.operationBatchId) {
+      const operationBatch = operationBatches.value.find(({ id }) => data.operationBatchId === id)
+      operationBatch.jobCount++
+    }
   }
   
   const createProductionRecord = (productionRecord) => {
-    // Implement
+    const job = jobs.value.find(
+      ({ productionOrder, operation }) =>
+        productionRecord.productionOrderId === productionOrder.id &&
+        productionRecord.operation.id === operation.id
+    )
+
+    const keys = {
+      OUTPUT: 'qtyOutput',
+      REJECT: 'qtyReject',
+      REWORK: 'qtyRework',
+      SHORTFALL: 'qtyShortfall'
+    }
+
+    job[keys[productionRecord.type]] += productionRecord.qty
+
+    const qtyMade = job.qtyOutput - job.qtyReject + job.qtyRework
+    const qtyDemand = job.qtyInput - job.qtyShortfall
+
+    job.status = qtyMade >= qtyDemand ? 'CLOSED' : 'IN_PROGRESS'
+    job.timeTakenMins += productionRecord.timeTakenMins
+
+    const nextJob = jobs.value.find(
+      ({ productionOrder, seq }) =>
+        productionRecord.productionOrderId === productionOrder.id &&
+        job.seq === seq - 1
+    )
+
+    if (nextJob) {
+      nextJob.qtyInput = job.status === 'CLOSED' ? qtyMade : 0
+    }
   }
 
   const createOperationBatch = (operationBatch) => {

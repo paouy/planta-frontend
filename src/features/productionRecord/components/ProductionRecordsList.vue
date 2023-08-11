@@ -9,7 +9,7 @@ const columns = [
     key: 'date'
   }, {
     label: 'Operation',
-    key: 'operationName'
+    key: 'operation.name'
   }, {
     label: 'Type',
     key: 'type'

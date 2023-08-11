@@ -50,7 +50,7 @@ const computedData = computed(() => {
       actions = ['Add record']
     }
 
-    if (job.operation.batch) {
+    if (job.operationBatchId) {
       actions = false
     }
 

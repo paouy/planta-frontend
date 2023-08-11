@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import commonProps from './commonProps.js'
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'input'])
 const props = defineProps({
   options: Array,
   ...commonProps
@@ -10,7 +10,10 @@ const props = defineProps({
 
 const computedValue = computed({
   get: () => props.modelValue || props.value,
-  set: (value) => emit('update:modelValue', value)
+  set: (value) => {
+    emit('update:modelValue', value)
+    emit('input', { data: value })
+  }
 })
 </script>
 

@@ -12,7 +12,7 @@ export const useProductionOrderStore = () => {
     productionOrders.value.push({ ...data, seq })
   }
 
-  const remove = ({ id }) => {
+  const remove = (id) => {
     productionOrders.value = productionOrders.value
       .filter(productionOrder => id !== productionOrder.id)
       .map((data, index) => ({ ...data, seq: index + 1 }))

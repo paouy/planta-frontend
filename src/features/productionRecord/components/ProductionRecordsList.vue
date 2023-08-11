@@ -6,7 +6,7 @@ const props = defineProps({ data: Array })
 const columns = [
   {
     label: 'Date',
-    key: 'date'
+    key: 'timestamp'
   }, {
     label: 'Operation',
     key: 'operation.name'
@@ -24,5 +24,12 @@ const columns = [
   <CfDataTable
     :columns="columns"
     :data="props.data"
-  />
+  >
+    <template v-slot:row="{ data }">
+      <td>{{ new Date(data.timestamp).toLocaleDateString('en-CA') }}</td>
+      <td>{{ data.operation.name }}</td>
+      <td>{{ data.type }}</td>
+      <td>{{ data.qty }}</td>
+    </template>
+  </CfDataTable>
 </template>

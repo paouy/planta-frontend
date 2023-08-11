@@ -52,3 +52,11 @@ export const deleteOne = async (id) => {
     throw Error(error.response.data.message)
   }
 }
+
+export const release = async (id) => {
+  try {
+    await axios.post(`/v1/production-orders/${id}/release`)
+  } catch (error) {
+    throw Error(error.response.data.message)
+  }
+}

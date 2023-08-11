@@ -15,18 +15,15 @@ const columns = [
     label: 'ID',
     key: 'publicId'
   }, {
-    label: 'Status',
-    key: 'status'
-  }, {
     label: 'Product',
     key: 'product.normalizedName',
-    width: '27.5%'
+    width: '35%'
   }, {
-    label: 'Demand',
-    key: 'qty'
+    label: 'Qty',
+    key: 'normalizedQty'
   }, {
-    label: 'Made',
-    key: 'qtyProduced'
+    label: 'Status',
+    key: 'status'
   }, {
     label: 'Due date',
     key: 'dueDate'
@@ -59,8 +56,13 @@ const computedData = computed(() => {
       actions.push('Release')
     }
 
+    const normalizedQty = order.status === 'CLOSED'
+      ? `${order.qtyMade}/${order.qty}`
+      : order.qty
+
     return {
       ...order,
+      normalizedQty,
       actions
     }
   })
@@ -81,10 +83,9 @@ const computedData = computed(() => {
     <template v-slot:row="{ data }">
       <td>{{ data.seq }}</td>
       <td>{{ data.publicId }}</td>
-      <td>{{ data.status }}</td>
       <td>{{ data.product.normalizedName }}</td>
-      <td>{{ `${data.qty} ${data.product.uom}` }}</td>
-      <td>{{ `${data.qtyProduced} ${data.product.uom}` }}</td>
+      <td>{{ data.normalizedQty }}</td>
+      <td>{{ data.status }}</td>
       <td>{{ data.dueDate }}</td>
     </template>
   </CfDataTable>

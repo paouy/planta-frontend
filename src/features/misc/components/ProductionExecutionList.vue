@@ -15,10 +15,10 @@ const columns = [
   {
     label: 'ID',
     key: 'productionOrder.publicId',
-    width: '12%'
   }, {
     label: 'Product',
-    key: 'product.normalizedName'
+    key: 'product.normalizedName',
+    width: '32.5%'
   }, {
     label: 'Qty',
     key: 'qty'

@@ -44,6 +44,10 @@ api.productionOrder
 api.job
   .getAll({ productionOrderId: props.productionOrderId })
   .then(data => jobs.value = data)
+
+api.productionRecord
+  .getAllByProductionOrder(props.productionOrderId)
+  .then(data => productionRecords.value = data)
 </script>
 
 <template>

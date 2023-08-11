@@ -1,20 +1,20 @@
 <script setup>
 import { ref } from 'vue'
-import { releaseProductionOrder } from '../api/index.js'
 import { CfDialog, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
 
-const onClick = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    await releaseProductionOrder(props.data.id)
+    await api.productionOrder.release(props.data.id)
 
-    emit('success', { id: props.data.id })
+    emit('success', props.data.id)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -27,10 +27,10 @@ const onClick = async () => {
 <template>
   <CfDialog title="Release production order" @close="emit('cancel')">
     <template #body>
-      <p>Are you sure you want to release <b>{{ props.data.friendlyId + ' — ' + props.data.product.name}}</b>? This will add {{ props.data.qtyProduced }} {{ props.data.product.uom }} to the inventory.</p>
+      <p>Are you sure you want to release <b>{{ props.data.publicId + ' — ' + props.data.product.normalizedName }}</b>? This will add {{ props.data.qtyMade }} {{ props.data.product.uom }} to the inventory.</p>
     </template>
     <template #footer>
-      <CfFilledButton :loading="isLoading" @click="onClick">
+      <CfFilledButton :loading="isLoading" @click="invoke">
         Release
       </CfFilledButton>
       <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">

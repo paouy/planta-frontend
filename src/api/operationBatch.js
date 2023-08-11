@@ -42,3 +42,19 @@ export const deleteOne = async (id) => {
     throw Error(error.response.data.message)
   }
 }
+
+export const start = async (id) => {
+  try {
+    await axios.post(`/v1/operation-batches/${id}/start`)
+  } catch (error) {
+    throw Error(error.response.data.message)
+  }
+}
+
+export const createReport = async (data) => {
+  try {
+    await axios.post('/v1/operation-batches/report', data)
+  } catch (error) {
+    throw Error(error.response.data.message)
+  }
+}

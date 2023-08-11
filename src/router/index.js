@@ -10,7 +10,7 @@ import CategoriesView from '../features/category/views/CategoriesView.vue'
 import ProductionOrdersView from '../features/productionOrder/views/ProductionOrdersView.vue'
 import ProductionOrderView from '../features/productionOrder/views/ProductionOrderView.vue'
 import ProductionExecutionView from '../features/misc/views/ProductionExecutionView.vue'
-import AddOperationBatchReportView from '../features/operationBatch/views/AddOperationBatchReportView.vue'
+import CreateOperationBatchReportView from '../features/operationBatch/views/CreateOperationBatchReportView.vue'
 import CustomersView from '../features/customer/views/CustomersView.vue'
 import SalesOrdersView from '../features/salesOrder/views/SalesOrdersView.vue'
 import SalesOrderView from '../features/salesOrder/views/SalesOrderView.vue'
@@ -74,8 +74,8 @@ const router = createRouter({
               props: true
             }, {
               path: ':operationSlug/:operationBatchId/add-report',
-              name: 'AddOperationBatchReport',
-              component: AddOperationBatchReportView,
+              name: 'CreateOperationBatchReport',
+              component: CreateOperationBatchReportView,
               props: true
             }
           ]

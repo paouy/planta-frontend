@@ -5,21 +5,16 @@ import { toSlug } from '../../../helpers/index.js'
 import { useProductionExecution } from '../composables/productionExecution.js'
 import { useOperationStore } from '../../operation/store.js'
 import { CfAppView, CfAppViewHeader } from '../../../components/index.js'
-
 import ProductionExecutionFilters from '../components/ProductionExecutionFilters.vue'
 import ProductionExecutionList from '../components/ProductionExecutionList.vue'
-
 import UnassignedJobsCallout from '../../job/components/UnassignedJobsCallout.vue'
 import AssignJob from '../../job/components/AssignJob.vue'
-
 import CreateProductionRecord from '../../productionRecord/components/CreateProductionRecord.vue'
 import CreateShortfallProductionRecord from '../../productionRecord/components/CreateShortfallProductionRecord.vue'
-
 import OperationBatchesList from '../../operationBatch/components/OperationBatchesList.vue'
 import CreateOperationBatch from '../../operationBatch/components/CreateOperationBatch.vue'
 import StartOperationBatch from '../../operationBatch/components/StartOperationBatch.vue'
-import RemoveOperationBatch from '../../operationBatch/components/RemoveOperationBatch.vue'
-
+import DeleteOperationBatch from '../../operationBatch/components/DeleteOperationBatch.vue'
 import api from '../../../api/index.js'
 
 const router = useRouter()
@@ -140,13 +135,15 @@ onMounted(async () => {
 
   <StartOperationBatch
     :data="operationBatch"
+    :operation="operation"
     @success="productionExecution.startOperationBatch"
     @cancel="action.operationBatch = operationBatch = null"
     v-if="action.operationBatch === 'START'"
   />
 
-  <RemoveOperationBatch
+  <DeleteOperationBatch
     :data="operationBatch"
+    :operation="operation"
     @success="productionExecution.deleteOperationBatch"
     @cancel="action.operationBatch = operationBatch = null"
     v-if="action.operationBatch === 'REMOVE'"

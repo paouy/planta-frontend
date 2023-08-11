@@ -21,6 +21,19 @@ const unassignedJobs = computed(() => {
 
 const currentJobs = computed(() => {
   return jobs.value
+    .map(job => {
+      const nextJob = jobs.value.find(
+        ({ productionOrder, seq }) =>
+          job.productionOrder.id === productionOrder.id &&
+          job.seq === seq - 1
+      )
+
+      if (nextJob) {
+        job.isLocked = nextJob.status !== 'OPEN'
+      }
+
+      return job
+    })
     .filter(job => job.operation.id === operation.value.id)
     .filter(job => job.workstation)
     .filter(job => workstation.value ? job.workstation.id === workstation.value.id : true)
@@ -81,12 +94,19 @@ export const useProductionExecution = () => {
     operationBatches.value.push(operationBatch)
   }
 
-  const startOperationBatch = ({ id }) => {
-    // Implement
+  const startOperationBatch = (id) => {
+    const operationBatch = operationBatches.value.find(operationBatch => operationBatch.id === id)
+    operationBatch.status = 'IN_PROGRESS'
+
+    jobs.value.forEach((job, index) => {
+      if (job.operationBatchId === id) {
+        jobs.value[index].status = 'IN_PROGRESS'
+      }
+    })
   }
 
-  const deleteOperationBatch = ({ id }) => {
-    operationBatches.value = operationBatches.value.filter(batch => id !== batch.id)
+  const deleteOperationBatch = (id) => {
+    operationBatches.value = operationBatches.value.filter(operationBatch => operationBatch.id !== id)
   }
 
   const initialize = (jobsArray, operationBatchesArray) => {

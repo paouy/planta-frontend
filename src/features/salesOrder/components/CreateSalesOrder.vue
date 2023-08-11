@@ -1,7 +1,6 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { createSalesOrder } from '../api/index.js'
-import { getCustomers } from '../../customer/api/index.js'
 import { CfInput, CfSelect, CfOutlinedButton, CfFilledButton } from '../../../components/index.js'
 import api from '../../../api/index.js'
 
@@ -72,19 +71,17 @@ const invoke = async () => {
   }
 }
 
-onMounted(async () => {
-  getCustomers().then(data => {
-    customerOptions.value = data.map(({ id, shortName }) => ({
-      label: shortName,
-      value: id
-    }))
-  })
+api.customer.getAll().then(data => {
+  customerOptions.value = data.map(({ id, shortName }) => ({
+    label: shortName,
+    value: id
+  }))
+})
 
-  api.product.getAll().then(data => {
-    products.value = data.map(
-      ({ id, normalizedName, uom }) => ({ id, normalizedName, uom })
-    )
-  })
+api.product.getAll().then(data => {
+  products.value = data.map(
+    ({ id, normalizedName, uom }) => ({ id, normalizedName, uom })
+  )
 })
 </script>
 

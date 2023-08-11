@@ -1,25 +1,25 @@
 <script setup>
 import { ref } from 'vue'
-import { updateCustomer } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
-const customer = ref({
+const ctx = ref({
   id: props.data.id,
   name: props.data.name,
   shortName: props.data.shortName
 })
 
-const onSubmit = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    await updateCustomer(customer.value)
+    await api.customer.updateOne(ctx.value)
 
-    emit('success', customer.value)
+    emit('success', ctx.value)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -32,14 +32,14 @@ const onSubmit = async () => {
 <template>
   <CfDialog title="Update customer" @close="emit('cancel')">
     <template #body>
-      <form id="updateCustomer" @submit.prevent="onSubmit">
+      <form id="updateCustomer" @submit.prevent="invoke">
         <CfInput
-          v-model="customer.name"
+          v-model="ctx.name"
           label="Name"
           required
         />
         <CfInput
-          v-model="customer.shortName"
+          v-model="ctx.shortName"
           label="Short name"
           required
         />

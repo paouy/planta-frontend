@@ -1,4 +1,5 @@
 import * as category from './category.js'
+import * as customer from './customer.js'
 import * as equipment from './equipment.js'
 import * as job from './job.js'
 import * as material from './material.js'
@@ -14,6 +15,7 @@ import * as workstation from './workstation.js'
 
 const api = {
   category,
+  customer,
   equipment,
   job,
   material,

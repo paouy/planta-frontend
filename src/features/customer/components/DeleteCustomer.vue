@@ -1,18 +1,18 @@
 <script setup>
 import { ref } from 'vue'
-import { removeCustomer } from '../api/index.js'
 import { CfDialog, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
 
-const onClick = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    await removeCustomer(props.data.id)
+    await api.customer.deleteOne(props.data.id)
 
     emit('success', props.data.id)
     emit('cancel')
@@ -30,7 +30,7 @@ const onClick = async () => {
       <p>Are you sure you want to delete <b>{{ props.data.name }}</b>?</p>
     </template>
     <template #footer>
-      <CfFilledButton color="red" :loading="isLoading" @click="onClick">
+      <CfFilledButton color="red" :loading="isLoading" @click="invoke">
         Delete
       </CfFilledButton>
       <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">

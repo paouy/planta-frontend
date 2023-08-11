@@ -1,23 +1,23 @@
 <script setup>
 import { ref } from 'vue'
-import { addCustomer } from '../api/index.js'
 import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
-const customer = ref({
+const ctx = ref({
   name: '',
   shortName: ''
 })
 
-const onSubmit = async () => {
+const invoke = async () => {
   try {
     isLoading.value = true
 
-    const createdCustomer = await addCustomer(customer.value)
+    const customer = await api.customer.createOne(ctx.value)
 
-    emit('success', createdCustomer)
+    emit('success', customer)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -30,21 +30,21 @@ const onSubmit = async () => {
 <template>
   <CfDialog title="Add customer" @close="emit('cancel')">
     <template #body>
-      <form id="addCustomer" @submit.prevent="onSubmit">
+      <form id="createCustomer" @submit.prevent="invoke">
         <CfInput
-          v-model="customer.name"
+          v-model="ctx.name"
           label="Name"
           required
         />
         <CfInput
-          v-model="customer.shortName"
+          v-model="ctx.shortName"
           label="Short name"
           required
         />
       </form>
     </template>
     <template #footer>
-      <CfFilledButton type="submit" form="addCustomer" :loading="isLoading">
+      <CfFilledButton type="submit" form="createCustomer" :loading="isLoading">
         Save
       </CfFilledButton>
       <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
@@ -55,7 +55,7 @@ const onSubmit = async () => {
 </template>
 
 <style>
-#addCustomer {
+#createCustomer {
   display: grid;
   gap: 1rem;
 }

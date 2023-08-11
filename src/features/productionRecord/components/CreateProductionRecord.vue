@@ -16,12 +16,10 @@ const productionRecordTypeOptions = computed(() => {
     IN_PROGRESS: [
       { label: 'Output', value: 'OUTPUT' },
       { label: 'Reject', value: 'REJECT' },
-      { label: 'Rework', value: 'REWORK' },
-      { label: 'Adjustment', value: 'ADJUSTMENT' }
+      { label: 'Rework', value: 'REWORK' }
     ],
     CLOSED: [
-      { label: 'Reject', value: 'REJECT' },
-      { label: 'Adjustment', value: 'ADJUSTMENT' }
+      { label: 'Reject', value: 'REJECT' }
     ]
   }
 
@@ -41,6 +39,7 @@ const ctx = ref({
 
 const dialogTitle = computed(() => `Add ${props.job.operation.name.toLowerCase()} record`)
 const normalizedJob = computed(()=> `${props.job.productionOrder.publicId} — ${props.job.product.normalizedName}`)
+const maxQty = computed(() => props.job.qtyInput - (props.job.qtyOutput - props.job.qtyReject + props.job.qtyRework))
 
 const invoke = async () => {
   try {
@@ -81,13 +80,15 @@ const invoke = async () => {
         <EquipmentSelect
           v-model="ctx.equipment"
           :operation-id="props.job.operation.id"
-          required
+          :required="false"
         />
         <CfInput
           v-model.number="ctx.qty"
           label="Quantity"
           type="number"
           step="any"
+          :max="maxQty"
+          min="1"
           required
         />
         <CfInput
@@ -112,7 +113,7 @@ const invoke = async () => {
   </CfDialog>
 </template>
 
-<style lang="scss">
+<style>
 #createProductionRecord {
   display: grid;
   gap: 1rem;

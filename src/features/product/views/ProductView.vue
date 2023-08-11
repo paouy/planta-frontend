@@ -8,6 +8,7 @@ import ProductMaterialsList from '../../productMaterial/components/ProductMateri
 import CreateProductMaterial from '../../productMaterial/components/CreateProductMaterial.vue'
 import UpdateProductMaterial from '../../productMaterial/components/UpdateProductMaterial.vue'
 import DeleteProductMaterial from '../../productMaterial/components/DeleteProductMaterial.vue'
+import ProductionOrdersByProductList from '../../productionOrder/components/ProductionOrdersByProductList.vue'
 import api from '../../../api/index.js'
 
 const breadcrumbs = [{ name: 'Products', path: '/inventory/products' }]
@@ -26,8 +27,11 @@ const product = ref({
   category: {
     id: '',
     name: ''
-  }
+  },
+  qtyAvailable: null,
+  qtyWip: null
 })
+const productionOrders = ref([])
 const productMaterials = ref([])
 const productMaterial = ref(null)
 
@@ -37,14 +41,14 @@ const productSummary = computed(() => {
       label: 'Category',
       value: product.value.category.name
     }, {
+      label: 'Operations',
+      value: product.value.operationIds.length
+    }, {
       label: 'SKU',
       value: product.value.sku
     }, {
-      label: 'UOM',
-      value: product.value.uom
-    }, {
-      label: 'Operations',
-      value: product.value.operationIds.length
+      label: 'Available',
+      value: `${product.value.qtyAvailable} ${product.value.uom}`
     }
   ]
 })
@@ -63,8 +67,17 @@ const onProductMaterialListAction = ({ key, data }) => {
   productMaterial.value = data
 }
 
-api.product.getOne(props.productId).then(data => product.value = data)
-api.productMaterial.getAll(props.productId).then(data => productMaterials.value = data)
+api.product
+  .getOne(props.productId)
+  .then(data => product.value = data)
+
+api.productMaterial
+  .getAll(props.productId)
+  .then(data => productMaterials.value = data)
+
+api.productionOrder
+  .getAllNotReleased({ productId: props.productId })
+  .then(data => productionOrders.value = data)
 </script>
 
 <template>
@@ -72,7 +85,7 @@ api.productMaterial.getAll(props.productId).then(data => productMaterials.value 
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader :title="product.name">
       <template #actions>
-        <CfOutlinedButton @click="currentAction.product = 'EDIT'">
+        <CfOutlinedButton :disabled="!!product.qtyWip" @click="currentAction.product = 'EDIT'">
           Edit product
         </CfOutlinedButton>
       </template>
@@ -92,6 +105,9 @@ api.productMaterial.getAll(props.productId).then(data => productMaterials.value 
       :data="productMaterials"
       @action="onProductMaterialListAction"
     />
+
+    <CfHeader title="Production orders"/>
+    <ProductionOrdersByProductList :data="productionOrders"/>
 
     <CfHeader title="Remove product"/>
     <CfActionCard simple>

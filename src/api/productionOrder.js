@@ -18,9 +18,8 @@ export const getOne = async (id) => {
   }
 }
 
-export const getAllNotReleased = async (productId) => {
+export const getAllNotReleased = async (params) => {
   try {
-    const params = productId ? { productId } : null
     const { data: productionOrders } = await axios.get('/v1/production-orders', { params })
     return productionOrders
   } catch (error) {

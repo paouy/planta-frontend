@@ -29,7 +29,7 @@ const currentJobs = computed(() => {
       )
 
       if (nextJob) {
-        job.isLocked = nextJob.status !== 'OPEN'
+        job.isLocked = nextJob.status !== 'OPEN' || nextJob.workstation !== null
       }
 
       return job

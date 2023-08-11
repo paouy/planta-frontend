@@ -13,12 +13,9 @@ const props = defineProps({
 
 const columns = [
   {
-    label: 'ID',
-    key: 'productionOrder.publicId',
-  }, {
-    label: 'Product',
-    key: 'product.normalizedName',
-    width: '32.5%'
+    label: 'Job',
+    key: 'normalizedJob',
+    width: '35%'
   }, {
     label: 'Qty',
     key: 'qty'
@@ -36,6 +33,10 @@ const columns = [
 
 const computedData = computed(() => {
   return props.data.map((job, index) => {
+    const normalizedJob = `${job.productionOrder.publicId} — ${job.product.normalizedName}`
+    const qtyMade = job.qtyOutput - job.qtyReject + job.qtyRework
+    const qty = `${qtyMade.toLocaleString()}/${job.qtyInput.toLocaleString()}`
+
     let actions = false
 
     if (job.status === 'OPEN') {
@@ -54,13 +55,11 @@ const computedData = computed(() => {
       actions = false
     }
 
-    const qtyMade = job.qtyOutput - job.qtyReject + job.qtyRework
-    const qty = `${qtyMade.toLocaleString()}/${job.qtyInput.toLocaleString()}`
-
     return {
       ...job,
-      actions,
-      qty
+      normalizedJob,
+      qty,
+      actions
     }
   })
 })

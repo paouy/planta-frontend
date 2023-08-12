@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import { confirmSalesOrder } from '../api/index.js'
 import { CfDialog, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ data: Object })
@@ -12,7 +12,7 @@ const invoke = async () => {
   try {
     isLoading.value = true
 
-    await confirmSalesOrder(props.data.id)
+    await api.salesOrder.confirm(props.data.id)
 
     emit('success')
     emit('cancel')

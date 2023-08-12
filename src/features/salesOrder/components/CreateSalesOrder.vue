@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { createSalesOrder } from '../api/index.js'
 import { CfInput, CfSelect, CfOutlinedButton, CfFilledButton } from '../../../components/index.js'
 import api from '../../../api/index.js'
 
@@ -9,37 +8,41 @@ const emit = defineEmits(['success', 'cancel'])
 const isLoading = ref(false)
 const customerOptions = ref([])
 const products = ref([])
-const salesOrder = ref({
-  customFriendlyId: '',
-  customerId: '',
-  date: new Date().toLocaleDateString('en-CA')
+const ctx = ref({
+  publicId: '',
+  customer: {
+    id: ''
+  },
+  date: new Date().toLocaleDateString('en-CA'),
+  items: [
+    {
+      product: {
+        id: '',
+        uom: ''
+      },
+      qty: null
+    }
+  ]
 })
-const salesOrderItems = ref([
-  {
-    product: {
-      id: '',
-      uom: ''
-    },
-    qty: null
-  }
-])
 
 const productOptions = computed(() => {
-  const selectedProductIds = salesOrderItems.value
+  const selectedProductIds = ctx.value.items
     .map(({ product }) => product.id)
     .filter(id => id)
 
-  return products.value.map(({ id, normalizedName, uom }) => ({
+  const options = products.value.map(({ id, normalizedName, uom }) => ({
     label: normalizedName,
     value: { id, uom },
     disabled: selectedProductIds.includes(id)
   }))
+
+  return options
 })
 
 const hasSelectableProductOption = computed(() => productOptions.value.some(({ disabled }) => !disabled))
 
 const addItem = () => {
-  salesOrderItems.value.push({
+  ctx.value.items.push({
     product: {
       id: '',
       uom: ''
@@ -49,21 +52,16 @@ const addItem = () => {
 }
 
 const removeItem = (index) => {
-  salesOrderItems.value.splice(index, 1)
+  ctx.value.items.splice(index, 1)
 }
 
 const invoke = async () => {
   try {
     isLoading.value = true
 
-    const order = {
-      ...salesOrder.value,
-      items: salesOrderItems.value
-    }
+    const salesOrder = await api.salesOrder.createOne(ctx.value)
 
-    const createdSalesOrder = await createSalesOrder(order)
-
-    emit('success', createdSalesOrder)
+    emit('success', salesOrder)
   } catch (error) {
     alert(error)
   } finally {
@@ -89,19 +87,18 @@ api.product.getAll().then(data => {
   <form id="createSalesOrder" @submit.prevent="invoke">
     <fieldset>
       <CfSelect
-        v-model="salesOrder.customerId"
+        v-model="ctx.customer.id"
         label="Customer"
         :options="customerOptions"
-        autofocus
         required
       />
       <CfInput
-        v-model="salesOrder.customFriendlyId"
+        v-model="ctx.publicId"
         label="Order number"
         required
       />
       <CfInput
-        v-model="salesOrder.date"
+        v-model="ctx.date"
         label="Date"
         type="date"
         required
@@ -112,10 +109,10 @@ api.product.getAll().then(data => {
         <col v-for="n in 3">
       </colgroup>
       <tbody>
-        <tr v-for="(item, index) in salesOrderItems" :key="index">
+        <tr v-for="(item, index) in ctx.items" :key="index">
           <td>
             <CfSelect
-              v-model="salesOrderItems[index].product"
+              v-model="ctx.items[index].product"
               label="Product"
               :options="productOptions"
               required
@@ -123,9 +120,9 @@ api.product.getAll().then(data => {
           </td>
           <td>
             <CfInput
-              v-model.number="salesOrderItems[index].qty"
+              v-model.number="ctx.items[index].qty"
               label="Qty"
-              :suffix="salesOrderItems[index].product.uom"
+              :suffix="ctx.items[index].product.uom"
               type="number"
               step="any"
               min="1"
@@ -136,7 +133,7 @@ api.product.getAll().then(data => {
             <button
               type="button"
               @click="removeItem(index)"
-              v-if="salesOrderItems.length > 1"
+              v-if="ctx.items.length > 1"
             >
               <span class="material-symbols-outlined">close</span>
             </button>
@@ -166,7 +163,7 @@ api.product.getAll().then(data => {
     display: grid;
     gap: 1rem;
     max-width: 18rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
 
   hr {

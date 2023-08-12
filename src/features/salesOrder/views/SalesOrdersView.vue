@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getSalesOrders } from '../api/index.js'
 import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
+import SalesOrdersSummary from '../components/SalesOrdersSummary.vue'
 import SalesOrdersList from '../components/SalesOrdersList.vue'
+import api from '../../../api/index.js'
 
 const router = useRouter()
 const salesOrders = ref([])
@@ -17,7 +18,9 @@ const onView = ({ data }) => {
   })
 }
 
-onMounted(() => getSalesOrders().then(data => salesOrders.value = data))
+api.salesOrder
+  .getAllNotFulfilled()
+  .then(data => salesOrders.value = data)
 </script>
 
 <template>
@@ -29,6 +32,7 @@ onMounted(() => getSalesOrders().then(data => salesOrders.value = data))
         </CfOutlinedButton>
       </template>
     </CfAppViewHeader>
+    <SalesOrdersSummary :data="salesOrders"/>
     <SalesOrdersList
       :data="salesOrders"
       @action="onView"

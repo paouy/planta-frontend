@@ -1,7 +1,6 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { getSalesOrder } from '../api/index.js'
 import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfSummaryList, CfActionCard, CfOutlinedButton, CfFilledButton } from '../../../components/index.js'
 import ConfirmSalesOrder from '../components/ConfirmSalesOrder.vue'
 import FulfillSalesOrder from '../components/FulfillSalesOrder.vue'
@@ -12,6 +11,7 @@ import CreateAllocationOrder from '../../allocationOrder/components/CreateAlloca
 import CreateSalesOrderItem from '../../salesOrderItem/components/CreateSalesOrderItem.vue'
 import UpdateSalesOrderItemQty from '../../salesOrderItem/components/UpdateSalesOrderItemQty.vue'
 import DeleteSalesOrderItem from '../../salesOrderItem/components/DeleteSalesOrderItem.vue'
+import api from '../../../api/index.js'
 
 const breadcrumbs = [{ name: 'Orders', path: '/sales/orders' }]
 const router = useRouter()
@@ -19,84 +19,87 @@ const props = defineProps({ salesOrderId: String })
 
 const salesOrder = ref({
   status: '',
-  customFriendlyId: '',
+  publicId: '',
   customer: {
     shortName: ''
   },
   date: null,
   items: []
 })
-
+const salesOrderItems = ref([])
 const salesOrderItem = ref(null)
 const currentAction = ref({
   salesOrder: null,
   salesOrderItem: null
 })
 
-const summary = computed(() => {
-  return [
-    {
-      label: 'Status',
-      value: salesOrder.value.status
-    }, {
-      label: 'Customer',
-      value: salesOrder.value.customer.shortName
-    }, {
-      label: 'Date',
-      value: salesOrder.value.date
-    }
-  ]
-})
+const summary = computed(() => ([
+  {
+    label: 'Status',
+    value: salesOrder.value.status
+  }, {
+    label: 'Customer',
+    value: salesOrder.value.customer.shortName
+  }, {
+    label: 'Date',
+    value: salesOrder.value.date
+  }
+]))
 
 const onSalesOrderItemAction = ({ key, data }) => {
   currentAction.value.salesOrderItem = key
   salesOrderItem.value = data
 }
 
-const onCreateProductionOrder = ({ salesOrderItemId, qty }) => {
-  const item = salesOrder.value.items.find(({ id }) => salesOrderItemId === id)
-  item.qtyWip = item.qtyWip + qty
-}
-
-const onCreateAllocationOrder = ({ salesOrderItem, qty }) => {
-  const item = salesOrder.value.items.find(({ id }) => salesOrderItem.id === id)
-  item.qtyAllocated = item.qtyAllocated + qty
-}
-
 const onCreateSalesOrderItem = ({ salesOrderId, ...data }) => {
-  salesOrder.value.items.push(data)
+  salesOrderItems.value.push(data)
 }
 
 const onUpdateSalesOrderItemQty = (data) => {
-  const item = salesOrder.value.items.find(({ id }) => data.id === id)
+  const item = salesOrderItems.value.find(({ id }) => data.id === id)
   item.qty = data.qty
 }
 
-const onDeleteSalesOrderItem = (data) => {
-  const itemIndex = salesOrder.value.items.findIndex(({ id }) => data.id === id)
+const onDeleteSalesOrderItem = (id) => {
+  const itemIndex = salesOrderItems.value
+    .findIndex(salesOrderItem => salesOrderItem.id === id)
 
-  salesOrder.value.items.splice(itemIndex, 1)
-
-  salesOrder.value.items.map((item, index) => ({ ...item, seq: index + 1 }))
+  salesOrderItems.value.splice(itemIndex, 1)
 }
 
-onMounted(async () => salesOrder.value = await getSalesOrder(props.salesOrderId))
+const onCreateProductionOrder = ({ salesOrderItemId, qty }) => {
+  const item = salesOrderItems.value.find(({ id }) => salesOrderItemId === id)
+  item.qtyWip = item.qtyWip + qty
+}
+
+const onCreateAllocation = ({ salesOrderItem, qty }) => {
+  const item = salesOrderItems.value.find(({ id }) => salesOrderItem.id === id)
+  item.qtyAllocated = item.qtyAllocated + qty
+}
+
+api.salesOrder
+  .getOne(props.salesOrderId)
+  .then(data => salesOrder.value = data)
+
+api.salesOrderItem
+  .getAllBySalesOrder(props.salesOrderId)
+  .then(data => salesOrderItems.value = data)
 </script>
 
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfAppViewHeader :title="salesOrder.customFriendlyId">
+    <CfAppViewHeader :title="salesOrder.publicId">
       <template #actions>
         <CfFilledButton
-          :disabled="salesOrder.items.length === 0"
+          :disabled="salesOrderItems.length === 0"
           @click="currentAction.salesOrder = 'CONFIRM'"
           v-if="salesOrder.status === 'OPEN'"
         >
           Confirm order
         </CfFilledButton>
         <CfFilledButton
-          :disabled="salesOrder.items.some(item => !item.qtyAllocated || item.qtyWip)"
+          :disabled="salesOrderItems.some(item => !item.qtyAllocated || item.qtyWip)"
           @click="currentAction.salesOrder = 'FULFILL'"
           v-if="salesOrder.status === 'CONFIRMED'"
         >
@@ -119,7 +122,7 @@ onMounted(async () => salesOrder.value = await getSalesOrder(props.salesOrderId)
       </template>
     </CfHeader>
     <SalesOrderItemsList
-      :data="salesOrder.items"
+      :data="salesOrderItems"
       :update-only="salesOrder.status === 'OPEN'"
       @action="onSalesOrderItemAction"
     />
@@ -169,13 +172,14 @@ onMounted(async () => salesOrder.value = await getSalesOrder(props.salesOrderId)
   <CreateAllocationOrder
     :product="salesOrderItem?.product"
     :sales-order-item-id="salesOrderItem?.id"
-    @success="onCreateAllocationOrder"
+    @success="onCreateAllocation"
     @cancel="currentAction.salesOrderItem = salesOrderItem = null"
     v-if="currentAction.salesOrderItem === 'ALLOCATE'"
   />
 
   <CreateSalesOrderItem
     :sales-order="salesOrder"
+    :sales-order-items="salesOrderItems"
     @success="onCreateSalesOrderItem"
     @cancel="currentAction.salesOrderItem = null"
     v-if="currentAction.salesOrderItem === 'CREATE'"

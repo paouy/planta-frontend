@@ -11,6 +11,8 @@ import * as product from './product.js'
 import * as productionOrder from './productionOrder.js'
 import * as productionRecord from './productionRecord.js'
 import * as productMaterial from './productMaterial.js'
+import * as salesOrder from './salesOrder.js'
+import * as salesOrderItem from './salesOrderItem.js'
 import * as workstation from './workstation.js'
 
 const api = {
@@ -27,6 +29,8 @@ const api = {
   productionOrder,
   productionRecord,
   productMaterial,
+  salesOrder,
+  salesOrderItem,
   workstation
 }
 

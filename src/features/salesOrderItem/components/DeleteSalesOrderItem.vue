@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import { deleteSalesOrderItem } from '../api/index.js'
 import { CfDialog, CfFilledButton } from '../../../components/index.js'
+import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ data: Object })
@@ -12,9 +12,9 @@ const invoke = async () => {
   try {
     isLoading.value = true
 
-    await deleteSalesOrderItem(props.data.id)
+    await api.salesOrderItem.deleteOne(props.data.id)
 
-    emit('success', { id: props.data.id })
+    emit('success', props.data.id )
     emit('cancel')
   } catch (error) {
     alert(error)

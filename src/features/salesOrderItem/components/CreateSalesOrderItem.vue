@@ -1,12 +1,14 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { createSalesOrderItem } from '../api/index.js'
+import { ref, computed } from 'vue'
 import { CfDialog, CfSelect, CfInput, CfFilledButton } from '../../../components/index.js'
 import CategorySelect from '../../category/components/CategorySelect.vue'
 import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
-const props = defineProps({ salesOrder: Object })
+const props = defineProps({
+  salesOrder: Object,
+  salesOrderItems: Array
+})
 
 const isLoading = ref(false)
 const productOptions = ref([])
@@ -22,26 +24,26 @@ const ctx = ref({
 })
 
 const computedProductOptions = computed(() => {
-  const productIds = props.salesOrder.items.map(({ product }) => product.id)
-
-  return productOptions.value
+  const productIds = props.salesOrderItems.map(({ product }) => product.id)
+  const options = productOptions.value
     .filter(option => categoryId.value === option.categoryId)
     .map(option => ({ ...option, disabled: productIds.includes(option.value.id) }))
+
+  return options
 })
 
 const invoke = async () => {
   try {
     isLoading.value = true
 
-    const { id } = await createSalesOrderItem(ctx.value)
+    const { id } = await api.salesOrderItem.createOne(ctx.value)
 
     const salesOrderItem = {
       id,
       product: ctx.value.product,
       qty: ctx.value.qty,
       qtyWip: 0,
-      qtyAllocated: 0,
-      seq: props.salesOrder.items.findLast(() => true).seq + 1
+      qtyAllocated: 0
     }
 
     emit('success', salesOrderItem)
@@ -53,14 +55,14 @@ const invoke = async () => {
   }
 }
 
-onMounted(async () => {
-  const products = await api.product.getAll()
-
-  productOptions.value = products.map(({ id, normalizedName, uom, category }) => ({
-    label: normalizedName,
-    value: { id, normalizedName, uom },
-    categoryId: category.id
-  }))
+api.product.getAll().then(products => {
+  productOptions.value = products.map(({ id, normalizedName, uom, category }) => {
+    return {
+      label: normalizedName,
+      value: { id, normalizedName, uom },
+      categoryId: category.id
+    }
+  })
 })
 </script>
 

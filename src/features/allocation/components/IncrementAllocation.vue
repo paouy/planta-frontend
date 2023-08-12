@@ -1,37 +1,32 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { createAllocationOrder } from '../api/index.js'
+import { ref, computed } from 'vue'
 import { CfDialog, CfFilledButton, CfInput } from '../../../components/index.js'
 import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
-
-const props = defineProps({
-  salesOrderItemId: String,
-  product: Object
-})
+const props = defineProps({ salesOrderItem: Object })
 
 const isLoading = ref(false)
-
 const product = ref({
   qtyAvailable: null,
   uom: ''
 })
+const qty = ref(props.salesOrderItem.qtyAllocated)
 
-const allocationOrder = ref({
+const ctx = computed(() => ({
   salesOrderItem: {
-    id: props.salesOrderItemId
+    id: props.salesOrderItem.id
   },
-  qty: null
-})
+  qty: qty.value - props.salesOrderItem.qtyAllocated
+}))
 
 const invoke = async () => {
   try {
     isLoading.value = true
 
-    const createdAllocationOrder = await createAllocationOrder(allocationOrder.value)
+    await api.allocation.increment(ctx.value)
 
-    emit('success', createdAllocationOrder)
+    emit('success', ctx.value)
     emit('cancel')
   } catch (error) {
     alert(error)
@@ -40,34 +35,35 @@ const invoke = async () => {
   }
 }
 
-onMounted(async () => product.value = await api.product.getOne(props.product.id))
+api.product
+  .getOne(props.salesOrderItem.product.id)
+  .then(data => product.value = data)
 </script>
 
 <template>
-  <CfDialog title="Create allocation order" @close="emit('cancel')">
+  <CfDialog title="Allocate stock" @close="emit('cancel')">
     <template #body>
-      <form id="createAllocationOrder" @submit.prevent="invoke">
+      <form id="incrementAllocation" @submit.prevent="invoke">
         <CfInput
           label="Product"
-          :value="props.product.normalizedName"
+          :value="product.normalizedName"
           disabled
         />
         <CfInput
-          v-model.number="allocationOrder.qty"
+          v-model.number="qty"
           label="Quantity"
           :suffix="product.uom"
           type="number"
           step="any"
           min="1"
-          :max="product.qtyAvailable - product.qtyAllocated"
           :disabled="!product.qtyAvailable"
           required
         />
       </form>
     </template>
     <template #footer>
-      <CfFilledButton type="submit" form="createAllocationOrder" :loading="isLoading">
-        Create
+      <CfFilledButton type="submit" form="incrementAllocation" :loading="isLoading">
+        Save
       </CfFilledButton>
       <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
         Cancel
@@ -77,7 +73,7 @@ onMounted(async () => product.value = await api.product.getOne(props.product.id)
 </template>
 
 <style>
-#createAllocationOrder {
+#incrementAllocation {
   display: grid;
   gap: 1rem;
 }

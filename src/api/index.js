@@ -1,3 +1,4 @@
+import * as allocation from './allocation.js'
 import * as category from './category.js'
 import * as customer from './customer.js'
 import * as equipment from './equipment.js'
@@ -16,6 +17,7 @@ import * as salesOrderItem from './salesOrderItem.js'
 import * as workstation from './workstation.js'
 
 const api = {
+  allocation,
   category,
   customer,
   equipment,

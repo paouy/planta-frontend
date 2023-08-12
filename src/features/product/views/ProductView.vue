@@ -9,6 +9,7 @@ import CreateProductMaterial from '../../productMaterial/components/CreateProduc
 import UpdateProductMaterial from '../../productMaterial/components/UpdateProductMaterial.vue'
 import DeleteProductMaterial from '../../productMaterial/components/DeleteProductMaterial.vue'
 import ProductionOrdersByProductList from '../../productionOrder/components/ProductionOrdersByProductList.vue'
+import AllocationsList from '../../allocation/components/AllocationsList.vue'
 import api from '../../../api/index.js'
 
 const breadcrumbs = [{ name: 'Products', path: '/inventory/products' }]
@@ -32,6 +33,7 @@ const product = ref({
   qtyWip: null
 })
 const productionOrders = ref([])
+const allocations = ref([])
 const productMaterials = ref([])
 const productMaterial = ref(null)
 
@@ -78,6 +80,10 @@ api.productMaterial
 api.productionOrder
   .getAllNotReleased({ productId: props.productId })
   .then(data => productionOrders.value = data)
+
+api.allocation
+  .getAll({ productId: props.productId })
+  .then(data => allocations.value = data)
 </script>
 
 <template>
@@ -108,6 +114,9 @@ api.productionOrder
 
     <CfHeader title="Production orders"/>
     <ProductionOrdersByProductList :data="productionOrders"/>
+
+    <CfHeader title="Allocation"/>
+    <AllocationsList :data="allocations"/>
 
     <CfHeader title="Remove product"/>
     <CfActionCard simple>

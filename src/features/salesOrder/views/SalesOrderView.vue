@@ -6,7 +6,7 @@ import ConfirmSalesOrder from '../components/ConfirmSalesOrder.vue'
 import RemoveSalesOrder from '../components/RemoveSalesOrder.vue'
 import SalesOrderItemsList from '../../salesOrderItem/components/SalesOrderItemsList.vue'
 import CreateProductionOrder from '../../productionOrder/components/CreateProductionOrder.vue'
-import CreateAllocationOrder from '../../allocationOrder/components/CreateAllocationOrder.vue'
+import IncrementAllocation from '../../allocation/components/IncrementAllocation.vue'
 import CreateSalesOrderItem from '../../salesOrderItem/components/CreateSalesOrderItem.vue'
 import UpdateSalesOrderItemQty from '../../salesOrderItem/components/UpdateSalesOrderItemQty.vue'
 import DeleteSalesOrderItem from '../../salesOrderItem/components/DeleteSalesOrderItem.vue'
@@ -75,13 +75,13 @@ const onDeleteSalesOrderItem = (id) => {
 
 const onCreateProductionOrder = ({ salesOrderItemId, qty }) => {
   const item = salesOrderItems.value.find(({ id }) => salesOrderItemId === id)
-  item.qtyWip = item.qtyWip + qty
+  item.qtyWip += qty
   item.productionOrderCount++
 }
 
-const onCreateAllocation = ({ salesOrderItem, qty }) => {
+const onIncrementAllocation = ({ salesOrderItem, qty }) => {
   const item = salesOrderItems.value.find(({ id }) => salesOrderItem.id === id)
-  item.qtyAllocated = item.qtyAllocated + qty
+  item.qtyAllocated += qty
 }
 
 api.salesOrder
@@ -160,21 +160,6 @@ api.salesOrderItem
     v-if="currentAction.salesOrder === 'REMOVE'"
   />
 
-  <CreateProductionOrder
-    :sales-order-item="salesOrderItem"
-    @success="onCreateProductionOrder"
-    @cancel="currentAction.salesOrderItem = salesOrderItem = null"
-    v-if="currentAction.salesOrderItem === 'MAKE'"
-  />
-
-  <CreateAllocationOrder
-    :product="salesOrderItem?.product"
-    :sales-order-item-id="salesOrderItem?.id"
-    @success="onCreateAllocation"
-    @cancel="currentAction.salesOrderItem = salesOrderItem = null"
-    v-if="currentAction.salesOrderItem === 'ALLOCATE'"
-  />
-
   <CreateSalesOrderItem
     :sales-order="salesOrder"
     :sales-order-items="salesOrderItems"
@@ -195,5 +180,19 @@ api.salesOrderItem
     @success="onDeleteSalesOrderItem"
     @cancel="currentAction.salesOrderItem = salesOrderItem = null"
     v-if="currentAction.salesOrderItem === 'REMOVE'"
+  />
+
+  <CreateProductionOrder
+    :sales-order-item="salesOrderItem"
+    @success="onCreateProductionOrder"
+    @cancel="currentAction.salesOrderItem = salesOrderItem = null"
+    v-if="currentAction.salesOrderItem === 'MAKE'"
+  />
+
+  <IncrementAllocation
+    :sales-order-item="salesOrderItem"
+    @success="onIncrementAllocation"
+    @cancel="currentAction.salesOrderItem = salesOrderItem = null"
+    v-if="currentAction.salesOrderItem === 'ALLOCATE'"
   />
 </template>

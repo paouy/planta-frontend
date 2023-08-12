@@ -7,7 +7,7 @@ import api from '../../../api/index.js'
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({
   product: Object,
-  salesOrderItemId: String
+  salesOrderItem: Object
 })
 
 const isLoading = ref(false)
@@ -46,14 +46,23 @@ const invoke = async () => {
 }
 
 onMounted(() => {
-  if (props.product) {
-    ctx.value.product = props.product
-  } else {
+  if (!props.product && !props.salesOrderItem) {
     api.product.getAll().then(data => products.value = data)
   }
 
-  if (props.salesOrderItemId) {
-    ctx.value.salesOrderItemId = props.salesOrderItemId
+  if (props.product) {
+    ctx.value.product = props.product
+  }
+
+  if (props.salesOrderItem) {
+    ctx.value.publicId = props.salesOrderItem.publicId
+
+    if (props.salesOrderItem.productionOrderCount) {
+      ctx.value.publicId += ` (${props.salesOrderItem.productionOrderCount + 1})`
+    }
+
+    ctx.value.product = props.salesOrderItem.product
+    ctx.value.salesOrderItemId = props.salesOrderItem.id
   }
 })
 </script>
@@ -66,20 +75,20 @@ onMounted(() => {
           v-model="ctx.publicId"
           label="ID"
           required
-          v-if="!props.salesOrderItemId"
+          v-if="!props.salesOrderItem"
         />
         <CategorySelect
           v-model="categoryId"
           type="products"
           :keys="['id']"
-          v-if="!props.product"
+          v-if="!props.product && !props.salesOrderItem"
         />
         <CfSelect
           v-model="ctx.product"
           label="Product"
           :options="productOptions"
           required
-          v-if="!props.product"
+          v-if="!props.product && !props.salesOrderItem"
         />
         <CfInput
           label="Product"

@@ -49,7 +49,7 @@ const invoke = async () => {
   <CfDialog title="Remove sales order" @close="emit('cancel')">
     <template #body>
       <form id="removeSalesOrder" @submit.prevent="invoke">
-        <p>Removing <b>{{ props.data.customFriendlyId }} ({{ props.data.customer.shortName }})</b> is permanent. Select a reason below to proceed.</p>
+        <p>Removing <b>{{ props.data.publicId }} ({{ props.data.customer.shortName }})</b> is permanent. Select a reason below to proceed.</p>
         <CfSelect
           v-model="ctx.status"
           label="Reason"

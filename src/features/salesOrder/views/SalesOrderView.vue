@@ -3,7 +3,6 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfSummaryList, CfActionCard, CfOutlinedButton, CfFilledButton } from '../../../components/index.js'
 import ConfirmSalesOrder from '../components/ConfirmSalesOrder.vue'
-import FulfillSalesOrder from '../components/FulfillSalesOrder.vue'
 import RemoveSalesOrder from '../components/RemoveSalesOrder.vue'
 import SalesOrderItemsList from '../../salesOrderItem/components/SalesOrderItemsList.vue'
 import CreateProductionOrder from '../../productionOrder/components/CreateProductionOrder.vue'
@@ -51,6 +50,13 @@ const onSalesOrderItemAction = ({ key, data }) => {
   salesOrderItem.value = data
 }
 
+const onConfirmSalesOrder = () => {
+  salesOrder.value.status = 'CONFIRMED'
+  salesOrderItems.value.forEach((_, index) => {
+    salesOrderItems.value[index].publicId = `${salesOrder.value.publicId}/${index + 1}`
+  })
+}
+
 const onCreateSalesOrderItem = ({ salesOrderId, ...data }) => {
   salesOrderItems.value.push(data)
 }
@@ -70,6 +76,7 @@ const onDeleteSalesOrderItem = (id) => {
 const onCreateProductionOrder = ({ salesOrderItemId, qty }) => {
   const item = salesOrderItems.value.find(({ id }) => salesOrderItemId === id)
   item.qtyWip = item.qtyWip + qty
+  item.productionOrderCount++
 }
 
 const onCreateAllocation = ({ salesOrderItem, qty }) => {
@@ -100,7 +107,6 @@ api.salesOrderItem
         </CfFilledButton>
         <CfFilledButton
           :disabled="salesOrderItems.some(item => !item.qtyAllocated || item.qtyWip)"
-          @click="currentAction.salesOrder = 'FULFILL'"
           v-if="salesOrder.status === 'CONFIRMED'"
         >
           Fulfill order
@@ -142,16 +148,9 @@ api.salesOrderItem
 
   <ConfirmSalesOrder
     :data="salesOrder"
-    @success="salesOrder.status = 'CONFIRMED'"
+    @success="onConfirmSalesOrder"
     @cancel="currentAction.salesOrder = null"
     v-if="currentAction.salesOrder === 'CONFIRM'"
-  />
-
-  <FulfillSalesOrder
-    :data="salesOrder"
-    @success="salesOrder.status = 'FULFILLED'"
-    @cancel="currentAction.salesOrder = null"
-    v-if="currentAction.salesOrder === 'FULFILL'"
   />
 
   <RemoveSalesOrder
@@ -162,8 +161,7 @@ api.salesOrderItem
   />
 
   <CreateProductionOrder
-    :product="salesOrderItem?.product"
-    :sales-order-item-id="salesOrderItem?.id"
+    :sales-order-item="salesOrderItem"
     @success="onCreateProductionOrder"
     @cancel="currentAction.salesOrderItem = salesOrderItem = null"
     v-if="currentAction.salesOrderItem === 'MAKE'"

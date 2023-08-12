@@ -27,7 +27,7 @@ const invoke = async () => {
 <template>
   <CfDialog title="Confirm sales order" @close="emit('cancel')">
     <template #body>
-      <p>You're about to confirm <b>{{ props.data.customFriendlyId }} ({{ props.data.customer.shortName }})</b>. You won't be able to change any order items. Do you want to proceed?</p>
+      <p>You're about to confirm <b>{{ props.data.publicId }} ({{ props.data.customer.shortName }})</b>. You won't be able to change any order items. Do you want to proceed?</p>
     </template>
     <template #footer>
       <CfFilledButton :loading="isLoading" @click="invoke">

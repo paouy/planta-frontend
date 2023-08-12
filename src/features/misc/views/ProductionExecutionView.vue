@@ -60,11 +60,11 @@ watch(operation, ({ name }) => router.push(`/production/execution/${toSlug(name)
 onMounted(async () => {
   const { operations } = useOperationStore()
 
-  const { id, name, isBatch } = Boolean(props.operationSlug)
+  const { id, name, isBatch, hasEquipment } = Boolean(props.operationSlug)
     ? operations.value.find(({ name }) => props.operationSlug === toSlug(name))
     : operations.value[0]
 
-  operation.value = { id, name, isBatch }
+  operation.value = { id, name, isBatch, hasEquipment }
 
   const [jobs, operationBatches] = await Promise.all([
     api.job.getAll(),
@@ -114,6 +114,7 @@ onMounted(async () => {
 
   <CreateProductionRecord
     :job="job"
+    :require-equipment="operation.hasEquipment"
     @success="productionExecution.createProductionRecord"
     @cancel="action.job = job = null"
     v-if="action.job === 'ADD_RECORD'"

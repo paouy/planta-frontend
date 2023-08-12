@@ -7,7 +7,8 @@ const workstation = ref(null)
 const operation = ref({
   id: '',
   name: '',
-  isBatch: null
+  isBatch: null,
+  hasEquipment: null
 })
 
 const showAllJobsFilterFn = (job) => showAllJobs.value || job.seq === 1 ? true : Boolean(job.qtyInput)

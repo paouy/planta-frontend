@@ -77,7 +77,7 @@ const invoke = async () => {
       <div class="productionOrdersListPreview">
         <h4>Preview</h4>
         <ul>
-          <li v-if="!productionOrder.next">
+          <li v-if="!productionOrder.next && productionOrder.beforePrev">
             <span>{{ position - 2 }}.</span>
             <span>{{ productionOrder.beforePrev.publicId }}</span>
             <span>{{ productionOrder.beforePrev.productNormalizedName }}</span>
@@ -97,7 +97,7 @@ const invoke = async () => {
             <span>{{ productionOrder.next.publicId }}</span>
             <span>{{ productionOrder.next.productNormalizedName }}</span>
           </li>
-          <li v-if="!productionOrder.prev">
+          <li v-if="!productionOrder.prev && productionOrder.afterNext">
             <span>{{ position + 2 }}.</span>
             <span>{{ productionOrder.afterNext.publicId }}</span>
             <span>{{ productionOrder.afterNext.productNormalizedName }}</span>

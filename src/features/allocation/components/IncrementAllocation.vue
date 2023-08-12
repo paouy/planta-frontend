@@ -56,6 +56,7 @@ api.product
           type="number"
           step="any"
           min="1"
+          :max="product.qtyAvailable"
           :disabled="!product.qtyAvailable"
           required
         />

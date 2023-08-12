@@ -105,12 +105,6 @@ api.salesOrderItem
         >
           Confirm order
         </CfFilledButton>
-        <CfFilledButton
-          :disabled="salesOrderItems.some(item => !item.qtyAllocated || item.qtyWip)"
-          v-if="salesOrder.status === 'CONFIRMED'"
-        >
-          Fulfill order
-        </CfFilledButton>
       </template>
     </CfAppViewHeader>
 

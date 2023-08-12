@@ -6,7 +6,7 @@ import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components
 import api from '../../../api'
 
 const emit = defineEmits(['success', 'cancel'])
-const props = defineProps({ job: Object })
+const props = defineProps({ job: Object, requireEquipment: Boolean })
 
 const productionRecordTypeOptions = computed(() => {
   const options = {
@@ -80,7 +80,7 @@ const invoke = async () => {
         <EquipmentSelect
           v-model="ctx.equipment"
           :operation-id="props.job.operation.id"
-          :required="false"
+          v-if="props.requireEquipment"
         />
         <CfInput
           v-model.number="ctx.qty"

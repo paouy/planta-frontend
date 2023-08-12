@@ -49,6 +49,10 @@ const data = computed(() => {
       ? ['Make', 'Allocate']
       : ['Edit', 'Remove']
 
+    if (item.qtyAllocated) {
+      actions.push('Fulfill')
+    }
+
     return {
       ...item,
       seq: index + 1,

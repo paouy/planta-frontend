@@ -19,7 +19,7 @@ const onView = ({ data }) => {
 }
 
 api.salesOrder
-  .getAllNotFulfilled()
+  .getAll()
   .then(data => salesOrders.value = data)
 </script>
 

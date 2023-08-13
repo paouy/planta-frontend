@@ -18,18 +18,9 @@ export const getOne = async (id) => {
   }
 }
 
-export const getAllNotFulfilled = async () => {
+export const getAll = async (params) => {
   try {
-    const { data: salesOrders } = await axios.get('/v1/sales-orders')
-    return salesOrders
-  } catch (error) {
-    throw Error(error.response.data.message)
-  }
-}
-
-export const getAllFulfilled = async () => {
-  try {
-    const { data: salesOrders } = await axios.get('/v1/sales-orders/fulfilled')
+    const { data: salesOrders } = await axios.get('/v1/sales-orders', { params })
     return salesOrders
   } catch (error) {
     throw Error(error.response.data.message)

@@ -3,12 +3,12 @@ import { computed } from 'vue'
 import { CfDataTable } from '../../../components/index.js'
 
 const emit = defineEmits(['action'])
-
 const props = defineProps({
   data: Array,
-  updateOnly: Boolean
+  salesOrderStatus: String
 })
 
+const showAllColumns = computed(() => ['CONFIRMED', 'PARTIALLY_FULFILLED', 'FULFILLED'].includes(props.salesOrderStatus))
 const computedColumns = computed(() => {
   const columns = [
     {
@@ -16,16 +16,16 @@ const computedColumns = computed(() => {
       key: 'seq',
       width: '4rem'
     },{
-      label: 'Name',
+      label: 'Product',
       key: 'product.normalizedName',
-      width: props.updateOnly ? 'auto' : '40%'
+      width: props.salesOrderStatus === 'OPEN' ? 'auto' : '40%'
     }, {
       label: 'Demand',
       key: 'qty'
     }
   ]
 
-  if (!props.updateOnly) {
+  if (showAllColumns.value) {
     columns.push(
       {
         label: 'WIP',
@@ -45,12 +45,18 @@ const computedColumns = computed(() => {
 
 const data = computed(() => {
   return props.data.map((item, index) => {
-    const actions = !props.updateOnly
-      ? ['Make', 'Allocate']
-      : ['Edit', 'Remove']
+    let actions = false
 
-    if (item.qtyAllocated) {
-      actions.push('Fulfill')
+    if (props.salesOrderStatus === 'OPEN') {
+      actions = ['Edit', 'Remove']
+    }
+
+    if (['CONFIRMED', 'PARTIALLY_FULFILLED'].includes(props.salesOrderStatus)) {
+      actions = ['Make', 'Allocate']
+
+      if (item.qtyAllocated) {
+        actions.push('Fulfill')
+      }
     }
 
     return {
@@ -73,9 +79,15 @@ const data = computed(() => {
       <td>{{ data.seq }}</td>
       <td>{{ data.product.normalizedName }}</td>
       <td>{{ data.qty }} {{ data.product.uom }}</td>
-      <td v-if="!props.updateOnly">{{ data.qtyWip }} {{ data.product.uom }}</td>
-      <td v-if="!props.updateOnly">{{ data.qtyAllocated }} {{ data.product.uom }}</td>
-      <td v-if="!props.updateOnly">{{ data.qtyFulfilled }} {{ data.product.uom }}</td>
+      <td v-if="showAllColumns">
+        {{ data.qtyWip }} {{ data.product.uom }}
+      </td>
+      <td v-if="showAllColumns">
+        {{ data.qtyAllocated }} {{ data.product.uom }}
+      </td>
+      <td v-if="showAllColumns">
+        {{ data.qtyFulfilled }} {{ data.product.uom }}
+      </td>
     </template>
   </CfDataTable>
 </template>

@@ -7,6 +7,7 @@ import RemoveSalesOrder from '../components/RemoveSalesOrder.vue'
 import SalesOrderItemsList from '../../salesOrderItem/components/SalesOrderItemsList.vue'
 import CreateProductionOrder from '../../productionOrder/components/CreateProductionOrder.vue'
 import IncrementAllocation from '../../allocation/components/IncrementAllocation.vue'
+import CreateFulfillment from '../../fulfillment/components/CreateFulfillment.vue'
 import CreateSalesOrderItem from '../../salesOrderItem/components/CreateSalesOrderItem.vue'
 import UpdateSalesOrderItemQty from '../../salesOrderItem/components/UpdateSalesOrderItemQty.vue'
 import DeleteSalesOrderItem from '../../salesOrderItem/components/DeleteSalesOrderItem.vue'
@@ -84,6 +85,11 @@ const onIncrementAllocation = ({ salesOrderItem, qty }) => {
   item.qtyAllocated += qty
 }
 
+const onCreateFulfillment = ({ salesOrderItemId, qty }) => {
+  const item = salesOrderItems.value.find(({ id }) => salesOrderItemId === id)
+  item.qtyFulfilled += qty
+}
+
 api.salesOrder
   .getOne(props.salesOrderId)
   .then(data => salesOrder.value = data)
@@ -123,7 +129,7 @@ api.salesOrderItem
     </CfHeader>
     <SalesOrderItemsList
       :data="salesOrderItems"
-      :update-only="salesOrder.status === 'OPEN'"
+      :sales-order-status="salesOrder.status"
       @action="onSalesOrderItemAction"
     />
 
@@ -188,5 +194,12 @@ api.salesOrderItem
     @success="onIncrementAllocation"
     @cancel="currentAction.salesOrderItem = salesOrderItem = null"
     v-if="currentAction.salesOrderItem === 'ALLOCATE'"
+  />
+
+  <CreateFulfillment
+    :sales-order-item="salesOrderItem"
+    @success="onCreateFulfillment"
+    @cancel="currentAction.salesOrderItem = salesOrderItem = null"
+    v-if="currentAction.salesOrderItem === 'FULFILL'"
   />
 </template>

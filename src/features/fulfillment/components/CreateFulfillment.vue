@@ -49,7 +49,7 @@ const invoke = async () => {
           type="number"
           step="any"
           min="1"
-          :max="props.salesOrderItem.qtyAllocated - props.salesOrderItem.qtyFulfilled"
+          :max="props.salesOrderItem.qtyAllocated"
           :suffix="props.salesOrderItem.product.uom"
           required
         />

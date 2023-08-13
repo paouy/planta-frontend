@@ -88,6 +88,13 @@ const onIncrementAllocation = ({ salesOrderItem, qty }) => {
 const onCreateFulfillment = ({ salesOrderItemId, qty }) => {
   const item = salesOrderItems.value.find(({ id }) => salesOrderItemId === id)
   item.qtyFulfilled += qty
+  item.qtyAllocated -= qty
+
+  const isSalesOrderPartiallyFulfilled = salesOrderItems.value
+    .map(({ qty, qtyFulfilled }) => qtyFulfilled >= qty )
+    .some(value => value === false)
+
+  salesOrder.value.status = isSalesOrderPartiallyFulfilled ? 'PARTIALLY_FULFILLED' : 'FULFILLED'
 }
 
 api.salesOrder

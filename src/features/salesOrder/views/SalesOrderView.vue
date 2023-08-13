@@ -3,6 +3,8 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfSummaryList, CfActionCard, CfOutlinedButton, CfFilledButton } from '../../../components/index.js'
 import ConfirmSalesOrder from '../components/ConfirmSalesOrder.vue'
+import ForceFulfillSalesOrder from '../components/ForceFulfillSalesOrder.vue'
+import ArchiveSalesOrder from '../components/ArchiveSalesOrder.vue'
 import RemoveSalesOrder from '../components/RemoveSalesOrder.vue'
 import SalesOrderItemsList from '../../salesOrderItem/components/SalesOrderItemsList.vue'
 import CreateProductionOrder from '../../productionOrder/components/CreateProductionOrder.vue'
@@ -118,6 +120,18 @@ api.salesOrderItem
         >
           Confirm order
         </CfFilledButton>
+        <CfOutlinedButton
+          @click="currentAction.salesOrder = 'FORCE_FULFILL'"
+          v-if="salesOrder.status === 'PARTIALLY_FULFILLED'"
+        >
+          Mark as fulfilled
+        </CfOutlinedButton>
+        <CfFilledButton
+          @click="currentAction.salesOrder = 'ARCHIVE'"
+          v-if="salesOrder.status === 'FULFILLED'"
+        >
+          Archive order
+        </CfFilledButton>
       </template>
     </CfAppViewHeader>
 
@@ -158,6 +172,20 @@ api.salesOrderItem
     @success="onConfirmSalesOrder"
     @cancel="currentAction.salesOrder = null"
     v-if="currentAction.salesOrder === 'CONFIRM'"
+  />
+
+  <ForceFulfillSalesOrder
+    :data="salesOrder"
+    @success="salesOrder.status = 'FULFILLED'"
+    @cancel="currentAction.salesOrder = null"
+    v-if="currentAction.salesOrder === 'FORCE_FULFILL'"
+  />
+
+  <ArchiveSalesOrder
+    :data="salesOrder"
+    @success="router.push({ name: 'SalesOrders' })"
+    @cancel="currentAction.salesOrder = null"
+    v-if="currentAction.salesOrder === 'ARCHIVE'"
   />
 
   <RemoveSalesOrder

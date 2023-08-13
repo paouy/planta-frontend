@@ -27,14 +27,6 @@ export const getAll = async (params) => {
   }
 }
 
-export const updateOne = async (data) => {
-  try {
-    await axios.put('/v1/sales-orders', data)
-  } catch (error) {
-    throw Error(error.response.data.message)
-  }
-}
-
 export const deleteOne = async (id) => {
   try {
     await axios.delete(`/v1/sales-orders/${id}`)
@@ -46,6 +38,22 @@ export const deleteOne = async (id) => {
 export const confirm = async (id) => {
   try {
     await axios.post(`/v1/sales-orders/${id}/confirm`)
+  } catch (error) {
+    throw Error(error.response.data.message)
+  }
+}
+
+export const forceFulfilledStatus = async (id) => {
+  try {
+    await axios.post(`/v1/sales-orders/${id}/fulfill`)
+  } catch (error) {
+    throw Error(error.response.data.message)
+  }
+}
+
+export const archive = async (id) => {
+  try {
+    await axios.post(`/v1/sales-orders/${id}/archive`)
   } catch (error) {
     throw Error(error.response.data.message)
   }

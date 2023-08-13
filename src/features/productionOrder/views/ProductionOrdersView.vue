@@ -5,9 +5,7 @@ import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../component
 import ProductionOrdersSummary from '../components/ProductionOrdersSummary.vue'
 import ProductionOrdersList from '../components/ProductionOrdersList.vue'
 import CreateProductionOrder from '../components/CreateProductionOrder.vue'
-import DeleteProductionOrder from '../components/DeleteProductionOrder.vue'
 import UpdateProductionOrderPriority from '../components/UpdateProductionOrderPriority.vue'
-import ReleaseProductionOrder from '../components/ReleaseProductionOrder.vue'
 import api from '../../../api/index.js'
 
 const { productionOrders, ...productionOrderStore } = useProductionOrderStore()
@@ -45,25 +43,11 @@ api.productionOrder.getAllNotReleased().then(productionOrderStore.set)
     v-if="currentAction === 'ADD'"
   />
 
-  <DeleteProductionOrder
-    :data="productionOrder"
-    @success="productionOrderStore.remove"
-    @cancel="currentAction = productionOrder = null"
-    v-if="currentAction === 'DELETE'"
-  />
-
   <UpdateProductionOrderPriority
     :data="productionOrder"
     :production-orders="productionOrders"
     @success="productionOrderStore.reprioritize"
     @cancel="currentAction = productionOrder = null"
     v-if="currentAction === 'REPRIORITIZE'"
-  />
-
-  <ReleaseProductionOrder
-    :data="productionOrder"
-    @success="productionOrderStore.remove"
-    @cancel="currentAction = null"
-    v-if="currentAction === 'RELEASE'"
   />
 </template>

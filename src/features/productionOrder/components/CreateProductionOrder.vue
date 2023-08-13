@@ -29,6 +29,11 @@ const productOptions = computed(() => {
 
   return options
 })
+const maxQty = computed(() => {
+  return props.salesOrderItem
+    ? props.salesOrderItem.qty - props.salesOrderItem.qtyAllocated
+    : null
+})
 
 const invoke = async () => {
   try {
@@ -101,6 +106,8 @@ onMounted(() => {
           label="Quantity"
           type="number"
           step="any"
+          min="1"
+          :max="maxQty"
           :suffix="ctx.product?.uom"
           required
         />

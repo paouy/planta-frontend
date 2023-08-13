@@ -19,6 +19,9 @@ const ctx = computed(() => ({
   },
   qty: qty.value - props.salesOrderItem.qtyAllocated
 }))
+const maxQty = computed(() => {
+  return props.salesOrderItem.qty - props.salesOrderItem.qtyWip
+})
 
 const invoke = async () => {
   try {
@@ -56,7 +59,7 @@ api.product
           type="number"
           step="any"
           min="1"
-          :max="product.qtyAvailable"
+          :max="maxQty"
           :disabled="!product.qtyAvailable"
           required
         />

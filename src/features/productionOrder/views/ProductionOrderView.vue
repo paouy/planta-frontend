@@ -1,12 +1,16 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfSummaryList } from '../../../components/index.js'
+import { useRouter } from 'vue-router'
+import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfActionCard, CfSummaryList, CfFilledButton, CfOutlinedButton } from '../../../components/index.js'
 import JobsList from '../../job/components/JobsList.vue'
 import ProductionRecordsList from '../../productionRecord/components/ProductionRecordsList.vue'
+import RemoveProductionOrder from '../components/RemoveProductionOrder.vue'
+import ReleaseProductionOrder from '../components/ReleaseProductionOrder.vue'
 import api from '../../../api/index.js'
 
-const breadcrumbs = [{ name: 'Overview', path: '/production/overview' }]
+const router = useRouter()
 const props = defineProps({ productionOrderId: String })
+const breadcrumbs = [{ name: 'Overview', path: '/production/overview' }]
 
 const productionOrder = ref({
   publicId: '',
@@ -20,6 +24,7 @@ const productionOrder = ref({
 })
 const jobs = ref([])
 const productionRecords = ref([])
+const currentAction = ref(null)
 
 const summary = computed(() => ([
   {
@@ -36,6 +41,7 @@ const summary = computed(() => ([
     value: productionOrder.value.dueDate
   }
 ]))
+const allowRemoval = computed(() => ['OPEN', 'IN_PROGRESS', 'PAUSED'].includes(productionOrder.value.status))
 
 api.productionOrder
   .getOne(props.productionOrderId)
@@ -53,7 +59,16 @@ api.productionRecord
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfAppViewHeader :title="productionOrder.publicId"/>
+    <CfAppViewHeader :title="productionOrder.publicId">
+      <template #actions>
+        <CfFilledButton
+          @click="currentAction = 'RELEASE'"
+          v-if="productionOrder.status === 'CLOSED'"
+        >
+          Release order
+        </CfFilledButton>
+      </template>
+    </CfAppViewHeader>
 
     <CfHeader title="Production details"/>
     <CfSummaryList :data="summary"/>
@@ -63,5 +78,31 @@ api.productionRecord
 
     <CfHeader title="Production records"/>
     <ProductionRecordsList :data="productionRecords"/>
+
+    <CfHeader title="Remove production order" v-if="allowRemoval"/>
+    <CfActionCard simple v-if="allowRemoval">
+      <template #body>
+        Cancelling or deleting this production order is permanent.
+      </template>
+      <template #action>
+        <CfOutlinedButton color="red" @click="currentAction = 'REMOVE'">
+          Remove
+        </CfOutlinedButton>
+      </template>
+    </CfActionCard>
   </CfAppView>
+
+  <RemoveProductionOrder
+    :data="productionOrder"
+    @success="router.push({ name: 'ProductionOrders' })"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'REMOVE'"
+  />
+
+  <ReleaseProductionOrder
+    :data="productionOrder"
+    @success="router.push({ name: 'ProductionOrders' })"
+    @cancel="currentAction = null"
+    v-if="currentAction === 'RELEASE'"
+  />
 </template>

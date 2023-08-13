@@ -12,12 +12,6 @@ export const useProductionOrderStore = () => {
     productionOrders.value.push({ ...data, seq })
   }
 
-  const remove = (id) => {
-    productionOrders.value = productionOrders.value
-      .filter(productionOrder => id !== productionOrder.id)
-      .map((data, index) => ({ ...data, seq: index + 1 }))
-  }
-
   const reprioritize = ({ id, priority }) => {
     const productionOrder = productionOrders.value.find(order => order.id === id)
 
@@ -33,7 +27,6 @@ export const useProductionOrderStore = () => {
     productionOrders: readonly(productionOrders),
     set,
     create,
-    remove,
     reprioritize
   }
 }

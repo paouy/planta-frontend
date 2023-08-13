@@ -48,13 +48,13 @@ const computedData = computed(() => {
       actions.push('Reprioritize')
     }
 
-    if (order.status === 'OPEN') {
-      actions.push('Delete')
-    }
+    // if (order.status === 'IN_PROGRESS') {
+    //   actions.push('Pause')
+    // }
 
-    if (order.status === 'CLOSED') {
-      actions.push('Release')
-    }
+    // if (order.status === 'PAUSED') {
+    //   actions.push('Resume')
+    // }
 
     const normalizedQty = order.status === 'CLOSED'
       ? `${order.qtyMade}/${order.qty}`

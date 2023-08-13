@@ -13,15 +13,19 @@ const product = ref({
 })
 const qty = ref(props.salesOrderItem.qtyAllocated)
 
+const maxQty = computed(() => {
+  const actualMaxQty = props.salesOrderItem.qty - props.salesOrderItem.qtyWip - props.salesOrderItem.qtyAllocated - props.salesOrderItem.qtyFulfilled
+  
+  return product.value.qtyAvailable < actualMaxQty
+    ? product.value.qtyAvailable
+    : actualMaxQty
+})
 const ctx = computed(() => ({
   salesOrderItem: {
     id: props.salesOrderItem.id
   },
   qty: qty.value - props.salesOrderItem.qtyAllocated
 }))
-const maxQty = computed(() => {
-  return props.salesOrderItem.qty - props.salesOrderItem.qtyWip
-})
 
 const invoke = async () => {
   try {
@@ -58,7 +62,7 @@ api.product
           :suffix="product.uom"
           type="number"
           step="any"
-          min="1"
+          :min="maxQty ? 1 : 0"
           :max="maxQty"
           :disabled="!product.qtyAvailable"
           required

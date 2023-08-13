@@ -47,6 +47,10 @@ const summary = computed(() => ([
     value: salesOrder.value.date
   }
 ]))
+const allowForceFulfill = computed(() => {
+  const hasQtyWip = salesOrderItems.value.map(({ qtyWip }) => qtyWip).some(qty => qty > 0)
+  return salesOrder.value.status === 'PARTIALLY_FULFILLED' && !hasQtyWip
+})
 
 const onSalesOrderItemAction = ({ key, data }) => {
   currentAction.value.salesOrderItem = key
@@ -122,7 +126,7 @@ api.salesOrderItem
         </CfFilledButton>
         <CfOutlinedButton
           @click="currentAction.salesOrder = 'FORCE_FULFILL'"
-          v-if="salesOrder.status === 'PARTIALLY_FULFILLED'"
+          v-if="allowForceFulfill"
         >
           Mark as fulfilled
         </CfOutlinedButton>

@@ -31,7 +31,7 @@ const productOptions = computed(() => {
 })
 const maxQty = computed(() => {
   return props.salesOrderItem
-    ? props.salesOrderItem.qty - props.salesOrderItem.qtyAllocated
+    ? props.salesOrderItem.qty - props.salesOrderItem.qtyWip - props.salesOrderItem.qtyAllocated - props.salesOrderItem.qtyFulfilled
     : null
 })
 
@@ -106,7 +106,7 @@ onMounted(() => {
           label="Quantity"
           type="number"
           step="any"
-          min="1"
+          :min="maxQty ? 1 : 0"
           :max="maxQty"
           :suffix="ctx.product?.uom"
           required

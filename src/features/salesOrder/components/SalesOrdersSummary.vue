@@ -1,19 +1,24 @@
 <script setup>
 import { computed } from 'vue'
 
-const props = defineProps({ data: Array })
+const props = defineProps({
+  salesOrders: Array,
+  archivedCount: Number
+})
 
 const summary = computed(() => {
-  const summary = props.data.reduce((count, { status }) => {
-    count[status] = (count[status] || 0) + 1
-
-    return count
+  const count = props.salesOrders.reduce((value, { status }) => {
+    value[status] = (value[status] || 0) + 1
+    return value
   }, {})
 
-  const allStatuses = ['OPEN', 'CONFIRMED', 'PARTIALLY_FULFILLED', 'FULFILLED']
+  const normalzedStatuses = ['Open', 'Confirmed', 'Partially fulfilled', 'Fulfilled']
 
-  allStatuses.forEach(status => {
-    summary[status] = summary[status] || 0
+  const summary = normalzedStatuses.map(status => {
+    return {
+      label: status,
+      value: count[status.replace(' ', '_').toUpperCase()] || 0
+    }
   })
 
   return summary
@@ -23,23 +28,15 @@ const summary = computed(() => {
 <template>
   <div class="salesOrderSummary">
     <h3>Summary</h3>
-    <p>There are {{ props.data.length }} sales orders.</p>
+    <p>There are {{ props.salesOrders.length }} sales orders.</p>
     <ul>
-      <li>
-        <span>Open</span>
-        <div>{{ summary['OPEN'] }}</div>
+      <li v-for="item in summary" :key="item.label">
+        <span>{{ item.label }}</span>
+        <div>{{ item.value }}</div>
       </li>
       <li>
-        <span>Confirmed</span>
-        <div>{{ summary['CONFIRMED'] }}</div>
-      </li>
-      <li>
-        <span>Partially Fulfilled</span>
-        <div>{{ summary['PARTIALLY_FULFILLED'] }}</div>
-      </li>
-      <li>
-        <span>Fulfilled</span>
-        <div>{{ summary['FULFILLED'] }}</div>
+        <span>Archived</span>
+        <div>{{ props.archivedCount }}</div>
       </li>
     </ul>
   </div>

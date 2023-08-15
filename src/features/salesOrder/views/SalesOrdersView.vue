@@ -8,6 +8,7 @@ import api from '../../../api/index.js'
 
 const router = useRouter()
 const salesOrders = ref([])
+const archivedCount = ref(0)
 
 const onView = ({ data }) => {
   router.push({
@@ -21,6 +22,10 @@ const onView = ({ data }) => {
 api.salesOrder
   .getAll()
   .then(data => salesOrders.value = data)
+
+api.lookup
+  .get('archivedSalesOrderCount')
+  .then(data => archivedCount.value = data.archivedSalesOrderCount)
 </script>
 
 <template>
@@ -32,7 +37,10 @@ api.salesOrder
         </CfOutlinedButton>
       </template>
     </CfAppViewHeader>
-    <SalesOrdersSummary :data="salesOrders"/>
+    <SalesOrdersSummary
+      :sales-orders="salesOrders"
+      :archived-count="archivedCount"
+    />
     <SalesOrdersList
       :data="salesOrders"
       @action="onView"

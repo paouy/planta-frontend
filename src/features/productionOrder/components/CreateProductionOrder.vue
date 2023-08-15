@@ -13,6 +13,7 @@ const props = defineProps({
 const isLoading = ref(false)
 const categoryId = ref(null)
 const products = ref([])
+const lastPublicId = ref('')
 const ctx = ref({
   publicId: '',
   product: {},
@@ -69,6 +70,11 @@ onMounted(() => {
     ctx.value.product = props.salesOrderItem.product
     ctx.value.salesOrderItemId = props.salesOrderItem.id
   }
+
+
+  api.lookup
+    .get('lastProductionOrderPublicId')
+    .then(data => lastPublicId.value = data.lastProductionOrderPublicId)
 })
 </script>
 
@@ -79,6 +85,7 @@ onMounted(() => {
         <CfInput
           v-model="ctx.publicId"
           label="ID"
+          :helper="lastPublicId ? `Last ID: ${lastPublicId}` : null"
           required
           v-if="!props.salesOrderItem"
         />

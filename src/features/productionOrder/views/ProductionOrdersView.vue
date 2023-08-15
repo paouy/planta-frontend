@@ -10,6 +10,7 @@ import api from '../../../api/index.js'
 
 const { productionOrders, ...productionOrderStore } = useProductionOrderStore()
 
+const releasedCount = ref(0)
 const productionOrder = ref(null)
 const currentAction = ref(null)
 
@@ -18,7 +19,13 @@ const onProductionOrderAction = ({ key, data }) => {
   currentAction.value = key
 }
 
-api.productionOrder.getAllNotReleased().then(productionOrderStore.set)
+api.productionOrder
+  .getAllNotReleased()
+  .then(productionOrderStore.set)
+
+api.lookup
+  .get('releasedProductionOrderCount')
+  .then(data => releasedCount.value = data.releasedProductionOrderCount)
 </script>
 
 <template>
@@ -30,7 +37,10 @@ api.productionOrder.getAllNotReleased().then(productionOrderStore.set)
         </CfOutlinedButton>
       </template>
     </CfAppViewHeader>
-    <ProductionOrdersSummary :data="productionOrders"/>
+    <ProductionOrdersSummary
+      :production-orders="productionOrders"
+      :released-count="releasedCount"
+    />
     <ProductionOrdersList
       :data="productionOrders"
       @action="onProductionOrderAction"

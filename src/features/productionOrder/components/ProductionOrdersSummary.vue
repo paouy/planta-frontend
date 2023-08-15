@@ -1,19 +1,24 @@
 <script setup>
 import { computed } from 'vue'
 
-const props = defineProps({ data: Array })
+const props = defineProps({
+  productionOrders: Array,
+  releasedCount: Number
+})
 
 const summary = computed(() => {
-  const summary = props.data.reduce((count, { status }) => {
-    count[status] = (count[status] || 0) + 1
-
-    return count
+  const count = props.productionOrders.reduce((value, { status }) => {
+    value[status] = (value[status] || 0) + 1
+    return value
   }, {})
 
-  const allStatuses = ['OPEN', 'IN_PROGRESS', 'PAUSED', 'CLOSED']
+  const normalzedStatuses = ['Open', 'In progress', 'Paused', 'Closed']
 
-  allStatuses.forEach(status => {
-    summary[status] = summary[status] || 0
+  const summary = normalzedStatuses.map(status => {
+    return {
+      label: status,
+      value: count[status.replace(' ', '_').toUpperCase()] || 0
+    }
   })
 
   return summary
@@ -23,23 +28,15 @@ const summary = computed(() => {
 <template>
   <div class="productionOrderSummary">
     <h3>Summary</h3>
-    <p>There are {{ props.data.length }} production orders.</p>
+    <p>There are {{ props.productionOrders.length }} production orders.</p>
     <ul>
-      <li>
-        <span>Open</span>
-        <div>{{ summary['OPEN'] }}</div>
+      <li v-for="item in summary" :key="item.label">
+        <span>{{ item.label }}</span>
+        <div>{{ item.value }}</div>
       </li>
       <li>
-        <span>In progress</span>
-        <div>{{ summary['IN_PROGRESS'] }}</div>
-      </li>
-      <li>
-        <span>Paused</span>
-        <div>{{ summary['PAUSED'] }}</div>
-      </li>
-      <li>
-        <span>Closed</span>
-        <div>{{ summary['CLOSED'] }}</div>
+        <span>Released</span>
+        <div>{{ props.releasedCount }}</div>
       </li>
     </ul>
   </div>

@@ -8,6 +8,7 @@ const emit = defineEmits(['success', 'cancel'])
 const isLoading = ref(false)
 const customerOptions = ref([])
 const products = ref([])
+const lastPublicId = ref('')
 const ctx = ref({
   publicId: '',
   customer: {
@@ -76,6 +77,10 @@ api.customer.getAll().then(data => {
   }))
 })
 
+api.lookup
+  .get('lastSalesOrderPublicId')
+  .then(data => lastPublicId.value = data.lastSalesOrderPublicId)
+
 api.product.getAll().then(data => {
   products.value = data.map(
     ({ id, normalizedName, uom }) => ({ id, normalizedName, uom })
@@ -95,6 +100,7 @@ api.product.getAll().then(data => {
       <CfInput
         v-model="ctx.publicId"
         label="Order number"
+        :helper="lastPublicId ? `Last order number: ${lastPublicId}` : null"
         required
       />
       <CfInput

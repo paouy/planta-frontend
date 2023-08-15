@@ -12,7 +12,7 @@ import TextButton from './Button/TextButton.vue'
 import Choice from './Choice/Choice.vue'
 import ChoiceList from './ChoiceList/ChoiceList.vue'
 import DataTable from './DataTable/DataTable.vue'
-import DefaultLayout from './DefaultLayout/DefaultLayout.vue'
+import AppLayout from './AppLayout/AppLayout.vue'
 import Dialog from './Dialog/Dialog.vue'
 import Dropdown from './Dropdown/Dropdown.vue'
 import DropdownItem from './Dropdown/DropdownItem.vue'
@@ -35,6 +35,7 @@ export {
   ActionCard as CfActionCard,
   AppBar as CfAppBar,
   AppBarLink as CfAppBarLink,
+  AppLayout as CfAppLayout,
   AppView as CfAppView,
   AppViewHeader as CfAppViewHeader,
   Banner as CfBanner,
@@ -45,7 +46,6 @@ export {
   Choice as CfChoice,
   ChoiceList as CfChoiceList,
   DataTable as CfDataTable,
-  DefaultLayout as CfDefaultLayout,
   Dialog as CfDialog,
   Dropdown as CfDropdown,
   DropdownItem as CfDropdownItem,

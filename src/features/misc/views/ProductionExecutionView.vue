@@ -1,7 +1,6 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { toSlug } from '../../../helpers/index.js'
 import { useProductionExecution } from '../composables/productionExecution.js'
 import { useOperationStore } from '../../operation/store.js'
 import { CfAppView, CfAppViewHeader } from '../../../components/index.js'
@@ -34,6 +33,8 @@ const listType = ref('BATCH')
 const action = ref({ job: null, operationBatch: null })
 const job = ref(null)
 const operationBatch = ref(null)
+
+const toSlug = (string) => string.toLowerCase().replaceAll(' ', '-')
 
 const onJobAction = ({ key, data }) => {
   action.value.job = key

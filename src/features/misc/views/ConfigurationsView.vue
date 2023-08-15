@@ -4,40 +4,52 @@ import { CfAppView, CfAppViewHeader, CfActionCard, CfFilledButton } from '../../
 
 <template>
   <CfAppView>
-    <CfAppViewHeader
-      surtitle="Settings"
-      title="Configurations"
-    />
+    <CfAppViewHeader surtitle="Settings" title="Configurations"/>
+
     <CfActionCard title="Operations">
       <template #body>
-        <p>Configure the operations in your production.</p>
+        <p>Set up the operations in your production.</p>
       </template>
       <template #action>
         <CfFilledButton :to="{ name: 'Operations' }">
-          Configure operations
+          Set up operations
         </CfFilledButton>
       </template>
     </CfActionCard>
+
     <CfActionCard title="Workstations">
       <template #body>
-        <p>Configure the workstations in your facility.</p>
+        <p>Add, edit, or remove workstations in your facility.</p>
       </template>
       <template #action>
         <CfFilledButton :to="{ name: 'Workstations' }">
-          Configure workstations
+          Manage workstations
         </CfFilledButton>
       </template>
     </CfActionCard>
+
+    <CfActionCard title="Workers">
+      <template #body>
+        <p>Add, edit, or remove workers who execute your production.</p>
+      </template>
+      <template #action>
+        <CfFilledButton :to="{ name: 'Workers' }">
+          Manage workers
+        </CfFilledButton>
+      </template>
+    </CfActionCard>
+
     <CfActionCard title="Equipment">
       <template #body>
-        <p>Configure the equipment used in your production.</p>
+        <p>Add, edit, or remove  equipment used in your production.</p>
       </template>
       <template #action>
         <CfFilledButton :to="{ name: 'Equipment' }">
-          Configure equipment
+          Manage equipment
         </CfFilledButton>
       </template>
     </CfActionCard>
+
     <CfActionCard title="Inventory Categories">
       <template #body>
         <p>Configure the categories that group your materials and products.</p>
@@ -48,5 +60,6 @@ import { CfAppView, CfAppViewHeader, CfActionCard, CfFilledButton } from '../../
         </CfFilledButton>
       </template>
     </CfActionCard>
+
   </CfAppView>
 </template>

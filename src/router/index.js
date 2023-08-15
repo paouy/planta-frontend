@@ -4,6 +4,7 @@ import ProductView from '../features/product/views/ProductView.vue'
 import MaterialsView from '../features/material/views/MaterialsView.vue'
 import ConfigurationsView from '../features/misc/views/ConfigurationsView.vue'
 import OperationsView from '../features/operation/views/OperationsView.vue'
+import WorkersView from '../features/worker/views/WorkersView.vue'
 import WorkstationsView from '../features/workstation/views/WorkstationsView.vue'
 import EquipmentsView from '../features/equipment/views/EquipmentsView.vue'
 import CategoriesView from '../features/category/views/CategoriesView.vue'
@@ -119,6 +120,10 @@ const router = createRouter({
           path: 'workstations',
           name: 'Workstations',
           component: WorkstationsView
+        }, {
+          path: 'workers',
+          name: 'Workers',
+          component: WorkersView
         }, {
           path: 'equipment',
           name: 'Equipment',

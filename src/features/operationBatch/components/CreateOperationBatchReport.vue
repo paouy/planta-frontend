@@ -2,6 +2,7 @@
 import { ref, computed, watchEffect } from 'vue'
 import { useOperationStore } from '../../operation/store.js'
 import { CfInput, CfSwitch, CfFilledButton } from '../../../components'
+import WorkerSelect from '../../worker/components/WorkerSelect.vue'
 import EquipmentSelect from '../../equipment/components/EquipmentSelect.vue'
 import api from '../../../api/index.js'
 
@@ -18,6 +19,9 @@ const ctx = ref({
     id: null
   },
   workstation: {
+    id: null
+  },
+  worker: {
     id: null
   },
   equipment: {
@@ -98,13 +102,17 @@ watchEffect(() => {
 
 <template>
   <form class="createOperationBatchReport" @submit.prevent="invoke">
-    <div>
+    <fieldset>
+      <WorkerSelect
+        v-model="ctx.worker.id"
+        :keys="['id']"
+      />
       <EquipmentSelect
         v-model="ctx.equipment.id"
         :keys="['id']"
         :operation-id="operation?.id"
       />
-    </div>
+    </fieldset>
     <table>
       <colgroup>
         <col v-for="n in 3">
@@ -165,9 +173,11 @@ watchEffect(() => {
 
 <style lang="scss">
 .createOperationBatchReport {
-  > div {
-    margin-bottom: 2rem;
+  fieldset {
+    display: grid;
+    gap: 1rem;
     max-width: 18rem;
+    margin-bottom: 2rem;
   }
 
   table {

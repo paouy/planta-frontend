@@ -37,7 +37,7 @@ const onEquipmentsListAction = ({ key, data }) => {
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfAppViewHeader title="Equipment" description="Configure the equipment used in your production.">
+    <CfAppViewHeader title="Equipment" description="Add, edit, or remove  equipment used in your production.">
       <template #actions>
         <CfFilledButton @click="currentAction = 'CREATE'">
           Add equipment

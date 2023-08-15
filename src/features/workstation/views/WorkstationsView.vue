@@ -37,7 +37,7 @@ const onWorkstationsListAction = ({ key, data }) => {
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfAppViewHeader title="Workstations" description="Configure the workstations in your facility.">
+    <CfAppViewHeader title="Workstations" description="Add, edit, or remove workstations in your facility.">
       <template #actions>
         <CfFilledButton @click="currentAction = 'CREATE'">
           Add workstation

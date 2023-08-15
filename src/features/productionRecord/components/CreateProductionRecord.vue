@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import WorkerSelect from '../../worker/components/WorkerSelect.vue'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 import EquipmentSelect from '../../equipment/components/EquipmentSelect.vue'
 import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
@@ -30,6 +31,7 @@ const isLoading = ref(false)
 const ctx = ref({
   productionOrderId: props.job.productionOrder.id,
   operation: props.job.operation,
+  worker: null,
   workstation: props.job.workstation,
   equipment: null,
   type: props.job.status === 'OPEN' ? 'OUTPUT' : null,
@@ -75,6 +77,10 @@ const invoke = async () => {
           v-model="ctx.type"
           label="Type"
           :options="productionRecordTypeOptions"
+          required
+        />
+        <WorkerSelect
+          v-model="ctx.worker"
           required
         />
         <EquipmentSelect

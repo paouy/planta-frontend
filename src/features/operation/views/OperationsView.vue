@@ -55,7 +55,7 @@ const onOperationsListAction = ({ key, data }) => {
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfAppViewHeader title="Operations" description="Configure the operations in your production.">
+    <CfAppViewHeader title="Operations" description="Set up the operations in your production.">
       <template #actions>
         <CfFilledButton @click="currentAction = 'CREATE'">
           Add operation

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { CfAppView, CfBreadcrumbs, CfAppViewHeader } from '../../../components/index.js'
+import { CfAppView, CfBreadcrumbs, CfAppViewHeader } from 'vue-cf-ui'
 import CreateOperationBatchReport from '../components/CreateOperationBatchReport.vue'
 import api from '../../../api/index.js'
 

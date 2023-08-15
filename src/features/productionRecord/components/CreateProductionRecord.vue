@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import WorkerSelect from '../../worker/components/WorkerSelect.vue'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 import EquipmentSelect from '../../equipment/components/EquipmentSelect.vue'
-import { CfDialog, CfInput, CfSelect, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfSelect, CfFilledButton } from 'vue-cf-ui'
 import api from '../../../api'
 
 const emit = defineEmits(['success', 'cancel'])

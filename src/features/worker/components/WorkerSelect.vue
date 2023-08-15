@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useWorkerStore } from '../store.js'
-import { CfSelect } from '../../../components/index.js'
+import { CfSelect } from 'vue-cf-ui'
 
 const emit = defineEmits(['update:modelValue'])
 

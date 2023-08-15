@@ -1,7 +1,7 @@
 <script setup>
 import { useMiscStore } from '../features/misc/store.js'
 import InitializeApp from '../features/misc/components/InitializeApp.vue'
-import { CfAppLayout, CfSidebarLink } from '../components/index.js'
+import { CfAppLayout, CfSidebarLink } from 'vue-cf-ui'
 
 const { isInitialized } = useMiscStore()
 </script>

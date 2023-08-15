@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfOutlinedButton, CfHeader, CfSummaryList, CfActionCard } from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfOutlinedButton, CfHeader, CfSummaryList, CfActionCard } from 'vue-cf-ui'
 import UpdateProduct from '../components/UpdateProduct.vue'
 import DeleteProduct from '../components/DeleteProduct.vue'
 import ProductMaterialsList from '../../productMaterial/components/ProductMaterialsList.vue'

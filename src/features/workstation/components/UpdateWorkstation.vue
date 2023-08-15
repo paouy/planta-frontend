@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { CfDialog, CfInput, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfInput, CfFilledButton } from 'vue-cf-ui'
 import OperationSelect from '../../operation/components/OperationSelect.vue'
 import api from '../../../api/index.js'
 

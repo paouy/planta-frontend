@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfSummaryList, CfActionCard, CfOutlinedButton, CfFilledButton } from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfSummaryList, CfActionCard, CfOutlinedButton, CfFilledButton } from 'vue-cf-ui'
 import ConfirmSalesOrder from '../components/ConfirmSalesOrder.vue'
 import ForceFulfillSalesOrder from '../components/ForceFulfillSalesOrder.vue'
 import ArchiveSalesOrder from '../components/ArchiveSalesOrder.vue'

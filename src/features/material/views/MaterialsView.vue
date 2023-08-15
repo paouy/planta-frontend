@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfOutlinedButton } from 'vue-cf-ui'
 import MaterialsList from '../components/MaterialsList.vue'
 import CreateMaterial from '../components/CreateMaterial.vue'
 import UpdateMaterial from '../components/UpdateMaterial.vue'

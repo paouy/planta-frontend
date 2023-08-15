@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useWorkstationStore } from '../store.js'
 import { useMiscStore } from '../../misc/store.js'
-import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
+import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import WorkstationsList from '../components/WorkstationsList.vue'
 import CreateWorkstation from '../components/CreateWorkstation.vue'
 import UpdateWorkstation from '../components/UpdateWorkstation.vue'

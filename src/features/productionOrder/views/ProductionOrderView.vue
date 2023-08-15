@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfActionCard, CfSummaryList, CfFilledButton, CfOutlinedButton } from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfActionCard, CfSummaryList, CfFilledButton, CfOutlinedButton } from 'vue-cf-ui'
 import JobsList from '../../job/components/JobsList.vue'
 import ProductionRecordsList from '../../productionRecord/components/ProductionRecordsList.vue'
 import RemoveProductionOrder from '../components/RemoveProductionOrder.vue'

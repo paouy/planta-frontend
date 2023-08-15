@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useEquipmentStore } from '../store.js'
 import { useMiscStore } from '../../misc/store.js'
-import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
+import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import EquipmentsList from '../components/EquipmentsList.vue'
 import CreateEquipment from '../components/CreateEquipment.vue'
 import UpdateEquipment from '../components/UpdateEquipment.vue'

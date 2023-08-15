@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { CfDialog, CfSelect, CfInput, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfSelect, CfInput, CfFilledButton } from 'vue-cf-ui'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 import api from '../../../api/index.js'
 

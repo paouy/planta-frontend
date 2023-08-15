@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useCustomerStore } from '../store.js'
-import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfOutlinedButton } from 'vue-cf-ui'
 import CustomersList from '../components/CustomersList.vue'
 import CreateCustomer from '../components/CreateCustomer.vue'
 import UpdateCustomer from '../components/UpdateCustomer.vue'

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { CfDialog, CfSelect, CfInput, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfSelect, CfInput, CfFilledButton } from 'vue-cf-ui'
 import CategorySelect from '../../category/components/CategorySelect.vue'
 import api from '../../../api/index.js'
 

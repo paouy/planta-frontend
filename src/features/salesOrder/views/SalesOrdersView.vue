@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfOutlinedButton } from 'vue-cf-ui'
 import SalesOrdersSummary from '../components/SalesOrdersSummary.vue'
 import SalesOrdersList from '../components/SalesOrdersList.vue'
 import api from '../../../api/index.js'

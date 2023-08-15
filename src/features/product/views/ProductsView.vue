@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfOutlinedButton } from 'vue-cf-ui'
 import ProductsList from '../components/ProductsList.vue'
 import CreateProduct from '../components/CreateProduct.vue'
 import CreateProductionOrder from '../../productionOrder/components/CreateProductionOrder.vue'

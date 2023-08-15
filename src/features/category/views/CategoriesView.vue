@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useCategoryStore } from '../store.js'
 import { useMiscStore } from '../../misc/store.js'
-import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
+import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import CategoriesList from '../components/CategoriesList.vue'
 import CreateCategory from '../components/CreateCategory.vue'
 import UpdateCategory from '../components/UpdateCategory.vue'

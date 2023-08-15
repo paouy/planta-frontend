@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { CfFilledButton } from '../../../components/index.js'
+import { CfFilledButton } from 'vue-cf-ui'
 
 const emit = defineEmits(['trigger'])
 const props = defineProps({

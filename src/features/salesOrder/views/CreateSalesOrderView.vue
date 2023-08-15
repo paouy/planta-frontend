@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { CfAppView, CfBreadcrumbs, CfAppViewHeader } from '../../../components/index.js'
+import { CfAppView, CfBreadcrumbs, CfAppViewHeader } from 'vue-cf-ui'
 import CreateSalesOrder from '../components/CreateSalesOrder.vue'
 
 const router = useRouter()

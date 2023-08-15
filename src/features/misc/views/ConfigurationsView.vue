@@ -1,5 +1,5 @@
 <script setup>
-import { CfAppView, CfAppViewHeader, CfActionCard, CfFilledButton } from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfActionCard, CfFilledButton } from 'vue-cf-ui'
 </script>
 
 <template>

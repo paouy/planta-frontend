@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { CfDataTable } from '../../../components/index.js'
+import { CfDataTable } from 'vue-cf-ui'
 
 const emit = defineEmits(['action'])
 const props = defineProps({ data: Array })

@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { CfDialog, CfSelect, CfFilledButton } from '../../../components/index.js'
+import { CfDialog, CfSelect, CfFilledButton } from 'vue-cf-ui'
 import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])

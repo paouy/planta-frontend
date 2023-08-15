@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useOperationStore } from '../store.js'
-import { CfChoiceList } from '../../../components/index.js'
+import { CfChoiceList } from 'vue-cf-ui'
 
 const emit = defineEmits(['update:modelValue'])
 const props = defineProps({

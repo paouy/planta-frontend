@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { CfSelect, CfSwitch } from '../../../components/index.js'
+import { CfSelect, CfSwitch } from 'vue-cf-ui'
 import OperationSelect from '../../operation/components/OperationSelect.vue'
 import WorkstationSelect from '../../workstation/components/WorkstationSelect.vue'
 

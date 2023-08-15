@@ -1,5 +1,5 @@
 <script setup>
-import { CfDataTable } from '../../../components/index'
+import { CfDataTable } from 'vue-cf-ui'
 
 const props = defineProps({ data: Array })
 const columns = [

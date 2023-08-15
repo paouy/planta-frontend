@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useOperationStore } from '../store.js'
 import { useMiscStore } from '../../misc/store.js'
-import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from '../../../components/index.js'
+import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import OperationsList from '../components/OperationsList.vue'
 import CreateOperation from '../components/CreateOperation.vue'
 import UpdateOperation from '../components/UpdateOperation.vue'

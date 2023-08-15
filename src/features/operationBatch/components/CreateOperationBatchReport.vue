@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watchEffect } from 'vue'
 import { useOperationStore } from '../../operation/store.js'
-import { CfInput, CfSwitch, CfFilledButton } from '../../../components'
+import { CfInput, CfSwitch, CfFilledButton } from 'vue-cf-ui'
 import WorkerSelect from '../../worker/components/WorkerSelect.vue'
 import EquipmentSelect from '../../equipment/components/EquipmentSelect.vue'
 import api from '../../../api/index.js'

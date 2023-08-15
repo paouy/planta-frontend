@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useProductionOrderStore } from '../store.js'
-import { CfAppView, CfAppViewHeader, CfOutlinedButton } from '../../../components/index.js'
+import { CfAppView, CfAppViewHeader, CfOutlinedButton } from 'vue-cf-ui'
 import ProductionOrdersSummary from '../components/ProductionOrdersSummary.vue'
 import ProductionOrdersList from '../components/ProductionOrdersList.vue'
 import CreateProductionOrder from '../components/CreateProductionOrder.vue'

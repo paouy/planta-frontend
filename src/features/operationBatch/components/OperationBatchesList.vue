@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { CfDataTable, CfOutlinedButton } from '../../../components/index.js'
+import { CfDataTable, CfOutlinedButton } from 'vue-cf-ui'
 
 const emit = defineEmits(['action'])
 

@@ -1,5 +1,5 @@
 <script setup>
-import { CfDataTable } from '../../../components'
+import { CfDataTable } from 'vue-cf-ui'
 
 const emit = defineEmits(['action'])
 

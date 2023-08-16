@@ -5,7 +5,7 @@ export const getAll = async (params) => {
     const { data: allocations } = await axios.get('/v1/allocations', { params })
     return allocations
   } catch (error) {
-    throw Error(error.response.data.message)
+    throw Error(error.data.message)
   }
 }
 
@@ -13,6 +13,6 @@ export const increment = async (data) => {
   try {
     await axios.post('/v1/allocations/increment', data)
   } catch (error) {
-    throw Error(error.response.data.message)
+    throw Error(error.data.message)
   }
 }

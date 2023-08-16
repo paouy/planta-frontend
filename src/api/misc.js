@@ -5,6 +5,6 @@ export const initializeApp = async () => {
     const { data } = await axios.get('/v1/initializeApp')
     return data
   } catch (error) {
-    throw Error(error.response.data.message)
+    throw Error(error.data.message)
   }
 }

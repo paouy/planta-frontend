@@ -9,12 +9,12 @@ import { ArchiveSalesOrder, ConfirmSalesOrder, ForceFulfillSalesOrder, RemoveSal
 import { CreateSalesOrderItem, DeleteSalesOrderItem, SalesOrderItemsList, UpdateSalesOrderItemQty } from '../features/salesOrderItem/index.js'
 import api from '../api/index.js'
 
-const breadcrumbs = [{ name: 'Orders', path: '/sales/orders' }]
 const router = useRouter()
 const props = defineProps({ salesOrderId: String })
 
 const salesOrder = ref({
   status: '',
+  isArchived: null,
   publicId: '',
   customer: {
     shortName: ''
@@ -29,6 +29,13 @@ const currentAction = ref({
   salesOrderItem: null
 })
 
+const breadcrumbs = computed(() => {
+  const root = salesOrder.value.isArchived
+    ? { name: 'Archived Orders', path: '/sales/orders/archived' }
+    : { name: 'Orders', path: '/sales/orders' }
+
+  return [root, { name: salesOrder.value.publicId }]
+})
 const summary = computed(() => ([
   {
     label: 'Status',
@@ -126,7 +133,7 @@ api.salesOrderItem
         </CfOutlinedButton>
         <CfFilledButton
           @click="currentAction.salesOrder = 'ARCHIVE'"
-          v-if="salesOrder.status === 'FULFILLED'"
+          v-if="salesOrder.status === 'FULFILLED' && !salesOrder.isArchived"
         >
           Archive order
         </CfFilledButton>
@@ -148,12 +155,12 @@ api.salesOrderItem
     </CfHeader>
     <SalesOrderItemsList
       :data="salesOrderItems"
-      :sales-order-status="salesOrder.status"
+      :sales-order="salesOrder"
       @action="onSalesOrderItemAction"
     />
 
-    <CfHeader title="Remove order" v-if="!salesOrder.status.includes('CANCELLED')"/>
-    <CfActionCard simple v-if="!salesOrder.status.includes('CANCELLED')">
+    <CfHeader title="Remove order" v-if="!salesOrder.isArchived"/>
+    <CfActionCard simple v-if="!salesOrder.isArchived">
       <template #body>
         Cancelling or deleting this order is permanent. You will no longer be able to fulfill this order.
       </template>

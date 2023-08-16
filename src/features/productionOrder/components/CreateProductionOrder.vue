@@ -13,7 +13,7 @@ const props = defineProps({
 const isLoading = ref(false)
 const categoryId = ref(null)
 const products = ref([])
-const lastPublicId = ref('')
+const lastPublicId = ref('None')
 const ctx = ref({
   publicId: '',
   product: {},
@@ -85,7 +85,7 @@ onMounted(() => {
         <CfInput
           v-model="ctx.publicId"
           label="ID"
-          :helper="lastPublicId ? `Last ID: ${lastPublicId}` : null"
+          :helper="`Last ID: ${lastPublicId}`"
           required
           v-if="!props.salesOrderItem"
         />

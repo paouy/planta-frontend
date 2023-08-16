@@ -1,18 +1,19 @@
 <script setup>
 import { computed } from 'vue'
+import OrdersStatsCard from '../../../components/OrdersStatsCard.vue'
 
 const props = defineProps({
   salesOrders: Array,
   archivedCount: Number
 })
 
-const summary = computed(() => {
+const data = computed(() => {
+  const normalzedStatuses = ['Open', 'Confirmed', 'Partially fulfilled', 'Fulfilled']
+
   const count = props.salesOrders.reduce((value, { status }) => {
     value[status] = (value[status] || 0) + 1
     return value
   }, {})
-
-  const normalzedStatuses = ['Open', 'Confirmed', 'Partially fulfilled', 'Fulfilled']
 
   const summary = normalzedStatuses.map(status => {
     return {
@@ -21,62 +22,20 @@ const summary = computed(() => {
     }
   })
 
+  summary.push({
+    label: 'Archived',
+    value: props.archivedCount,
+    to: { name: 'ArchivedSalesOrders' }
+  })
+
   return summary
 })
 </script>
 
 <template>
-  <div class="salesOrderSummary">
-    <h3>Summary</h3>
-    <p>There are {{ props.salesOrders.length }} sales orders.</p>
-    <ul>
-      <li v-for="item in summary" :key="item.label">
-        <span>{{ item.label }}</span>
-        <div>{{ item.value }}</div>
-      </li>
-      <li>
-        <span>Archived</span>
-        <div>{{ props.archivedCount }}</div>
-      </li>
-    </ul>
-  </div>
+  <OrdersStatsCard
+    title="Summary"
+    :description="`There are ${props.salesOrders.length} sales orders.`"
+    :data="data"
+  />
 </template>
-
-<style lang="scss">
-.salesOrderSummary {
-  padding: 1.5rem 1rem;
-  border: 1px solid var(--cf-gray-7);
-  border-radius: 0.3125rem;
-  margin: 1rem 0 2.5rem 0;
-
-  h3 {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  ul {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(5, 1fr);
-    margin-top: 1rem;
-
-    li {
-      border-right: 1px solid var(--cf-gray-7);
-
-      &:last-child {
-        border-right: none;
-      }
-    }
-
-    span {
-      color: var(--cf-gray-2);
-      font-size: 0.875rem;
-    }
-
-    div {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-  }
-}
-</style>

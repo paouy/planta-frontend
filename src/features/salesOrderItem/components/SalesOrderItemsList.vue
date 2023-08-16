@@ -5,10 +5,13 @@ import { CfDataTable } from 'vue-cf-ui'
 const emit = defineEmits(['action'])
 const props = defineProps({
   data: Array,
-  salesOrderStatus: String
+  salesOrder: Object
 })
 
-const showAllColumns = computed(() => ['CONFIRMED', 'PARTIALLY_FULFILLED', 'FULFILLED'].includes(props.salesOrderStatus))
+const showQtyColumns = computed(() => {
+  const statuses = ['CONFIRMED', 'PARTIALLY_FULFILLED', 'FULFILLED']
+  return statuses.includes(props.salesOrder.status)
+})
 const computedColumns = computed(() => {
   const columns = [
     {
@@ -18,14 +21,14 @@ const computedColumns = computed(() => {
     },{
       label: 'Product',
       key: 'product.normalizedName',
-      width: props.salesOrderStatus === 'OPEN' ? 'auto' : '40%'
+      width: props.salesOrder.status === 'OPEN' ? 'auto' : '40%'
     }, {
       label: 'Demand',
       key: 'qty'
     }
   ]
 
-  if (showAllColumns.value) {
+  if (showQtyColumns.value && !props.salesOrder.isArchived) {
     columns.push(
       {
         label: 'WIP',
@@ -33,11 +36,15 @@ const computedColumns = computed(() => {
       }, {
         label: 'Allocated',
         key: 'qtyAllocated'
-      }, {
-        label: 'Fulfilled',
-        key: 'qtyFulfilled'
       }
     )
+  }
+
+  if (showQtyColumns.value || props.salesOrder.isArchived) {
+    columns.push({
+      label: 'Fulfilled',
+      key: 'qtyFulfilled'
+    })
   }
 
   return columns
@@ -47,11 +54,11 @@ const data = computed(() => {
   return props.data.map((item, index) => {
     let actions = false
 
-    if (props.salesOrderStatus === 'OPEN') {
+    if (props.salesOrder.status === 'OPEN') {
       actions = ['Edit', 'Remove']
     }
 
-    if (['CONFIRMED', 'PARTIALLY_FULFILLED'].includes(props.salesOrderStatus)) {
+    if (['CONFIRMED', 'PARTIALLY_FULFILLED'].includes(props.salesOrder.status)) {
       actions = ['Make', 'Allocate']
 
       if (item.qtyAllocated) {
@@ -79,13 +86,13 @@ const data = computed(() => {
       <td>{{ data.seq }}</td>
       <td>{{ data.product.normalizedName }}</td>
       <td>{{ data.qty }} {{ data.product.uom }}</td>
-      <td v-if="showAllColumns">
+      <td v-if="showQtyColumns && !props.salesOrder.isArchived">
         {{ data.qtyWip }} {{ data.product.uom }}
       </td>
-      <td v-if="showAllColumns">
+      <td v-if="showQtyColumns && !props.salesOrder.isArchived">
         {{ data.qtyAllocated }} {{ data.product.uom }}
       </td>
-      <td v-if="showAllColumns">
+      <td v-if="showQtyColumns || props.salesOrder.isArchived">
         {{ data.qtyFulfilled }} {{ data.product.uom }}
       </td>
     </template>

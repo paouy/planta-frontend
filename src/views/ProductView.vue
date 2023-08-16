@@ -8,7 +8,6 @@ import { ProductionOrdersByProductList } from '../features/productionOrder/index
 import { CreateProductMaterial, DeleteProductMaterial, ProductMaterialsList, UpdateProductMaterial } from '../features/productMaterial/index.js'
 import api from '../api/index.js'
 
-const breadcrumbs = [{ name: 'Products', path: '/inventory/products' }]
 const router = useRouter()
 const props = defineProps({ productId: String })
 
@@ -33,6 +32,7 @@ const allocations = ref([])
 const productMaterials = ref([])
 const productMaterial = ref(null)
 
+const breadcrumbs = computed(() => [{ name: 'Products', path: '/inventory/products' }, { name: product.value.sku }])
 const productSummary = computed(() => {
   return [
     {

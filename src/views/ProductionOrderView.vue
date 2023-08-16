@@ -9,7 +9,6 @@ import api from '../api/index.js'
 
 const router = useRouter()
 const props = defineProps({ productionOrderId: String })
-const breadcrumbs = [{ name: 'Overview', path: '/production/overview' }]
 
 const productionOrder = ref({
   publicId: '',
@@ -18,6 +17,7 @@ const productionOrder = ref({
     uom: ''
   },
   status: '',
+  isReleased: null,
   qty: null,
   dueDate: null
 })
@@ -25,6 +25,13 @@ const jobs = ref([])
 const productionRecords = ref([])
 const currentAction = ref(null)
 
+const breadcrumbs = computed(() => {
+  const root = productionOrder.value.isReleased
+    ? { name: 'Released Orders', path: '/production/overview/released' }
+    : { name: 'Overview', path: '/production/overview' }
+
+  return [root, { name: productionOrder.value.publicId }]
+})
 const summary = computed(() => ([
   {
     label: 'Status',
@@ -62,7 +69,7 @@ api.productionRecord
       <template #actions>
         <CfFilledButton
           @click="currentAction = 'RELEASE'"
-          v-if="productionOrder.status === 'CLOSED'"
+          v-if="productionOrder.status === 'CLOSED' && !productionOrder.isReleased"
         >
           Release order
         </CfFilledButton>

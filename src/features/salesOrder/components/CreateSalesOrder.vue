@@ -8,7 +8,7 @@ const emit = defineEmits(['success', 'cancel'])
 const isLoading = ref(false)
 const customerOptions = ref([])
 const products = ref([])
-const lastPublicId = ref('')
+const lastPublicId = ref('None')
 const ctx = ref({
   publicId: '',
   customer: {
@@ -99,8 +99,8 @@ api.product.getAll().then(data => {
       />
       <CfInput
         v-model="ctx.publicId"
-        label="Order number"
-        :helper="lastPublicId ? `Last order number: ${lastPublicId}` : null"
+        label="ID"
+        :helper="`Last ID: ${lastPublicId}`"
         required
       />
       <CfInput

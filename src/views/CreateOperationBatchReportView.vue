@@ -22,8 +22,11 @@ const operationBatch = ref({
 })
 const jobs = ref([])
 
-const breadcrumb = computed(() => ({ name: 'Execution', path: `/production/execution/${props.operationSlug}` }))
 const operationName = computed(() => props.operationSlug.replaceAll('-', ' '))
+const breadcrumbs = computed(() => [
+  { name: 'Execution', path: `/production/execution/${props.operationSlug}` },
+  { name: `Add ${operationName.value} report` }
+])
 
 onMounted(() => {
   api.operationBatch
@@ -38,7 +41,7 @@ onMounted(() => {
 
 <template>
   <CfAppView>
-    <CfBreadcrumbs :data="[breadcrumb]"/>
+    <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader :title="`Add ${operationName} report`"/>
     <dl class="operationBatchDetails">
       <dt>Batch ID:</dt>
@@ -49,8 +52,8 @@ onMounted(() => {
     <CreateOperationBatchReport
       :operation-batch="operationBatch"
       :jobs="jobs"
-      @success="router.push(breadcrumb.path)"
-      @cancel="router.push(breadcrumb.path)"
+      @success="router.push(breadcrumbs[0].path)"
+      @cancel="router.push(breadcrumbs[0].path)"
       v-if="operationBatch"
     />
   </CfAppView>

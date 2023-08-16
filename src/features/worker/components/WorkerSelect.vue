@@ -7,6 +7,10 @@ const emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({
   modelValue: [Object, String],
+  label: {
+    type: String,
+    default: 'Worker'
+  },
   defaultOption: Boolean,
   keys: {
     type: Array,
@@ -33,7 +37,7 @@ const options = computed(() => {
       } 
 
       return {
-        label: `${worker.lastName}, ${worker.firstName} — ${worker.publicId}`,
+        label: worker.name,
         value
       }
     })
@@ -53,7 +57,7 @@ const computedValue = computed({
 <template>
   <CfSelect
     v-model="computedValue"
-    label="Worker"
+    :label="props.label"
     :options="options"
     :disabled="props.disabled"
     :required="props.required"

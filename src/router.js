@@ -15,6 +15,7 @@ const ProductionOrderView = () => import('./views/ProductionOrderView.vue')
 const ProductsView = () => import('./views/ProductsView.vue')
 const ProductView = () => import('./views/ProductView.vue')
 const ReleasedProductionOrdersView = () => import('./views/ReleasedProductionOrdersView.vue')
+const ReportsView = () => import('./views/ReportsView.vue')
 const SalesOrdersView = () => import('./views/SalesOrdersView.vue')
 const SalesOrderView = () => import('./views/SalesOrderView.vue')
 const WorkersView = () => import('./views/WorkersView.vue')
@@ -117,32 +118,41 @@ const router = createRouter({
         }
       ]
     }, {
-      path: '/settings/configurations',
+      path: '/reports',
+      name: 'Reports',
+      component: ReportsView
+    }, {
+      path: '/settings',
       children: [
         {
-          path: '',
-          name: 'Configurations',
-          component: ConfigurationsView
-        }, {
-          path: 'operations',
-          name: 'Operations',
-          component: OperationsView
-        }, {
-          path: 'workstations',
-          name: 'Workstations',
-          component: WorkstationsView
-        }, {
-          path: 'workers',
-          name: 'Workers',
-          component: WorkersView
-        }, {
-          path: 'equipment',
-          name: 'Equipment',
-          component: EquipmentsView
-        }, {
-          path: 'categories',
-          name: 'Categories',
-          component: CategoriesView
+          path: 'configurations',
+          children: [
+            {
+              path: '',
+              name: 'Configurations',
+              component: ConfigurationsView
+            }, {
+              path: 'operations',
+              name: 'Operations',
+              component: OperationsView
+            }, {
+              path: 'workstations',
+              name: 'Workstations',
+              component: WorkstationsView
+            }, {
+              path: 'workers',
+              name: 'Workers',
+              component: WorkersView
+            }, {
+              path: 'equipment',
+              name: 'Equipment',
+              component: EquipmentsView
+            }, {
+              path: 'categories',
+              name: 'Categories',
+              component: CategoriesView
+            }
+          ]
         }
       ]
     }

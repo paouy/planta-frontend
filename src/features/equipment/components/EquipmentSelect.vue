@@ -6,6 +6,14 @@ import { CfSelect } from 'vue-cf-ui'
 const emit = defineEmits(['update:modelValue'])
 const props = defineProps({
   modelValue: [Object, String],
+  label: {
+    type: String,
+    default: 'Equipment'
+  },
+  filtered: {
+    type: Boolean,
+    default: true
+  },
   operationId: String,
   defaultOption: Boolean,
   keys: {
@@ -23,7 +31,7 @@ const { equipments } = useEquipmentStore()
 
 const options = computed(() => {
   return equipments.value
-    .filter(({ operationIds }) => operationIds.includes(props.operationId))
+    .filter(({ operationIds }) => props.filtered ? operationIds.includes(props.operationId) : true)
     .map(equipment => {
       let value = {}
 
@@ -54,7 +62,7 @@ const computedValue = computed({
 <template>
   <CfSelect
     v-model="computedValue"
-    label="Equipment"
+    :label="props.label"
     :options="options"
     :disabled="props.disabled"
     :required="props.required"

@@ -7,6 +7,14 @@ const emit = defineEmits(['update:modelValue'])
 
 const props = defineProps({
   modelValue: [Object, String],
+  label: {
+    type: String,
+    default: 'Workstation'
+  },
+  filtered: {
+    type: Boolean,
+    default: true
+  },
   operationId: String,
   defaultOption: Boolean,
   keys: {
@@ -24,7 +32,7 @@ const { workstations } = useWorkstationStore()
 
 const options = computed(() => {
   return workstations.value
-    .filter(({ operation }) => operation.id === props.operationId)
+    .filter(({ operation }) => props.filtered ? operation.id === props.operationId : true)
     .map(workstation => {
       let value = {}
 
@@ -55,7 +63,7 @@ const computedValue = computed({
 <template>
   <CfSelect
     v-model="computedValue"
-    label="Workstation"
+    :label="props.label"
     :options="options"
     :disabled="props.disabled"
     :required="props.required"

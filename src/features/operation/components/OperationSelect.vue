@@ -7,6 +7,10 @@ const emit = defineEmits(['update:modelValue'])
 const props = defineProps({
   modelValue: [Object, String],
   defaultOption: Boolean,
+  label: {
+    type: String,
+    default: 'Operation'
+  },
   keys: {
     type: Array,
     default: () => ['id', 'name']
@@ -58,7 +62,7 @@ onMounted(() => {
 <template>
   <CfSelect
     v-model="computedValue"
-    label="Operation"
+    :label="props.label"
     :options="options"
     :disabled="props.disabled"
     :required="props.required"

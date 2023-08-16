@@ -30,7 +30,7 @@ const { isInitialized } = useMiscStore()
           <CfSidebarLink :to="{ name: 'Materials' }">Materials</CfSidebarLink>
         </template>
       </CfSidebarLink>
-      <CfSidebarLink icon="monitoring" href="#">Reports</CfSidebarLink>
+      <CfSidebarLink icon="monitoring" :to="{ name: 'Reports' }">Reports</CfSidebarLink>
       <hr>
       <CfSidebarLink icon="settings" parent>Settings
         <template #children>

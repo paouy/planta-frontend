@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import OrdersStatsCard from '../../../components/OrdersStatsCard.vue'
+import StatsCard from '../../../components/StatsCard.vue'
 
 const props = defineProps({
   productionOrders: Array,
@@ -33,7 +33,7 @@ const data = computed(() => {
 </script>
 
 <template>
-  <OrdersStatsCard
+  <StatsCard
     title="Summary"
     :description="`There are ${props.productionOrders.length} production orders.`"
     :data="data"

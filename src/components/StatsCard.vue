@@ -13,7 +13,10 @@ const props = defineProps({
     <ul>
       <li v-for="item in props.data" :key="item.label">
         <span v-if="item.to">
-          <RouterLink :to="item.to">{{ item.label }}</RouterLink>
+          <RouterLink :to="item.to">
+            {{ item.label }}
+          </RouterLink>
+          <span class="material-symbols-outlined">open_in_new</span>
         </span>
         <span v-else>{{ item.label }}</span>
         <div>{{ item.value }}</div>
@@ -51,6 +54,13 @@ const props = defineProps({
     span {
       color: var(--cf-gray-2);
       font-size: 0.875rem;
+
+      span {
+        color: var(--cf-blue-4);
+        margin-left: 0.25rem;
+        position: relative;
+        top: 2px;
+      }
 
       a {
         color: var(--cf-blue-4);

@@ -17,7 +17,7 @@ const columns = [
     key: 'normalizedJob',
     width: '35%'
   }, {
-    label: 'Qty',
+    label: 'Quantity',
     key: 'qty'
   }, {
     label: 'Est Time',

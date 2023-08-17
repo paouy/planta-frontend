@@ -12,7 +12,7 @@ const columns = [
     label: 'Product',
     key: 'product.normalizedName'
   }, {
-    label: 'Qty',
+    label: 'Quantity',
     key: 'qtyMade'
   }
 ]

@@ -19,7 +19,7 @@ const columns = [
     key: 'product.normalizedName',
     width: '35%'
   }, {
-    label: 'Qty',
+    label: 'Quantity',
     key: 'normalizedQty'
   }, {
     label: 'Status',

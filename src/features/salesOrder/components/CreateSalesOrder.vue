@@ -127,7 +127,7 @@ api.product.getAll().then(data => {
           <td>
             <CfInput
               v-model.number="ctx.items[index].qty"
-              label="Qty"
+              label="Quantity"
               :suffix="ctx.items[index].product.uom"
               type="number"
               step="any"

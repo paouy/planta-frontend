@@ -14,7 +14,7 @@ const columns = [
     label: 'Type',
     key: 'type'
   }, {
-    label: 'Qty',
+    label: 'Quantity',
     key: 'qty'
   }
 ]

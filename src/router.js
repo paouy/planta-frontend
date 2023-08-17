@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import CleanLayout from './components/CleanLayout.vue'
+import DefaultLayout from './components/DefaultLayout.vue'
 
 const ArchivedSalesOrdersView = () => import('./views/ArchivedSalesOrdersView.vue')
 const CategoriesView = () => import('./views/CategoriesView.vue')
@@ -7,6 +9,7 @@ const CreateOperationBatchReportView = () => import('./views/CreateOperationBatc
 const CreateSalesOrderView = () => import('./views/CreateSalesOrderView.vue')
 const CustomersView = () => import('./views/CustomersView.vue')
 const EquipmentsView = () => import('./views/EquipmentsView.vue')
+const LoginView = () => import('./views/LoginView.vue')
 const MaterialsView = () => import('./views/MaterialsView.vue')
 const OperationsView = () => import('./views/OperationsView.vue')
 const ProductionExecutionView = () => import('./views/ProductionExecutionView.vue')
@@ -25,7 +28,18 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/login',
+      component: CleanLayout,
+      children: [
+        {
+          path: '',
+          name: 'Login',
+          component: LoginView
+        }
+      ]
+    }, {
       path: '/sales',
+      component: DefaultLayout,
       children: [
         {
           path: 'orders',
@@ -57,6 +71,7 @@ const router = createRouter({
       ]
     }, {
       path: '/production',
+      component: DefaultLayout,
       children: [
         {
           path: 'overview',
@@ -96,6 +111,7 @@ const router = createRouter({
       ]
     }, {
       path: '/inventory',
+      component: DefaultLayout,
       children: [
         {
           path: 'products',
@@ -119,10 +135,17 @@ const router = createRouter({
       ]
     }, {
       path: '/reports',
-      name: 'Reports',
-      component: ReportView
+      component: DefaultLayout,
+      children: [
+        {
+          path: '',
+          name: 'Reports',
+          component: ReportView
+        }
+      ]
     }, {
       path: '/settings',
+      component: DefaultLayout,
       children: [
         {
           path: 'configurations',

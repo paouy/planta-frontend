@@ -10,10 +10,10 @@
   "dependencies": {
     "@vueuse/core": "^10.1.2",
     "@vueuse/integrations": "^10.1.2",
+    "axios": "^1.4.0",
     "destyle.css": "^4.0.0",
     "dot-prop": "^8.0.1",
     "fuse.js": "^6.6.2",
-    "redaxios": "^0.5.1",
     "vue": "^3.3.2",
     "vue-cf-ui": "^0.3.0",
     "vue-router": "^4.2.0"

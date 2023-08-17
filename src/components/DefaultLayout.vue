@@ -1,15 +1,30 @@
 <script setup>
-import { CfAppLayout, CfSidebarLink } from 'vue-cf-ui'
+import { CfAppLayout, CfAppBarLink, CfDropdownItem, CfSidebarLink } from 'vue-cf-ui'
+import { useAuth } from '../features/auth/index.js'
 import { useStore, InitializeApp } from '../features/misc/index.js'
 
-const { isInitialized } = useStore()
+const { session } = useAuth()
+const { isInitialized, organizationName } = useStore()
 </script>
 
 <template>
   <CfAppLayout>
     <template #brand>
-      Planta
+      <b>{{ organizationName }}</b>
     </template>
+
+    <template #navigation>
+      <CfAppBarLink dropdown>
+        <template #default>
+          {{ `${session?.user.firstName} ${session?.user.lastName}` }}
+        </template>
+        <template #dropdown>
+          <CfDropdownItem large>Manage Account</CfDropdownItem>
+          <CfDropdownItem large>Log Out</CfDropdownItem>
+        </template>
+      </CfAppBarLink>
+    </template>
+
     <template #sidebar>
       <CfSidebarLink icon="storefront" parent>Sales
         <template #children>
@@ -30,14 +45,15 @@ const { isInitialized } = useStore()
         </template>
       </CfSidebarLink>
       <CfSidebarLink icon="monitoring" :to="{ name: 'Reports' }">Reports</CfSidebarLink>
-      <hr>
-      <CfSidebarLink icon="settings" parent>Settings
+      <hr v-if="session?.user.isAdmin">
+      <CfSidebarLink icon="settings" parent v-if="session?.user.isAdmin">Settings
         <template #children>
           <CfSidebarLink href="#">Users</CfSidebarLink>
           <CfSidebarLink :to="{ name: 'Configurations' }">Configurations</CfSidebarLink>
         </template>
       </CfSidebarLink>
     </template>
+    
     <template #main>
       <InitializeApp v-if="!isInitialized"/>
       <RouterView v-else/>

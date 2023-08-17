@@ -8,7 +8,7 @@ import { useWorkerStore } from '../../worker/store.js'
 import { useWorkstationStore } from '../../workstation/store.js'
 import api from '../../../api/index.js'
 
-const { startInitialization, completeInitialization } = useStore()
+const { completeInitialization, setOrganizatioName, startInitialization } = useStore()
 
 const invoke = async () => {
   const categoryStore = useCategoryStore()
@@ -22,6 +22,7 @@ const invoke = async () => {
 
     const data = await api.misc.initializeApp()
 
+    setOrganizatioName(data.organizationName)
     categoryStore.set(data.categories)
     equipmentStore.set(data.equipments)
     operationStore.set(data.operations)

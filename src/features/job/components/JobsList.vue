@@ -30,5 +30,14 @@ const columns = [
   <CfDataTable
     :columns="columns"
     :data="props.data"
-  />
+  >
+  <template v-slot:row="{ data }">
+    <td>{{ data.operation.name }}</td>
+    <td>{{ data.status }}</td>
+    <td>{{ data.qtyOutput }}</td>
+    <td>{{ data.qtyReject ? `(${data.qtyReject})` : 0  }}</td>
+    <td>{{ data.qtyRework }}</td>
+    <td>{{ data.qtyShortfall ? `(${data.qtyShortfall})` : 0 }}</td>
+  </template>
+  </CfDataTable>
 </template>

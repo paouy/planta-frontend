@@ -5,7 +5,6 @@ import DeleteProductionOrder from './components/DeleteProductionOrder.vue'
 import ProductionOrdersByProductList from './components/ProductionOrdersByProductList.vue'
 import ProductionOrdersList from './components/ProductionOrdersList.vue'
 import ProductionOrdersSummary from './components/ProductionOrdersSummary.vue'
-import ProductionOrderTally from './components/ProductionOrderTally.vue'
 import ReleasedProductionOrdersList from './components/ReleasedProductionOrdersList.vue'
 import ReleaseProductionOrder from './components/ReleaseProductionOrder.vue'
 import RemoveProductionOrder from './components/RemoveProductionOrder.vue'
@@ -18,7 +17,6 @@ export {
   ProductionOrdersByProductList,
   ProductionOrdersList,
   ProductionOrdersSummary,
-  ProductionOrderTally,
   ReleasedProductionOrdersList,
   ReleaseProductionOrder,
   RemoveProductionOrder,

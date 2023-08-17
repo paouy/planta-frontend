@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import { useEquipmentStore, CreateEquipment, DeleteEquipment, EquipmentsList, UpdateEquipment } from '../features/equipment/index.js'
-import { useMiscStore } from '../features/misc/index.js'
+import { useStore } from '../features/misc/index.js'
 import api from '../api/index.js'
 
 const breadcrumbs = [
@@ -14,7 +14,7 @@ const breadcrumbs = [
   }
 ]
 
-const { isInitialized, isInitializing } = useMiscStore()
+const { isInitialized, isInitializing } = useStore()
 const { equipments, ...equipmentStore } = useEquipmentStore()
 
 if (!isInitialized.value && !isInitializing.value) {

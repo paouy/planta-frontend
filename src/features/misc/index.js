@@ -1,4 +1,4 @@
-import { useMiscStore } from './store.js'
+import { useStore } from './store.js'
 import { useProductionExecution } from './composables/productionExecution.js'
 
 import InitializeApp from './components/InitializeApp.vue'
@@ -9,7 +9,7 @@ import ReportSummary from './components/ReportSummary.vue'
 import ReportTable from './components/ReportTable.vue'
 
 export {
-  useMiscStore,
+  useStore,
   useProductionExecution,
   InitializeApp,
   ProductionExecutionFilters,

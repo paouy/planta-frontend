@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import { useCategoryStore, CategoriesList, CreateCategory, DeleteCategory, UpdateCategory } from '../features/category/index.js'
-import { useMiscStore } from '../features/misc/index.js'
+import { useStore } from '../features/misc/index.js'
 import api from '../api/index.js'
 
 const breadcrumbs = [
@@ -10,7 +10,7 @@ const breadcrumbs = [
   { name: 'Inventory Categories' }
 ]
 
-const { isInitialized, isInitializing } = useMiscStore()
+const { isInitialized, isInitializing } = useStore()
 const { categories, ...categoryStore } = useCategoryStore()
 
 if (!isInitialized.value && !isInitializing.value) {

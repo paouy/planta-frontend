@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
-import { useMiscStore } from '../features/misc/index.js'
+import { useStore } from '../features/misc/index.js'
 import { useWorkerStore, CreateWorker, DeleteWorker, UpdateWorker, WorkersList } from '../features/worker/index.js'
 import api from '../api/index.js'
 
@@ -14,7 +14,7 @@ const breadcrumbs = [
   }
 ]
 
-const { isInitialized, isInitializing } = useMiscStore()
+const { isInitialized, isInitializing } = useStore()
 const { workers, ...workerStore } = useWorkerStore()
 
 if (!isInitialized.value && !isInitializing.value) {

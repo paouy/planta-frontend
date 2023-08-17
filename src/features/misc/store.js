@@ -3,7 +3,7 @@ import { ref, readonly } from 'vue'
 const isInitialized = ref(false)
 const isInitializing = ref(false)
 
-export const useMiscStore = () => {
+export const useStore = () => {
   const startInitialization = () => {
     isInitializing.value = true
   }

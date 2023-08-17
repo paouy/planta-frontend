@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
-import { useMiscStore } from '../store.js'
+import { useStore } from '../store.js'
 import { useCategoryStore } from '../../category/store.js'
 import { useEquipmentStore } from '../../equipment/store.js'
 import { useOperationStore } from '../../operation/store.js'
@@ -8,7 +8,7 @@ import { useWorkerStore } from '../../worker/store.js'
 import { useWorkstationStore } from '../../workstation/store.js'
 import api from '../../../api/index.js'
 
-const { startInitialization, completeInitialization } = useMiscStore()
+const { startInitialization, completeInitialization } = useStore()
 
 const invoke = async () => {
   const categoryStore = useCategoryStore()

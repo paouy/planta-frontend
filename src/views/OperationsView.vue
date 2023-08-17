@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { CfAppView, CfBreadcrumbs, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
-import { useMiscStore } from '../features/misc/index.js'
+import { useStore } from '../features/misc/index.js'
 import { useOperationStore, CreateOperation, DeleteOperation, OperationsList, UpdateOperation } from '../features/operation/index.js'
 import api from '../api/index.js'
 
@@ -14,7 +14,7 @@ const breadcrumbs = [
   }
 ]
 
-const { isInitialized, isInitializing } = useMiscStore()
+const { isInitialized, isInitializing } = useStore()
 const { operations, ...operationStore } = useOperationStore()
 
 if (!isInitialized.value && !isInitializing.value) {

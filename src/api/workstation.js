@@ -1,4 +1,4 @@
-import axios from '../lib/axios.js'
+import axios from '../axios.js'
 
 export const createOne = async (data) => {
   try {

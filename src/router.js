@@ -15,7 +15,7 @@ const ProductionOrderView = () => import('./views/ProductionOrderView.vue')
 const ProductsView = () => import('./views/ProductsView.vue')
 const ProductView = () => import('./views/ProductView.vue')
 const ReleasedProductionOrdersView = () => import('./views/ReleasedProductionOrdersView.vue')
-const ReportsView = () => import('./views/ReportsView.vue')
+const ReportView = () => import('./views/ReportView.vue')
 const SalesOrdersView = () => import('./views/SalesOrdersView.vue')
 const SalesOrderView = () => import('./views/SalesOrderView.vue')
 const WorkersView = () => import('./views/WorkersView.vue')
@@ -120,7 +120,7 @@ const router = createRouter({
     }, {
       path: '/reports',
       name: 'Reports',
-      component: ReportsView
+      component: ReportView
     }, {
       path: '/settings',
       children: [

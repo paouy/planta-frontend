@@ -9,9 +9,8 @@ export const createOne = async (data) => {
   }
 }
 
-export const getAllByProductionOrder = async (productionOrderId) => {
+export const getAll = async (params) => {
   try {
-    const params = { productionOrderId }
     const { data: productionRecords } = await axios.get('/v1/production-records', { params })
     return productionRecords
   } catch (error) {

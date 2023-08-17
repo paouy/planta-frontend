@@ -32,7 +32,7 @@ const ctx = ref({
 
 const operation = computed(() => operations.value.find(({ id }) => props.operationBatch.operationId === id))
 const footerText = computed(() => {
-  const text = operation?.allowsRework
+  const text = operation.value?.allowsRework
     ? 'while incomplete jobs will be available for assignment'
     : 'and its jobs'
 
@@ -47,7 +47,7 @@ const invoke = async () => {
       productionOrderId,
       type: 'OUTPUT',
       qty: qtyOutput,
-      timeTakenMins: operation?.timePerCycleMins
+      timeTakenMins: operation.value?.timePerCycleMins
     })
 
     if (qtyReject) {

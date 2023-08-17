@@ -8,7 +8,7 @@ const columns = [
     label: 'ID',
     key: 'productionOrderPublicId'
   }, {
-    label: 'Product SKU',
+    label: 'Product',
     key: 'productSku'
   }, {
     label: 'Workstation',

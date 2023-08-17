@@ -11,7 +11,7 @@ const columns = [
     label: 'Name',
     key: 'name'
   }, {
-    label: 'Operations',
+    label: 'Operation Count',
     key: 'operationCount'
   }
 ]

@@ -9,7 +9,7 @@ const columns = [
     label: 'Name',
     key: 'normalizedName'
   }, {
-    label: 'Cycle Time',
+    label: 'Cycle Time (Mins)',
     key: 'timePerCycleMins'
   }, {
     label: 'Allows Rework',

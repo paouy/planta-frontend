@@ -18,6 +18,7 @@ const columns = [
   <CfDataTable
     :columns="columns"
     :data="props.data"
+    sortable
     :row-actions="['Edit', 'Remove']"
     @row-action="$event => emit('action', $event)"
   >

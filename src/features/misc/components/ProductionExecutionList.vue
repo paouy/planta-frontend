@@ -1,16 +1,15 @@
 <script setup>
 import { computed } from 'vue'
 import { CfDataTable } from 'vue-cf-ui'
+import StatusBadge from '../../../components/StatusBadge.vue'
 
 const emit = defineEmits(['action'])
-
 const props = defineProps({
   data: {
     type: Array,
     default: () => []
   }
 })
-
 const columns = [
   {
     label: 'ID',
@@ -74,5 +73,14 @@ const computedData = computed(() => {
     force-row-menu
     row-actions
     @row-action="$event => emit('action', $event)"
-  />
+  >
+    <template v-slot:row="{ data }">
+      <td>{{ data.productionOrder.publicId }}</td>
+      <td>{{ data.product.normalizedName }}</td>
+      <td>{{ data.qty }}</td>
+      <td>{{ data.timeEstimatedMins }}</td>
+      <td><StatusBadge :data="data.status"/></td>
+      <td>{{ data.workstation.name }}</td>
+    </template>
+  </CfDataTable>
 </template>

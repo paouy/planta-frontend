@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { CfDataTable } from 'vue-cf-ui'
+import StatusBadge from '../../../components/StatusBadge.vue'
 
 const emit = defineEmits(['action'])
 
@@ -85,7 +86,7 @@ const computedData = computed(() => {
       <td>{{ data.publicId }}</td>
       <td>{{ data.product.normalizedName }}</td>
       <td>{{ data.normalizedQty }}</td>
-      <td>{{ data.status }}</td>
+      <td><StatusBadge :data="data.status"/></td>
       <td>{{ data.dueDate }}</td>
     </template>
   </CfDataTable>

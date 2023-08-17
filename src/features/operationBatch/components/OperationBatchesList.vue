@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { CfDataTable, CfOutlinedButton } from 'vue-cf-ui'
+import StatusBadge from '../../../components/StatusBadge.vue'
 
 const emit = defineEmits(['action'])
 
@@ -64,6 +65,13 @@ const computedData = computed(() => {
       <CfOutlinedButton @click="emit('action', { key: 'CREATE' })">
         Add batch
       </CfOutlinedButton>
+    </template>
+    <template v-slot:row="{ data }">
+      <td>{{ data.publicId }}</td>
+      <td>{{ data.schedule }}</td>
+      <td>{{ data.jobCount }}</td>
+      <td><StatusBadge :data="data.status"/></td>
+      <td>{{ data.workstation.name }}</td>
     </template>
   </CfDataTable>
 </template>

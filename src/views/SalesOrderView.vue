@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { snakeToSentence } from '../helpers.js'
 import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfSummaryList, CfActionCard, CfOutlinedButton, CfFilledButton } from 'vue-cf-ui'
 import { IncrementAllocation } from '../features/allocation/index.js'
 import { CreateFulfillment } from '../features/fulfillment/index.js'
@@ -39,7 +40,7 @@ const breadcrumbs = computed(() => {
 const summary = computed(() => ([
   {
     label: 'Status',
-    value: salesOrder.value.status
+    value: snakeToSentence(salesOrder.value.status)
   }, {
     label: 'Customer',
     value: salesOrder.value.customer.shortName

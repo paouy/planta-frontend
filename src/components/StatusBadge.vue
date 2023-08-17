@@ -1,10 +1,11 @@
 <script setup>
 import { computed } from 'vue'
+import { snakeToSentence } from '../helpers.js'
 
 const props = defineProps({ data: String })
 
 const normalizedStatus = computed(() => {
-  const snakeToSentence = (snakeCase) => snakeCase.charAt(0).toUpperCase() + snakeCase.slice(1).toLowerCase().replace(/_/g, ' ')
+  
   return snakeToSentence(props.data)
 })
 

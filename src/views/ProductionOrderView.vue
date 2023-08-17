@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { snakeToSentence } from '../helpers.js'
 import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfActionCard, CfSummaryList, CfFilledButton, CfOutlinedButton } from 'vue-cf-ui'
 import { JobsList } from '../features/job/index.js'
 import { ReleaseProductionOrder, RemoveProductionOrder } from '../features/productionOrder/index.js'
@@ -35,7 +36,7 @@ const breadcrumbs = computed(() => {
 const summary = computed(() => ([
   {
     label: 'Status',
-    value: productionOrder.value.status
+    value: snakeToSentence(productionOrder.value.status)
   }, {
     label: 'Product',
     value: productionOrder.value.product.normalizedName

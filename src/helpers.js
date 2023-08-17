@@ -1,0 +1,1 @@
+export const snakeToSentence = (snakeCase) => snakeCase.charAt(0).toUpperCase() + snakeCase.slice(1).toLowerCase().replace(/_/g, ' ')

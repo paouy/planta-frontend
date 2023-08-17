@@ -8,8 +8,8 @@ const columns = [
     label: 'ID',
     key: 'productionOrderPublicId'
   }, {
-    label: 'Operation',
-    key: 'operation.name'
+    label: 'Product SKU',
+    key: 'productSku'
   }, {
     label: 'Workstation',
     key: 'workstation.name'
@@ -17,12 +17,13 @@ const columns = [
     label: 'Equipment',
     key: 'equipment.name'
   }, {
-    label: 'Qty',
+    label: 'Quantity',
     key: 'qty',
-    width: '10%'
+    width: '12%'
   }, {
     label: 'Worker',
-    key: 'worker.name'
+    key: 'worker.name',
+    width: '18%'
   }, {
     label: 'Date',
     key: 'timestamp'
@@ -38,7 +39,7 @@ const columns = [
   >
     <template v-slot:row="{ data }">
       <td>{{ data.productionOrderPublicId }}</td>
-      <td>{{ data.operation.name }}</td>
+      <td>{{ data.productSku }}</td>
       <td>{{ data.workstation?.name }}</td>
       <td>{{ data.equipment?.name }}</td>
       <td>{{ (data.type === 'REJECT' ? '(' : '') + data.qty + (data.type === 'REJECT' ? ')' : '') }}</td>

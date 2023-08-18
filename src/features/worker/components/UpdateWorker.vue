@@ -33,7 +33,7 @@ Object.assign(ctx.value, props.data)
 </script>
 
 <template>
-  <CfDialog title="Update worker" @close="emit('cancel')">
+  <CfDialog title="Update worker" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="updateWorker" @submit.prevent="invoke">
         <CfInput

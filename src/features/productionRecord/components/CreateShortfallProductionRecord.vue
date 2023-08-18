@@ -36,7 +36,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog :title="dialogTitle" @close="emit('cancel')">
+  <CfDialog :title="dialogTitle" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <p>Are you sure you want to continue? Closing the {{ normalizedOperationName }} job for <b>{{ normalizedJob }}</b> will result to a <b>shortfall of {{ ctx.qty }}</b>.</p>
     </template>

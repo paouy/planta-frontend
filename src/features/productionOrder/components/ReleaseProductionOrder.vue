@@ -25,7 +25,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog title="Release production order" @close="emit('cancel')">
+  <CfDialog title="Release production order" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <p>Are you sure you want to release <b>{{ props.data.publicId + ' — ' + props.data.product.normalizedName }}</b>? This will add {{ props.data.qtyMade }} {{ props.data.product.uom }} to the inventory.</p>
     </template>

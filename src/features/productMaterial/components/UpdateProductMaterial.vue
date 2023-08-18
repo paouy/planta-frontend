@@ -30,7 +30,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog title="Update product material" @close="emit('cancel')">
+  <CfDialog title="Update product material" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="updateProductMaterial" @submit.prevent="invoke">
         <CfInput

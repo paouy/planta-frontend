@@ -79,7 +79,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <CfDialog title="Create production order" @close="emit('cancel')">
+  <CfDialog title="Create production order" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="createProductionOrder" @submit.prevent="invoke">
         <CfInput

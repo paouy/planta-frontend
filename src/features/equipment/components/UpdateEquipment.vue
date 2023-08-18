@@ -25,7 +25,7 @@ const invoke = async () => {
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
@@ -34,7 +34,7 @@ onMounted(() => Object.assign(ctx.value, props.data))
 </script>
 
 <template>
-  <CfDialog title="Edit equipment" @close="emit('cancel')">
+  <CfDialog title="Edit equipment" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="updateEquipment" @submit.prevent="invoke">
         <CfInput

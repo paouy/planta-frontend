@@ -15,21 +15,8 @@ const ctx = ref({
   password: ''
 })
 
-const isSelfServe = computed(() => {
-  return props.user?.id === session.value.user.id || !props.user
-})
-
-const passwordLabel = computed(() => {
-  if (session.value.user.isAdmin) {
-    if (props.user) {
-      return 'Enter your password'
-    } else {
-      return 'Old password'
-    }
-  } else {
-    return 'Old password'
-  }
-})
+const isSelfServe = computed(() => props.user?.id === session.value.user.id || !props.user)
+const dialogTitle = computed(() => `Change ${isSelfServe.value ? 'your' : `${props.user.firstName}'s`} password`)
 
 const invoke = async () => {
   try {
@@ -49,7 +36,8 @@ onMounted(() => { if (props.user) ctx.value.id = props.user.id })
 </script>
 
 <template>
-  <CfDialog :title="`Change ${isSelfServe ? 'your' : `${props.user.firstName}'s`} password`" @close="emit('dismiss')">
+  <CfDialog :title="dialogTitle" :persist="isLoading" @close="emit('dismiss')"
+  >
     <template #body>
       <form id="changePassword" @submit.prevent="invoke">
         <CfInput

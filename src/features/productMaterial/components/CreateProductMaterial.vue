@@ -60,7 +60,7 @@ onMounted(async () => materials.value = await api.material.getAll())
 </script>
 
 <template>
-  <CfDialog title="Add product material" @close="emit('cancel')">
+  <CfDialog title="Add product material" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="createProductMaterial" @submit.prevent="invoke">
         <CategorySelect

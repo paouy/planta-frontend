@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-// import { CfDialog, CfFilledButton, CfInput } from 'vue-cf-ui'
+import { CfDialog, CfFilledButton, CfInput } from 'vue-cf-ui'
 import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -48,7 +48,7 @@ api.product
 </script>
 
 <template>
-  <CfDialog title="Allocate stock" @close="emit('cancel')">
+  <CfDialog title="Allocate stock" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="incrementAllocation" @submit.prevent="invoke">
         <CfInput

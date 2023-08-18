@@ -18,14 +18,14 @@ const invoke = async () => {
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
 </script>
 
 <template>
-  <CfDialog title="Remove worker" @close="emit('cancel')">
+  <CfDialog title="Remove worker" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <p>Are you sure you want to remove <b>{{ `${props.data.lastName}, ${props.data.firstName} (${props.data.publicId})` }}</b> as a worker?</p>
     </template>

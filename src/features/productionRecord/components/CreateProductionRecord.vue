@@ -53,14 +53,14 @@ const invoke = async () => {
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
 </script>
 
 <template>
-  <CfDialog :title="dialogTitle" @close="emit('cancel')">
+  <CfDialog :title="dialogTitle" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="createProductionRecord" @submit.prevent="invoke">
         <CfInput

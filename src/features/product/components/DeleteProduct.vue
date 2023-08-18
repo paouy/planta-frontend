@@ -18,14 +18,14 @@ const invoke = async () => {
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
 </script>
 
 <template>
-  <CfDialog title="Remove product" @close="emit('cancel')">
+  <CfDialog title="Remove product" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <p>Are you sure you want to remove <b>{{ props.data?.name }}</b> from the inventory?</p>
     </template>

@@ -60,7 +60,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog title="Reprioritize production order" @close="emit('cancel')">
+  <CfDialog title="Reprioritize production order" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="updateProductionOrderPriority" @submit.prevent="invoke">
         <CfInput

@@ -28,7 +28,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog :title="dialogTitle" @close="emit('cancel')">
+  <CfDialog :title="dialogTitle" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <p>You are about to start <b>{{ props.data.publicId }} — {{ props.data.schedule }}</b> with {{ normalizedJobCount }}. Do you want to proceed?</p>
     </template>

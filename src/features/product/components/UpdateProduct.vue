@@ -37,7 +37,7 @@ onMounted(() => Object.assign(ctx.value, props.data))
 </script>
 
 <template>
-  <CfDialog title="Edit product" @close="emit('cancel')">
+  <CfDialog title="Edit product" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="updateProduct" @submit.prevent="invoke">
         <CategorySelect

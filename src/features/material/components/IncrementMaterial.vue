@@ -29,16 +29,14 @@ const invoke = async () => {
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
 </script>
 
 <template>
-  <CfDialog
-    title="Adjust available quantity"
-    @close="emit('cancel')"
+  <CfDialog title="Adjust available quantity" :persist="isLoading" @close="emit('cancel')"
   >
     <template #body>
       <form id="incrementMaterial" @submit.prevent="invoke">

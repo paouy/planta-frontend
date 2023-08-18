@@ -25,7 +25,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog title="Delete customer" @close="emit('cancel')">
+  <CfDialog title="Delete customer" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <p>Are you sure you want to delete <b>{{ props.data.name }}</b>?</p>
     </template>

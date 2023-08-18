@@ -32,7 +32,7 @@ const onSubmit = async () => {
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
@@ -41,7 +41,7 @@ onMounted(() => Object.assign(ctx.value, props.data))
 </script>
 
 <template>
-  <CfDialog title="Update material" @close="emit('cancel')">
+  <CfDialog title="Update material" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="updateMaterial" @submit.prevent="onSubmit">
         <CategorySelect

@@ -25,7 +25,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog title="Mark sales order as fulfilled" @close="emit('cancel')">
+  <CfDialog title="Mark sales order as fulfilled" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <p>You're about to mark <b>{{ props.data.publicId }} ({{ props.data.customer.shortName }})</b> as fulfilled. Do you want to proceed?</p>
     </template>

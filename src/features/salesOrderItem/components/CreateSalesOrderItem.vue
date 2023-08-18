@@ -67,7 +67,7 @@ api.product.getAll().then(products => {
 </script>
 
 <template>
-  <CfDialog title="Add sales order item" @close="emit('cancel')">
+  <CfDialog title="Add sales order item" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="createSalesOrderItem" @submit.prevent="invoke">
         <CategorySelect

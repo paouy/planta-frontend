@@ -22,14 +22,14 @@ const invoke = async () => {
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
 </script>
 
 <template>
-  <CfDialog title="Add workstation" @close="emit('cancel')">
+  <CfDialog title="Add workstation" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="createWorkstation" @submit.prevent="invoke">
         <OperationSelect v-model="ctx.operation"/>

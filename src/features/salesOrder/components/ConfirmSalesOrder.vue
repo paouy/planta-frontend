@@ -25,7 +25,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog title="Confirm sales order" @close="emit('cancel')">
+  <CfDialog title="Confirm sales order" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <p>You're about to confirm <b>{{ props.data.publicId }} ({{ props.data.customer.shortName }})</b>. You won't be able to change any order items. Do you want to proceed?</p>
     </template>

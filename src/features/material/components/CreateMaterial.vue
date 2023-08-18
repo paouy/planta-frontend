@@ -24,14 +24,14 @@ const invoke = async () => {
     emit('cancel')
   } catch (error) {
     alert(error)
-
+  } finally {
     isLoading.value = false
   }
 }
 </script>
 
 <template>
-  <CfDialog title="Add material" @close="emit('cancel')">
+  <CfDialog title="Add material" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="createMaterial" @submit.prevent="invoke">
         <CategorySelect

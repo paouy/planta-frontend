@@ -25,7 +25,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog title="Remove product material" @close="emit('cancel')">
+  <CfDialog title="Remove product material" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <p>Are you sure you want to remove <b>{{ props.data?.name }}</b> as product material?</p>
     </template>

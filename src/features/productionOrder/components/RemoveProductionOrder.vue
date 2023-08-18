@@ -34,7 +34,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog title="Remove production order" @close="emit('cancel')">
+  <CfDialog title="Remove production order" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="removeProductionOrder" @submit.prevent="invoke">
         <p>Removing <b>{{ props.data.publicId + ' — ' + props.data.product.normalizedName }}</b> is permanent. Select a reason below to proceed.</p>

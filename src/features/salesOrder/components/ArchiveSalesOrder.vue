@@ -25,7 +25,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog title="Archive sales order" @close="emit('cancel')">
+  <CfDialog title="Archive sales order" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <p>You're about to archive <b>{{ props.data.publicId }} ({{ props.data.customer.shortName }})</b>. Do you want to proceed?</p>
     </template>

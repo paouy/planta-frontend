@@ -102,7 +102,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <CfDialog :title="dialogTitle" @close="emit('cancel')">
+  <CfDialog :title="dialogTitle" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="assignJob" @submit.prevent="invoke">
         <CfSelect

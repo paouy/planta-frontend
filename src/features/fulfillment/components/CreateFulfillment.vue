@@ -29,7 +29,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog title="Create fulfillment" @close="emit('cancel')">
+  <CfDialog title="Create fulfillment" :persist="isLoading" @close="emit('cancel')">
     <template #body>
       <form id="createFulfillment" @submit.prevent="invoke">
         <CfInput

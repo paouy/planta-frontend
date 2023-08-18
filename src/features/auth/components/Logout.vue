@@ -1,13 +1,18 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useAuth } from '../componsables/auth.js'
+import { useStore } from '../../misc/index.js'
 
 const router = useRouter()
 const { clearSession } = useAuth()
+const { reset } = useStore()
 
-const invoke = () => {
+const invoke = async () => {
   clearSession()
-  router.push({ name: 'Login' })
+
+  await router.push({ name: 'Login' })
+
+  reset()
 }
 </script>
 

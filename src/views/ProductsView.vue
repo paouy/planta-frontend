@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { CfAppView, CfAppViewHeader, CfOutlinedButton } from 'vue-cf-ui'
+import { CfAppView, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import { CreateProduct, IncrementProduct, ProductsList } from '../features/product/index.js'
 import { CreateProductionOrder } from '../features/productionOrder/index.js'
 import api from '../api/index.js'
@@ -50,9 +50,9 @@ onMounted(async () => products.value = await api.product.getAll())
   <CfAppView>
     <CfAppViewHeader surtitle="Inventory" title="Products">
       <template #actions>
-        <CfOutlinedButton @click="currentAction = 'CREATE'">
+        <CfFilledButton @click="currentAction = 'CREATE'">
           Add product
-        </CfOutlinedButton>
+        </CfFilledButton>
       </template>
     </CfAppViewHeader>
     <ProductsList

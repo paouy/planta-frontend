@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { CfAppView, CfAppViewHeader, CfOutlinedButton } from 'vue-cf-ui'
+import { CfAppView, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import { useProductionOrderStore, CreateProductionOrder, ProductionOrdersList, ProductionOrdersSummary, UpdateProductionOrderPriority } from '../features/productionOrder/index.js'
 import api from '../api/index.js'
 
@@ -28,9 +28,9 @@ api.lookup
   <CfAppView>
     <CfAppViewHeader surtitle="Production" title="Overview">
       <template #actions>
-        <CfOutlinedButton @click="currentAction = 'ADD'">
+        <CfFilledButton @click="currentAction = 'ADD'">
           Create order
-        </CfOutlinedButton>
+        </CfFilledButton>
       </template>
     </CfAppViewHeader>
     <ProductionOrdersSummary

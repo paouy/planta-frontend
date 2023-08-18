@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { CfAppView, CfAppViewHeader, CfOutlinedButton } from 'vue-cf-ui'
+import { CfAppView, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import { CreateMaterial, DeleteMaterial, IncrementMaterial, MaterialsList, UpdateMaterial } from '../features/material/index.js'
 import api from '../api/index.js'
 
@@ -38,9 +38,9 @@ onMounted(async () => materials.value = await api.material.getAll())
   <CfAppView>
     <CfAppViewHeader surtitle="Inventory" title="Materials">
       <template #actions>
-        <CfOutlinedButton @click="currentAction = 'CREATE'">
+        <CfFilledButton @click="currentAction = 'CREATE'">
           Add material
-        </CfOutlinedButton>
+        </CfFilledButton>
       </template>
     </CfAppViewHeader>
     <MaterialsList

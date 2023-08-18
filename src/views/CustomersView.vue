@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { CfAppView, CfAppViewHeader, CfOutlinedButton } from 'vue-cf-ui'
+import { CfAppView, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import { useCustomerStore, CreateCustomer, CustomersList, DeleteCustomer, UpdateCustomer } from '../features/customer/index.js'
 import api from '../api/index.js'
 
@@ -21,9 +21,9 @@ const onAction = ({ key, data }) => {
   <CfAppView>
     <CfAppViewHeader surtitle="Sales" title="Customers">
       <template #actions>
-        <CfOutlinedButton @click="currentAction = 'CREATE'">
+        <CfFilledButton @click="currentAction = 'CREATE'">
           Add customer
-        </CfOutlinedButton>
+        </CfFilledButton>
       </template>
     </CfAppViewHeader>
     <CustomersList

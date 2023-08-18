@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { CfAppView, CfAppViewHeader, CfOutlinedButton } from 'vue-cf-ui'
+import { CfAppView, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import { SalesOrdersList, SalesOrdersSummary } from '../features/salesOrder/index.js'
 import api from '../api/index.js'
 
@@ -31,9 +31,9 @@ api.lookup
   <CfAppView>
     <CfAppViewHeader surtitle="Sales" title="Orders">
       <template #actions>
-        <CfOutlinedButton :to="{ name: 'CreateSalesOrder' }">
+        <CfFilledButton :to="{ name: 'CreateSalesOrder' }">
           Create order
-        </CfOutlinedButton>
+        </CfFilledButton>
       </template>
     </CfAppViewHeader>
     <SalesOrdersSummary

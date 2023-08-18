@@ -12,11 +12,7 @@ const storeSession = (data) => {
 }
 
 const clearSession = () => {
-  session.value = {
-    user: null,
-    token: null,
-    expiresIn: null
-  }
+  session.value = null
 }
 
 export const useAuth = () => {

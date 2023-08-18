@@ -196,7 +196,7 @@ router.beforeEach((to, from, next) => {
   const { session, clearSession } = useAuth()
 
   if (to.name === 'Login') {
-    if (session.value.user) {
+    if (session.value?.user) {
       next({ name: 'SalesOrders' })
     } else {
       next()
@@ -204,7 +204,7 @@ router.beforeEach((to, from, next) => {
   }
   
   else if (to.name === 'NotFound') {
-    if (session.value.user) {
+    if (session.value?.user) {
       next({ name: 'SalesOrders' })
     } else {
       next({ name: 'Login'})
@@ -212,7 +212,7 @@ router.beforeEach((to, from, next) => {
   }
   
   else if (to.path.includes('settings')) {
-    if (session.value.user?.isAdmin) {
+    if (session.value?.user?.isAdmin) {
       next()
     } else {
       next({ name: 'SalesOrders' })
@@ -220,7 +220,7 @@ router.beforeEach((to, from, next) => {
   }
   
   else {
-    if (!session.value.user || Math.floor(Date.now() / 1000) > session.value.expiresIn) {
+    if (!session.value?.user || Math.floor(Date.now() / 1000) > session.value?.expiresIn) {
       clearSession()
 
       next({ name: 'Login' })

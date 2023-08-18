@@ -1,10 +1,17 @@
 <script setup>
+import { useRouter } from 'vue-router'
 import { CfAppLayout, CfAppBarLink, CfDropdownItem, CfSidebarLink } from 'vue-cf-ui'
 import { useAuth } from '../features/auth/index.js'
 import { useStore, InitializeApp } from '../features/misc/index.js'
 
-const { session } = useAuth()
+const router = useRouter()
+const { session, clearSession } = useAuth()
 const { isInitialized, organizationName } = useStore()
+
+const logout = () => {
+  clearSession()
+  router.push({ name: 'Login' })
+}
 </script>
 
 <template>
@@ -20,7 +27,7 @@ const { isInitialized, organizationName } = useStore()
         </template>
         <template #dropdown>
           <CfDropdownItem large>Manage Account</CfDropdownItem>
-          <CfDropdownItem large>Log Out</CfDropdownItem>
+          <CfDropdownItem large @click="logout">Log Out</CfDropdownItem>
         </template>
       </CfAppBarLink>
     </template>

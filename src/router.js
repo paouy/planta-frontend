@@ -3,6 +3,7 @@ import { useAuth } from './features/auth/index.js'
 import CleanLayout from './components/CleanLayout.vue'
 import DefaultLayout from './components/DefaultLayout.vue'
 
+const AccountView = () => import('./views/AccountView.vue')
 const ArchivedSalesOrdersView = () => import('./views/ArchivedSalesOrdersView.vue')
 const CategoriesView = () => import('./views/CategoriesView.vue')
 const ConfigurationsView = () => import('./views/ConfigurationsView.vue')
@@ -185,6 +186,16 @@ const router = createRouter({
         }
       ]
     }, {
+      path: '/account',
+      component: DefaultLayout,
+      children: [
+        {
+          path: '',
+          name: 'Account',
+          component: AccountView
+        }
+      ]
+    }, {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: CleanLayout
@@ -192,11 +203,11 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const { session, clearSession } = useAuth()
 
   if (to.name === 'Login') {
-    if (session.value?.user) {
+    if (session.value.user) {
       next({ name: 'SalesOrders' })
     } else {
       next()
@@ -207,12 +218,12 @@ router.beforeEach((to, from, next) => {
     if (session.value?.user) {
       next({ name: 'SalesOrders' })
     } else {
-      next({ name: 'Login'})
+      next({ name: 'Login' })
     }
   }
   
   else if (to.path.includes('settings')) {
-    if (session.value?.user?.isAdmin) {
+    if (session.value.user?.isAdmin) {
       next()
     } else {
       next({ name: 'SalesOrders' })
@@ -220,8 +231,8 @@ router.beforeEach((to, from, next) => {
   }
   
   else {
-    if (!session.value?.user || Math.floor(Date.now() / 1000) > session.value?.expiresIn) {
-      clearSession()
+    if (!session.value.user || Math.floor(Date.now() / 1000) > session.value.expiresIn) {
+      await clearSession()
 
       next({ name: 'Login' })
     } else {

@@ -26,7 +26,7 @@ const data = computed(() => {
       ? new Date(user.lastLogin).toLocaleString('en-CA')
       : ''
 
-    const actions = ['Edit', 'Update password']
+    const actions = ['Edit', 'Change password']
 
     if (user.id !== session.value?.user.id) {
       if (!user.isDisabled) {

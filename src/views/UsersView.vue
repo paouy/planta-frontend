@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { CfAppView, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
-import { UpdatePassword } from '../features/auth/index.js'
+import { ChangePassword } from '../features/auth/index.js'
 import { CreateUser, DeleteUser, DisableUser, EnableUser, UpdateUser, UsersList } from '../features/user/index.js'
 import api from '../api/index.js'
 
@@ -77,10 +77,9 @@ api.user
     v-if="currentAction === 'EDIT'"
   />
 
-  <UpdatePassword
+  <ChangePassword
     :user="user"
-    @success="currentAction = user = null"
-    @cancel="currentAction = user = null"
-    v-if="currentAction === 'UPDATE_PASSWORD'"
+    @dismiss="currentAction = user = null"
+    v-if="currentAction === 'CHANGE_PASSWORD'"
   />
 </template>

@@ -9,9 +9,9 @@ export const login = async (data) => {
   }
 }
 
-export const updatePassword = async (data) => {
+export const changePassword = async (data) => {
   try {
-    await axios.post('/v1/auth/update-password', data)
+    await axios.post('/v1/auth/change-password', data)
   } catch (error) {
     throw Error(error.response.data.message)
   }

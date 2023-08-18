@@ -21,7 +21,15 @@ body[data-layout="clean"] {
   main {
     display: flex;
     justify-content: center;
-    padding: 2rem;
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 880px) {
+  body[data-layout="clean"] {
+    main {
+      padding: 2rem
+    }
   }
 }
 </style>

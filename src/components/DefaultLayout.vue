@@ -8,8 +8,8 @@ const router = useRouter()
 const { session, clearSession } = useAuth()
 const { isInitialized, organizationName } = useStore()
 
-const logout = () => {
-  clearSession()
+const logout = async () => {
+  await clearSession()
   router.push({ name: 'Login' })
 }
 </script>
@@ -23,10 +23,10 @@ const logout = () => {
     <template #navigation>
       <CfAppBarLink dropdown>
         <template #default>
-          {{ `${session?.user.firstName} ${session?.user.lastName}` }}
+          {{ `${session.user?.firstName} ${session.user?.lastName}` }}
         </template>
         <template #dropdown>
-          <CfDropdownItem large>Manage Account</CfDropdownItem>
+          <CfDropdownItem large :to="{ name: 'Account' }">Manage Account</CfDropdownItem>
           <CfDropdownItem large @click="logout">Log Out</CfDropdownItem>
         </template>
       </CfAppBarLink>
@@ -52,8 +52,8 @@ const logout = () => {
         </template>
       </CfSidebarLink>
       <CfSidebarLink icon="monitoring" :to="{ name: 'Reports' }">Reports</CfSidebarLink>
-      <hr v-if="session?.user.isAdmin">
-      <CfSidebarLink icon="settings" parent v-if="session?.user.isAdmin">Settings
+      <hr v-if="session.user?.isAdmin">
+      <CfSidebarLink icon="settings" parent v-if="session.user?.isAdmin">Settings
         <template #children>
           <CfSidebarLink :to="{ name: 'Users' }">Users</CfSidebarLink>
           <CfSidebarLink :to="{ name: 'Configurations' }">Configurations</CfSidebarLink>

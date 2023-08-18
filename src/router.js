@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuth } from './features/auth/index.js'
 import CleanLayout from './components/CleanLayout.vue'
 import DefaultLayout from './components/DefaultLayout.vue'
 
@@ -183,8 +184,50 @@ const router = createRouter({
           ]
         }
       ]
+    }, {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: CleanLayout
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const { session, clearSession } = useAuth()
+
+  if (to.name === 'Login') {
+    if (session.value.user) {
+      next({ name: 'SalesOrders' })
+    } else {
+      next()
+    }
+  }
+  
+  else if (to.name === 'NotFound') {
+    if (session.value.user) {
+      next({ name: 'SalesOrders' })
+    } else {
+      next({ name: 'Login'})
+    }
+  }
+  
+  else if (to.path.includes('settings')) {
+    if (session.value.user?.isAdmin) {
+      next()
+    } else {
+      next({ name: 'SalesOrders' })
+    }
+  }
+  
+  else {
+    if (!session.value.user || Math.floor(Date.now() / 1000) > session.value.expiresIn) {
+      clearSession()
+
+      next({ name: 'Login' })
+    } else {
+      next()
+    }
+  }
 })
 
 export default router

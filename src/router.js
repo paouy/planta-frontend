@@ -21,6 +21,7 @@ const ReleasedProductionOrdersView = () => import('./views/ReleasedProductionOrd
 const ReportView = () => import('./views/ReportView.vue')
 const SalesOrdersView = () => import('./views/SalesOrdersView.vue')
 const SalesOrderView = () => import('./views/SalesOrderView.vue')
+const UsersView = () => import('./views/UsersView.vue')
 const WorkersView = () => import('./views/WorkersView.vue')
 const WorkstationsView = () => import('./views/WorkstationsView.vue')
 
@@ -148,6 +149,10 @@ const router = createRouter({
       component: DefaultLayout,
       children: [
         {
+          path: 'users',
+          name: 'Users',
+          component: UsersView
+        }, {
           path: 'configurations',
           children: [
             {

@@ -5,7 +5,7 @@ export const getAll = async (params) => {
     const { data: jobs } = await axios.get('/v1/jobs', { params })
     return jobs
   } catch (error) {
-    throw Error(error.data.message)
+    throw Error(error.response.data.message)
   }
 }
 
@@ -13,6 +13,6 @@ export const updateOne = async (data) => {
   try {
     await axios.put('/v1/jobs', data)
   } catch (error) {
-    throw Error(error.data.message)
+    throw Error(error.response.data.message)
   }
 }

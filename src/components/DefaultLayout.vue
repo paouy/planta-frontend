@@ -48,7 +48,7 @@ const { isInitialized, organizationName } = useStore()
       <hr v-if="session?.user.isAdmin">
       <CfSidebarLink icon="settings" parent v-if="session?.user.isAdmin">Settings
         <template #children>
-          <CfSidebarLink href="#">Users</CfSidebarLink>
+          <CfSidebarLink :to="{ name: 'Users' }">Users</CfSidebarLink>
           <CfSidebarLink :to="{ name: 'Configurations' }">Configurations</CfSidebarLink>
         </template>
       </CfSidebarLink>

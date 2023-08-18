@@ -13,6 +13,6 @@ export const get = async (key) => {
     const { data } = await axios.get('/v1/lookup', { params })
     return data
   } catch (error) {
-    throw Error(error.data.message)
+    throw Error(error.response.data.message)
   }
 }

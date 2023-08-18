@@ -5,7 +5,7 @@ export const createOne = async (data) => {
     const { data: fulfillment } = await axios.post('/v1/fulfillments', data)
     return fulfillment
   } catch (error) {
-    throw Error(error.data.message)
+    throw Error(error.response.data.message)
   }
 }
 
@@ -13,6 +13,6 @@ export const deleteOne = async (id) => {
   try {
     await axios.delete(`/v1/fulfillments/${id}`)
   } catch (error) {
-    throw Error(error.data.message)
+    throw Error(error.response.data.message)
   }
 }

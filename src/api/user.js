@@ -2,8 +2,8 @@ import axios from '../axios.js'
 
 export const createOne = async (data) => {
   try {
-    const { data: operation } = await axios.post('/v1/operations', data)
-    return operation
+    const { data: user } = await axios.post('/v1/users', data)
+    return user
   } catch (error) {
     throw Error(error.response.data.message)
   }
@@ -11,8 +11,8 @@ export const createOne = async (data) => {
 
 export const getAll = async () => {
   try {
-    const { data: operations } = await axios.get('/v1/operations')
-    return operations
+    const { data: users } = await axios.get('/v1/users')
+    return users
   } catch (error) {
     throw Error(error.response.data.message)
   }
@@ -20,7 +20,7 @@ export const getAll = async () => {
 
 export const updateOne = async (data) => {
   try {
-    await axios.put('/v1/operations', data)
+    await axios.put('/v1/users', data)
   } catch (error) {
     throw Error(error.response.data.message)
   }
@@ -28,7 +28,7 @@ export const updateOne = async (data) => {
 
 export const deleteOne = async (id) => {
   try {
-    await axios.delete(`/v1/operations/${id}`)
+    await axios.delete(`/v1/users/${id}`)
   } catch (error) {
     throw Error(error.response.data.message)
   }

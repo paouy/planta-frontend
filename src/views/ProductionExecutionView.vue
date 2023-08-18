@@ -52,7 +52,6 @@ const onOperationBatchAction = ({ key, data }) => {
 watch(operation, ({ name }) => router.push(`/production/execution/${toSlug(name)}`))
 
 onMounted(async () => {
-  if (props.operationSlug) {
     const { operations } = useOperationStore()
 
     const { id, name, isBatch, hasEquipment } = Boolean(props.operationSlug)
@@ -67,7 +66,6 @@ onMounted(async () => {
     ])
 
     productionExecution.initialize(jobs, operationBatches)
-  }
 })
 </script>
 

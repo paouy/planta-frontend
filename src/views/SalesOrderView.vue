@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { snakeToSentence } from '../helpers.js'
 import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfHeader, CfSummaryList, CfActionCard, CfOutlinedButton, CfFilledButton } from 'vue-cf-ui'
 import { IncrementAllocation } from '../features/allocation/index.js'
-import { CreateFulfillment } from '../features/fulfillment/index.js'
+import { CreateFulfillment, FulfillmentsList } from '../features/fulfillment/index.js'
 import { CreateProductionOrder } from '../features/productionOrder/index.js'
 import { ArchiveSalesOrder, ConfirmSalesOrder, ForceFulfillSalesOrder, RemoveSalesOrder } from '../features/salesOrder/index.js'
 import { CreateSalesOrderItem, DeleteSalesOrderItem, SalesOrderItemsList, UpdateSalesOrderItemQty } from '../features/salesOrderItem/index.js'
@@ -24,6 +24,7 @@ const salesOrder = ref({
   items: []
 })
 const salesOrderItems = ref([])
+const fulfillments = ref([])
 const salesOrderItem = ref(null)
 const currentAction = ref({
   salesOrder: null,
@@ -112,6 +113,10 @@ api.salesOrder
 api.salesOrderItem
   .getAllBySalesOrder(props.salesOrderId)
   .then(data => salesOrderItems.value = data)
+
+api.fulfillment
+  .getAllBySalesOrder(props.salesOrderId)
+  .then(data => fulfillments.value = data)
 </script>
 
 <template>
@@ -159,6 +164,9 @@ api.salesOrderItem
       :sales-order="salesOrder"
       @action="onSalesOrderItemAction"
     />
+
+    <CfHeader title="Fulfillments" v-if="salesOrder.status !== 'OPEN'"/>
+    <FulfillmentsList :data="fulfillments" v-if="salesOrder.status !== 'OPEN'"/>
 
     <CfHeader title="Remove order" v-if="!salesOrder.isArchived"/>
     <CfActionCard simple v-if="!salesOrder.isArchived">

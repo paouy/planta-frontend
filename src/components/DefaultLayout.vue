@@ -1,17 +1,10 @@
 <script setup>
-import { useRouter } from 'vue-router'
 import { CfAppLayout, CfAppBarLink, CfDropdownItem, CfSidebarLink } from 'vue-cf-ui'
-import { useAuth } from '../features/auth/index.js'
+import { useAuth, Logout } from '../features/auth/index.js'
 import { useStore, InitializeApp } from '../features/misc/index.js'
 
-const router = useRouter()
-const { session, clearSession } = useAuth()
+const { session } = useAuth()
 const { isInitialized, organizationName } = useStore()
-
-const logout = async () => {
-  await clearSession()
-  router.push({ name: 'Login' })
-}
 </script>
 
 <template>
@@ -27,7 +20,9 @@ const logout = async () => {
         </template>
         <template #dropdown>
           <CfDropdownItem large :to="{ name: 'Account' }">Manage Account</CfDropdownItem>
-          <CfDropdownItem large @click="logout">Log Out</CfDropdownItem>
+          <Logout v-slot="{ invoke }">
+            <CfDropdownItem large @click="invoke">Log Out</CfDropdownItem>
+          </Logout>
         </template>
       </CfAppBarLink>
     </template>

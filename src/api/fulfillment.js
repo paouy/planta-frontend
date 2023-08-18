@@ -9,6 +9,15 @@ export const createOne = async (data) => {
   }
 }
 
+export const getAllBySalesOrder = async (id) => {
+  try {
+    const { data: fulfillments } = await axios.get('/v1/fulfillments?salesOrderId=' + id)
+    return fulfillments
+  } catch (error) {
+    throw Error(error.response.data.message)
+  }
+}
+
 export const deleteOne = async (id) => {
   try {
     await axios.delete(`/v1/fulfillments/${id}`)

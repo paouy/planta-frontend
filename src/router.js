@@ -203,7 +203,7 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
   const { session, clearSession } = useAuth()
 
   if (to.name === 'Login') {
@@ -232,7 +232,7 @@ router.beforeEach(async (to, from, next) => {
   
   else {
     if (!session.value.user || Math.floor(Date.now() / 1000) > session.value.expiresIn) {
-      await clearSession()
+      clearSession()
 
       next({ name: 'Login' })
     } else {

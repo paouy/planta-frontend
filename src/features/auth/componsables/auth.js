@@ -12,15 +12,11 @@ const storeSession = (data) => {
 }
 
 const clearSession = () => {
-  return new Promise((resolve) => {
-    session.value = {
-      user: null,
-      token: null,
-      expiresIn: null
-    }
-
-    resolve()
-  })
+  session.value = {
+    user: null,
+    token: null,
+    expiresIn: null
+  }
 }
 
 export const useAuth = () => {

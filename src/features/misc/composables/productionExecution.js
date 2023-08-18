@@ -33,6 +33,10 @@ const currentJobs = computed(() => {
         job.isLocked = nextJob.status !== 'OPEN' || nextJob.workstation !== null
       }
 
+      if (job.workstation && !job.qtyInput) {
+        job.isLocked = true
+      }
+
       return job
     })
     .filter(job => job.operation.id === operation.value.id)

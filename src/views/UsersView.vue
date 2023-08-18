@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { CfAppView, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import { ChangePassword } from '../features/auth/index.js'
-import { CreateUser, DeleteUser, DisableUser, EnableUser, UpdateUser, UsersList } from '../features/user/index.js'
+import { CreateUser, DeleteUser, UpdateUser, UsersList } from '../features/user/index.js'
 import api from '../api/index.js'
 
 const currentAction = ref(null)
@@ -53,28 +53,14 @@ api.user
     :data="user"
     @success="onDelete"
     @cancel="currentAction = user = null"
-    v-if="currentAction === 'REMOVE'"
-  />
-
-  <DisableUser
-    :data="user"
-    @success="onUpdate"
-    @cancel="currentAction = user = null"
-    v-if="currentAction === 'DISABLE'"
-  />
-
-  <EnableUser
-    :data="user"
-    @success="onUpdate"
-    @cancel="currentAction = user = null"
-    v-if="currentAction === 'ENABLE'"
+    v-if="currentAction === 'DELETE'"
   />
 
   <UpdateUser
     :data="user"
     @success="onUpdate"
     @cancel="currentAction = user = null"
-    v-if="currentAction === 'EDIT'"
+    v-if="currentAction === 'UPDATE'"
   />
 
   <ChangePassword

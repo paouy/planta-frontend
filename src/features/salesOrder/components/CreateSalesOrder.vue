@@ -136,13 +136,13 @@ api.product.getAll().then(data => {
             />
           </td>
           <td>
-            <button
-              type="button"
+            <CfFilledButton
+              color="gray"
               @click="removeItem(index)"
               v-if="ctx.items.length > 1"
             >
               <span class="material-symbols-outlined">close</span>
-            </button>
+            </CfFilledButton>
           </td>
         </tr>
       </tbody>
@@ -217,16 +217,7 @@ api.product.getAll().then(data => {
     }
 
     button {
-      display: grid;
-      place-content: center;
-      color: var(--cf-gray-5);
-      font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 20;
-      height: 2.125rem;
-      width: 2.125rem;
-
-      &:hover {
-        color: var(--cf-red-4);
-      }
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
     }
   }
 }

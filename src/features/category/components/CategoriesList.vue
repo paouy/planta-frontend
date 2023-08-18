@@ -2,9 +2,7 @@
 import { CfDataTable } from 'vue-cf-ui'
 
 const emit = defineEmits(['action'])
-
 const props = defineProps({ data: Array })
-
 const columns = [
   {
     key: 'name',

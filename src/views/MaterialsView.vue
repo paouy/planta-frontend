@@ -22,7 +22,8 @@ const onUpdateMaterial = (data) => {
   materials.value[index] = data
 }
 
-const onDeleteMaterial = (index) => {
+const onDeleteMaterial = (id) => {
+  const index = materials.value.findIndex(material => id === material.id)
   materials.value.splice(index, 1)
 }
 

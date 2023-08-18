@@ -45,8 +45,8 @@ const computedData = computed(() => {
     }
 
     return {
-      ...batch,
-      actions
+      _: { actions },
+      ...batch
     }
   })
 })

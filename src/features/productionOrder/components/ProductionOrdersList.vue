@@ -62,9 +62,9 @@ const computedData = computed(() => {
       : order.qty
 
     return {
+      _: { actions },
       ...order,
-      normalizedQty,
-      actions
+      normalizedQty
     }
   })
 })

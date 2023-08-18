@@ -14,7 +14,7 @@ const invoke = async () => {
 
     await api.productMaterial.deleteOne(props.data)
 
-    emit('success', props.data.index)
+    emit('success', props.data.id)
     emit('cancel')
   } catch (error) {
     alert(error)

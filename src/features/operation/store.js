@@ -17,7 +17,7 @@ export const useOperationStore = () => {
     sortOperations()
   }
 
-  const remove = ({ id }) => {
+  const remove = (id) => {
     const index = operations.value.findIndex(operation => id === operation.id)
     operations.value.splice(index, 1)
   }

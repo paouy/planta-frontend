@@ -21,6 +21,7 @@ const computedData = computed(() => {
   return props.data.map((operation, index) => {
     const normalizedName = `${operation.name} ${operation.isBatch ? '(Batch)' : ''}`
     const normalizedAllowsRework = operation.allowsRework ? 'Yes' : 'No'
+
     let actions = ['Move up', 'Move down', 'Edit', 'Remove']
 
     if (index === 0) {
@@ -32,10 +33,10 @@ const computedData = computed(() => {
     }
 
     return {
+      _: { actions },
       ...operation,
       normalizedName,
-      normalizedAllowsRework,
-      actions
+      normalizedAllowsRework
     }
   })
 })

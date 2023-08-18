@@ -57,7 +57,10 @@ const productMaterialActions = {
     const index = productMaterials.value.findIndex(({ id }) => data.id === id)
     Object.assign(productMaterials.value[index], data)
   },
-  remove: (index) => productMaterials.value.splice(index, 1)
+  remove: (id) => {
+    const index = productMaterials.value.findIndex(pm => id === pm.id)
+    productMaterials.value.splice(index, 1)
+  }
 }
 
 const onProductMaterialListAction = ({ key, data }) => {

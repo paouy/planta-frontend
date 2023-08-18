@@ -67,9 +67,9 @@ const data = computed(() => {
     }
 
     return {
+      _: { actions },
       ...item,
-      seq: index + 1,
-      actions
+      seq: index + 1
     }
   })
 })

@@ -48,18 +48,18 @@ const computedData = computed(() => {
       actions = ['Add record', 'Reassign', 'Close']
     }
 
-    if (job.status === 'CLOSED' && !job.isLocked) {
+    if (job.status === 'CLOSED') {
       actions = ['Add record']
     }
 
-    if (job.operationBatchId) {
+    if (job.operationBatchId || job.isLocked) {
       actions = false
     }
 
     return {
+      _: { actions },
       ...job,
-      qty,
-      actions
+      qty
     }
   })
 })

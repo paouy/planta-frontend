@@ -1,17 +1,21 @@
 <script setup>
 import { ref } from 'vue'
 import { CfDialog, CfInput, CfSwitch, CfFilledButton } from 'vue-cf-ui'
+import { useAuth } from '../../auth/index.js'
 import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ data: Object })
+
+const { session } = useAuth()
 
 const isLoading = ref(false)
 const ctx = ref({
   id: props.data.id,
   firstName: props.data.firstName,
   lastName: props.data.lastName,
-  isAdmin: props.data.isAdmin
+  isAdmin: props.data.isAdmin,
+  isDisabled: props.data.isDisabled
 })
 
 const invoke = async () => {
@@ -31,7 +35,7 @@ const invoke = async () => {
 </script>
 
 <template>
-  <CfDialog title="Edit user" @close="emit('cancel')">
+  <CfDialog title="Update user" @close="emit('cancel')">
     <template #body>
       <form id="updateUser" @submit.prevent="invoke">
         <CfInput
@@ -47,6 +51,13 @@ const invoke = async () => {
         <CfSwitch
           v-model="ctx.isAdmin"
           label="Administrator role"
+        />
+        <CfSwitch
+          v-model="ctx.isDisabled"
+          label="Active"
+          :true-value="false"
+          :false-value="true"
+          v-if="props.data.id !== session.user.id"
         />
       </form>
     </template>

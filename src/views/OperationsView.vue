@@ -26,21 +26,23 @@ const currentAction = ref(null)
 
 const onOperationsListAction = ({ key, data }) => {
   if (key === 'MOVE_UP') {
-    const { id, seq } = operations.value[data.index - 1]
+    const index = operations.value.findIndex(({ id }) => data.id === id)
+    const { id, seq } = operations.value[index - 1]
 
     api.operation.updateOne({ id, seq: seq + 1})
     api.operation.updateOne({ id: data.id, seq: data.seq - 1 })
     
-    return operationStore.moveUp(data.index)
+    return operationStore.moveUp(index)
   }
 
   if (key === 'MOVE_DOWN') {
-    const { id, seq } = operations.value[data.index + 1]
+    const index = operations.value.findIndex(({ id }) => data.id === id)
+    const { id, seq } = operations.value[index + 1]
     
     api.operation.updateOne({ id, seq: seq - 1})
     api.operation.updateOne({ id: data.id, seq: data.seq + 1 })
 
-    return operationStore.moveDown(data.index)
+    return operationStore.moveDown(index)
   }
 
   currentAction.value = key

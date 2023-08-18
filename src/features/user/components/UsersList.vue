@@ -22,26 +22,20 @@ const { session } = useAuth()
 
 const data = computed(() => {
   return props.data.map(user => {
+    const actions = ['Update', 'Change password']
+
+    if (user.id !== session.value?.user.id) {
+      actions.push('Delete')
+    }
+
     const normalizedLastLogin = user.lastLogin
       ? new Date(user.lastLogin).toLocaleString('en-CA')
       : ''
 
-    const actions = ['Edit', 'Change password']
-
-    if (user.id !== session.value?.user.id) {
-      if (!user.isDisabled) {
-        actions.push('Disable')
-      } else {
-        actions.push('Enable')
-      }
-
-      actions.push('Remove')
-    }
-
     return {
+      _: { actions },
       ...user,
-      normalizedLastLogin,
-      actions
+      normalizedLastLogin
     }
   })
 })

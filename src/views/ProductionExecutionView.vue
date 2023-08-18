@@ -52,20 +52,22 @@ const onOperationBatchAction = ({ key, data }) => {
 watch(operation, ({ name }) => router.push(`/production/execution/${toSlug(name)}`))
 
 onMounted(async () => {
-  const { operations } = useOperationStore()
+  if (props.operationSlug) {
+    const { operations } = useOperationStore()
 
-  const { id, name, isBatch, hasEquipment } = Boolean(props.operationSlug)
-    ? operations.value.find(({ name }) => props.operationSlug === toSlug(name))
-    : operations.value[0]
+    const { id, name, isBatch, hasEquipment } = Boolean(props.operationSlug)
+      ? operations.value.find(({ name }) => props.operationSlug === toSlug(name))
+      : operations.value[0]
 
-  operation.value = { id, name, isBatch, hasEquipment }
+    operation.value = { id, name, isBatch, hasEquipment }
 
-  const [jobs, operationBatches] = await Promise.all([
-    api.job.getAll(),
-    api.operationBatch.getAllNotClosed()
-  ])
+    const [jobs, operationBatches] = await Promise.all([
+      api.job.getAll(),
+      api.operationBatch.getAllNotClosed()
+    ])
 
-  productionExecution.initialize(jobs, operationBatches)
+    productionExecution.initialize(jobs, operationBatches)
+  }
 })
 </script>
 

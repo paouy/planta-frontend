@@ -28,19 +28,19 @@ const { isInitialized, organizationName } = useStore()
     </template>
 
     <template #sidebar>
-      <CfSidebarLink icon="storefront" parent>Sales
+      <CfSidebarLink icon="storefront" parent="/sales">Sales
         <template #children>
           <CfSidebarLink :to="{ name:'SalesOrders' }">Orders</CfSidebarLink>
           <CfSidebarLink :to="{ name: 'Customers' }">Customers</CfSidebarLink>
         </template>
       </CfSidebarLink>
-      <CfSidebarLink icon="pallet" parent>Production
+      <CfSidebarLink icon="pallet" parent="/production">Production
         <template #children>
           <CfSidebarLink :to="{ name: 'ProductionOrders' }">Overview</CfSidebarLink>
           <CfSidebarLink :to="{ name: 'ProductionExecution' }">Execution</CfSidebarLink>
         </template>
       </CfSidebarLink>
-      <CfSidebarLink icon="category" parent>Inventory
+      <CfSidebarLink icon="category" parent="/inventory">Inventory
         <template #children>
           <CfSidebarLink :to="{ name: 'Products' }">Products</CfSidebarLink>
           <CfSidebarLink :to="{ name: 'Materials' }">Materials</CfSidebarLink>
@@ -48,7 +48,7 @@ const { isInitialized, organizationName } = useStore()
       </CfSidebarLink>
       <CfSidebarLink icon="monitoring" :to="{ name: 'Reports' }">Reports</CfSidebarLink>
       <hr v-if="session.user?.isAdmin">
-      <CfSidebarLink icon="settings" parent v-if="session.user?.isAdmin">Settings
+      <CfSidebarLink icon="settings" parent="/settings" v-if="session.user?.isAdmin">Settings
         <template #children>
           <CfSidebarLink :to="{ name: 'Users' }">Users</CfSidebarLink>
           <CfSidebarLink :to="{ name: 'Configurations' }">Configurations</CfSidebarLink>

@@ -27,8 +27,8 @@ const filteredProductionRecords = computed(() => {
 
 watch(dateRange, ([startDate, endDate]) => {
   if (startDate && endDate) {
-    const from = new Date(`${startDate}, GMT+8`).getTime()
-    const to = new Date(`${endDate}, 23:59:59 GMT+8`).getTime()
+    const from = Date.parse(`${startDate}T00:00:00+08:00`)
+    const to = Date.parse(`${endDate}T23:59:59+08:00`)
 
     api.productionRecord
       .getAll({ from, to })
@@ -38,7 +38,7 @@ watch(dateRange, ([startDate, endDate]) => {
 </script>
 
 <template>
-  <CfAppView>
+  <CfAppView wide>
     <CfAppViewHeader title="Reports">
       <template #actions>
         <DateRangeInput v-model="dateRange"/>

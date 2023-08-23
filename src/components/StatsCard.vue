@@ -40,11 +40,14 @@ const props = defineProps({
   ul {
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, minmax(8rem, 1fr));
+    white-space: nowrap;
     margin-top: 1rem;
+    overflow-x: auto;
 
     li {
       border-right: 1px solid var(--cf-gray-7);
+      padding-right: 1rem;
 
       &:last-child {
         border-right: none;

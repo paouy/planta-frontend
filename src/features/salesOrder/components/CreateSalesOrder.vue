@@ -196,11 +196,7 @@ api.product.getAll().then(data => {
 
   col {
     &:first-child {
-      width: 24rem;
-    }
-
-    &:nth-child(2) {
-      width: 10rem;
+      width: 50%;
     }
   }
 
@@ -226,6 +222,22 @@ api.product.getAll().then(data => {
           height: 1.25rem;
           width: 1.25rem;
         }
+      }
+    }
+  }
+}
+
+@media (min-width: 880px) {
+  .createSalesOrderItems {
+    max-width: 40rem;
+    
+    col {
+      &:first-child {
+        width: 60%;
+      }
+
+      &:nth-child(2) {
+        width: 30%;
       }
     }
   }

@@ -71,10 +71,15 @@ const list = computed({
   display: flex;
   gap: 1rem;
   align-items: flex-end;
+  flex-wrap: wrap;
   margin-bottom: 1.5rem;
+}
 
-  > :not(:last-child) {
-    max-width: 12rem;
+@media (min-width: 880px) {
+  .productionExecutionFilters {
+    > :not(:last-child) {
+      max-width: 12rem;
+    }
   }
 }
 </style>

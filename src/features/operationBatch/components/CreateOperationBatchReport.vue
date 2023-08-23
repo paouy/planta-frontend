@@ -181,41 +181,19 @@ watchEffect(() => {
   }
 
   table {
-    table-layout: fixed;
     width: 100%;
   }
 
-  col {
-    width: 13.5rem;
-
-    &:first-child {
-      width: 24rem;
-    }
-  }
-
   tr {
-    &:hover,
-    &:focus-within {
-      background: var(--cf-gray-9);
-    }
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
   }
 
   td {
-    padding: 0.5rem;
-
     &:first-child {
-      padding-left: 0;
+      grid-column: span 2;
     }
-
-    &:last-child {
-      padding-right: 0;
-    }
-  }
-
-  .allowsReworkToggle {
-    display: flex;
-    align-items: center;
-    padding-top: 1.5625rem;
   }
 
   hr {
@@ -232,6 +210,49 @@ watchEffect(() => {
 
     p {
       margin-right: auto;
+    }
+  }
+}
+
+@media (min-width: 880px) {
+  .createOperationBatchReport {
+    table {
+      table-layout: fixed;
+    }
+
+    col {
+      width: 13.5rem;
+
+      &:first-child {
+        width: 24rem;
+      }
+    }
+
+    tr {
+      display: table-row;
+
+      &:hover,
+      &:focus-within {
+        background: var(--cf-gray-9);
+      }
+    }
+
+    td {
+      padding: 0.5rem;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+
+    .allowsReworkToggle {
+      display: flex;
+      align-items: center;
+      padding-top: 1.5625rem;
     }
   }
 }

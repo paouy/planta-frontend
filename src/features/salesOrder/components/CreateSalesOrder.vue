@@ -141,7 +141,7 @@ api.product.getAll().then(data => {
               @click="removeItem(index)"
               v-if="ctx.items.length > 1"
             >
-              <span class="material-symbols-outlined">close</span>
+              <span></span>
             </CfFilledButton>
           </td>
         </tr>
@@ -217,7 +217,16 @@ api.product.getAll().then(data => {
     }
 
     button {
-      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+      span {
+        &::before {
+          display: block;
+          content: '';
+          background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M256-213.847 213.847-256l224-224-224-224L256-746.153l224 224 224-224L746.153-704l-224 224 224 224L704-213.847l-224-224-224 224Z"/></svg>') center;
+          background-size: contain;
+          height: 1.25rem;
+          width: 1.25rem;
+        }
+      }
     }
   }
 }

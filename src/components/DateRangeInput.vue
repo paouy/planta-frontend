@@ -69,7 +69,7 @@ onBeforeMount(() => emit('update:modelValue', [getPreviousDate(today, days.value
           :max="today"
         >
         <button @click="days = 7">
-          <span class="material-symbols-outlined">close</span>
+          <span></span>
         </button>
       </div>
     </div>
@@ -79,9 +79,18 @@ onBeforeMount(() => emit('update:modelValue', [getPreviousDate(today, days.value
 <style lang="scss">
 .date-range-input {
   button {
-    font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 20;
     padding: 0 0.25rem;
-    height: 1.5rem;
+
+    span {
+      &::before {
+        display: block;
+        content: '';
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M256-213.847 213.847-256l224-224-224-224L256-746.153l224 224 224-224L746.153-704l-224 224 224 224L704-213.847l-224-224-224 224Z"/></svg>') center;
+        background-size: contain;
+        height: 1.25rem;
+        width: 1.25rem;
+      }
+    }
   }
 }
 </style>

@@ -2,30 +2,29 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuth } from './features/auth/index.js'
 import CleanLayout from './components/CleanLayout.vue'
 import DefaultLayout from './components/DefaultLayout.vue'
-
-const AccountView = () => import('./views/AccountView.vue')
-const ArchivedSalesOrdersView = () => import('./views/ArchivedSalesOrdersView.vue')
-const CategoriesView = () => import('./views/CategoriesView.vue')
-const ConfigurationsView = () => import('./views/ConfigurationsView.vue')
-const CreateOperationBatchReportView = () => import('./views/CreateOperationBatchReportView.vue')
-const CreateSalesOrderView = () => import('./views/CreateSalesOrderView.vue')
-const CustomersView = () => import('./views/CustomersView.vue')
-const EquipmentsView = () => import('./views/EquipmentsView.vue')
-const LoginView = () => import('./views/LoginView.vue')
-const MaterialsView = () => import('./views/MaterialsView.vue')
-const OperationsView = () => import('./views/OperationsView.vue')
-const ProductionExecutionView = () => import('./views/ProductionExecutionView.vue')
-const ProductionOrdersView = () => import('./views/ProductionOrdersView.vue')
-const ProductionOrderView = () => import('./views/ProductionOrderView.vue')
-const ProductsView = () => import('./views/ProductsView.vue')
-const ProductView = () => import('./views/ProductView.vue')
-const ReleasedProductionOrdersView = () => import('./views/ReleasedProductionOrdersView.vue')
-const ReportView = () => import('./views/ReportView.vue')
-const SalesOrdersView = () => import('./views/SalesOrdersView.vue')
-const SalesOrderView = () => import('./views/SalesOrderView.vue')
-const UsersView = () => import('./views/UsersView.vue')
-const WorkersView = () => import('./views/WorkersView.vue')
-const WorkstationsView = () => import('./views/WorkstationsView.vue')
+import AccountView from './views/AccountView.vue'
+import ArchivedSalesOrdersView from './views/ArchivedSalesOrdersView.vue'
+import CategoriesView from './views/CategoriesView.vue'
+import ConfigurationsView from './views/ConfigurationsView.vue'
+import CreateOperationBatchReportView from './views/CreateOperationBatchReportView.vue'
+import CreateSalesOrderView from './views/CreateSalesOrderView.vue'
+import CustomersView from './views/CustomersView.vue'
+import EquipmentsView from './views/EquipmentsView.vue'
+import LoginView from './views/LoginView.vue'
+import MaterialsView from './views/MaterialsView.vue'
+import OperationsView from './views/OperationsView.vue'
+import ProductionExecutionView from './views/ProductionExecutionView.vue'
+import ProductionOrdersView from './views/ProductionOrdersView.vue'
+import ProductionOrderView from './views/ProductionOrderView.vue'
+import ProductsView from './views/ProductsView.vue'
+import ProductView from './views/ProductView.vue'
+import ReleasedProductionOrdersView from './views/ReleasedProductionOrdersView.vue'
+import ReportView from './views/ReportView.vue'
+import SalesOrdersView from './views/SalesOrdersView.vue'
+import SalesOrderView from './views/SalesOrderView.vue'
+import UsersView from './views/UsersView.vue'
+import WorkersView from './views/WorkersView.vue'
+import WorkstationsView from './views/WorkstationsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

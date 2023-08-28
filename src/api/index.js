@@ -7,6 +7,7 @@ import * as fulfillment from './fulfillment.js'
 import * as job from './job.js'
 import * as lookup from './lookup.js'
 import * as material from './material.js'
+import * as metafield from './metafield.js'
 import * as misc from './misc.js'
 import * as operation from './operation.js'
 import * as operationBatch from './operationBatch.js'
@@ -31,6 +32,7 @@ const api = {
   job,
   lookup,
   material,
+  metafield,
   misc,
   operation,
   operationBatch,

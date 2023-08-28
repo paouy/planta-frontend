@@ -12,6 +12,7 @@ import CustomersView from './views/CustomersView.vue'
 import EquipmentsView from './views/EquipmentsView.vue'
 import LoginView from './views/LoginView.vue'
 import MaterialsView from './views/MaterialsView.vue'
+import MetafieldsView from './views/MetafieldsView.vue'
 import OperationsView from './views/OperationsView.vue'
 import ProductionExecutionView from './views/ProductionExecutionView.vue'
 import ProductionOrdersView from './views/ProductionOrdersView.vue'
@@ -160,6 +161,10 @@ const router = createRouter({
               path: '',
               name: 'Configurations',
               component: ConfigurationsView
+            }, {
+              path: 'custom-data',
+              name: 'Metafields',
+              component: MetafieldsView
             }, {
               path: 'operations',
               name: 'Operations',

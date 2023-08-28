@@ -13,15 +13,31 @@ const operation = ref({
 
 const showAllJobsFilterFn = (job) => showAllJobs.value || job.seq === 1 ? true : Boolean(job.qtyInput)
 
-const unassignedJobs = computed(() => {
+const filteredJobs = computed(() => {
   return jobs.value
     .filter(job => job.operation.id === operation.value.id)
-    .filter(job => !job.workstation)
     .filter(showAllJobsFilterFn)
 })
 
+const unassignedJobs = computed(() => {
+  return filteredJobs.value.filter(job => {
+    const qtyMade = job.qtyOutput - job.qtyReject + job.qtyRework
+    const qtyDemand = job.qtyInput - job.qtyShortfall
+    
+    const condition = qtyMade === 0 && qtyDemand === 0
+      ? job.status === 'OPEN'
+      : qtyDemand > qtyMade
+
+    return job.workstation === null && condition
+  })
+})
+
 const currentJobs = computed(() => {
-  return jobs.value
+  const unassignedJobIds = unassignedJobs.value.map(({ id }) => id)
+
+  return filteredJobs.value
+    .filter(({ id }) => !unassignedJobIds.includes(id))
+    .filter(job => workstation.value ? job.workstation.id === workstation.value.id : true)
     .map(job => {
       const nextJob = jobs.value.find(
         ({ productionOrder, seq }) =>
@@ -41,12 +57,12 @@ const currentJobs = computed(() => {
         job.isLocked = false
       }
 
+      if (['PAUSED', 'CLOSED'].includes(job.status) && job.operation.isBatch) {
+        job.isLocked = true
+      }
+
       return job
     })
-    .filter(job => job.operation.id === operation.value.id)
-    .filter(job => job.workstation)
-    .filter(job => workstation.value ? job.workstation.id === workstation.value.id : true)
-    .filter(showAllJobsFilterFn)
 })
 
 const currentOperationBatches = computed(() => {

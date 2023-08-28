@@ -80,7 +80,7 @@ const computedData = computed(() => {
       <td>{{ data.qty }}</td>
       <td>{{ data.timeEstimatedMins }}</td>
       <td><StatusBadge :data="data.status"/></td>
-      <td>{{ data.workstation.name }}</td>
+      <td>{{ data.workstation?.name }}</td>
     </template>
   </CfDataTable>
 </template>

@@ -12,7 +12,8 @@ const ctx = computed(() => ({
   productionOrderId: props.job.productionOrder.id,
   operation: props.job.operation,
   type: 'SHORTFALL',
-  qty: props.job.qtyInput - (props.job.qtyOutput - props.job.qtyReject + props.job.qtyRework)
+  qty: props.job.qtyInput - (props.job.qtyOutput - props.job.qtyReject + props.job.qtyRework),
+  meta: null
 }))
 
 const normalizedJob = computed(() => `${props.job.productionOrder.publicId} — ${props.job.product.normalizedName}`)

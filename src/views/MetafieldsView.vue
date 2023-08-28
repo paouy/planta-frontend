@@ -38,7 +38,7 @@ api.metafield
 <template>
   <CfAppView>
     <CfBreadcrumbs :data="breadcrumbs"/>
-    <CfAppViewHeader title="Custom Data" description="Configure custom data fields for products and orders.">
+    <CfAppViewHeader title="Custom Data" description="Configure custom data fields for products and operations.">
       <template #actions>
         <CfFilledButton @click="currentAction = 'CREATE'">
           Add custom field

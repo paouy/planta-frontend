@@ -40,7 +40,7 @@ const computedData = computed(() => {
 
     let actions = false
 
-    if (job.status === 'OPEN') {
+    if (job.status === 'OPEN' || job.status === 'PAUSED') {
       actions = ['Add record', 'Reassign']
     }
 

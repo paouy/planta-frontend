@@ -10,15 +10,18 @@ const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ job: Object, requireEquipment: Boolean })
 
 const productionRecordTypeOptions = computed(() => {
+  const allOptions = [
+    { label: 'Output', value: 'OUTPUT' },
+    { label: 'Reject', value: 'REJECT' },
+    { label: 'Rework', value: 'REWORK' }
+  ]
+
   const options = {
     OPEN: [
       { label: 'Output', value: 'OUTPUT' }
     ],
-    IN_PROGRESS: [
-      { label: 'Output', value: 'OUTPUT' },
-      { label: 'Reject', value: 'REJECT' },
-      { label: 'Rework', value: 'REWORK' }
-    ],
+    IN_PROGRESS: allOptions,
+    PAUSED: allOptions,
     CLOSED: [
       { label: 'Reject', value: 'REJECT' }
     ]

@@ -1,11 +1,16 @@
 <script setup>
 import { ref } from 'vue'
 import { CfDialog, CfInput, CfSelect, CfSwitch, CfTagsInput, CfFilledButton } from 'vue-cf-ui'
+import { OperationSelect } from '../../operation/index.js'
 import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 const typeOptions = ['Text', 'Number', 'Date', 'Dimension', 'Volume', 'Weight']
-const resourceOptions = ['Product', 'Production Order', 'Sales Order']
+  .map(type => ({ label: type, value: type.toUpperCase() }))
+const resourceOptions = [
+  { label: 'Product', value: 'PRODUCT' },
+  { label: 'Operation', value: 'OPERATION' }
+]
 
 const isLoading = ref(false)
 const ctx = ref({
@@ -14,6 +19,8 @@ const ctx = ref({
   resource: '',
   attributes: []
 })
+const resource = ref('')
+const operationId = ref('')
 const attributes = ref({
   'MIN': '',
   'MAX': '',
@@ -26,7 +33,11 @@ const invoke = async () => {
   try {
     isLoading.value = true
 
-    if (ctx.value.type === 'Text') {
+    ctx.value.resource = resource.value === 'OPERATION'
+      ? `OPERATION:${operationId.value}`
+      : 'PRODUCT'
+
+    if (ctx.value.type === 'TEXT') {
       if (showTagsInput.value && attributes.value.OPTIONS.length) {
         ctx.value.attributes.push({
           type: 'OPTIONS',
@@ -35,7 +46,7 @@ const invoke = async () => {
       }
     }
 
-    if (ctx.value.type === 'Number') {
+    if (ctx.value.type === 'NUMBER') {
       ['MIN', 'MAX', 'STEP'].forEach(key => {
         const attribute = attributes.value[key]
 
@@ -70,10 +81,15 @@ const invoke = async () => {
           required
         />
         <CfSelect
-          v-model="ctx.resource"
+          v-model="resource"
           label="Resource"
           :options="resourceOptions"
           required
+        />
+        <OperationSelect
+          v-model="operationId"
+          :keys="['id']"
+          v-if="resource === 'OPERATION'"
         />
         <CfSelect
           v-model="ctx.type"
@@ -85,28 +101,28 @@ const invoke = async () => {
         <CfSwitch
           v-model="showTagsInput"
           label="Limit to preset options"
-          v-if="ctx.type === 'Text'"
+          v-if="ctx.type === 'TEXT'"
         />
         <CfTagsInput
           v-model="attributes.OPTIONS"
           label="Options"
-          v-if="ctx.type === 'Text' && showTagsInput"
+          v-if="ctx.type === 'TEXT' && showTagsInput"
         />
 
         <CfInput
           v-model="attributes.MIN"
           label="Minimum value"
-          v-if="ctx.type === 'Number'"
+          v-if="ctx.type === 'NUMBER'"
         />
         <CfInput
           v-model="attributes.MAX"
           label="Maximum value"
-          v-if="ctx.type === 'Number'"
+          v-if="ctx.type === 'NUMBER'"
         />
         <CfInput
           v-model="attributes.STEP"
           label="Step size"
-          v-if="ctx.type === 'Number'"
+          v-if="ctx.type === 'NUMBER'"
         />
       </form>
     </template>

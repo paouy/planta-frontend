@@ -146,7 +146,7 @@ api.fulfillment
       </template>
     </CfAppViewHeader>
 
-    <CfHeader title="Order details"/>
+    <CfHeader title="Overview"/>
     <CfSummaryList :data="summary"/>
 
     <CfHeader

@@ -45,7 +45,11 @@ const computedData = computed(() => {
     }
 
     if (job.status === 'IN_PROGRESS') {
-      actions = ['Add record', 'Reassign', 'Close']
+      actions = ['Add record', 'Reassign']
+
+      if (job.isAllowedShortfall) {
+        actions.push('Close')
+      }
     }
 
     if (job.status === 'CLOSED') {

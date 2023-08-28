@@ -39,26 +39,35 @@ const currentJobs = computed(() => {
     .filter(({ id }) => !unassignedJobIds.includes(id))
     .filter(job => workstation.value ? job.workstation.id === workstation.value.id : true)
     .map(job => {
-      const nextJob = jobs.value.find(
-        ({ productionOrder, seq }) =>
-          job.productionOrder.id === productionOrder.id &&
-          job.seq === seq - 1
-      )
-
-      if (!job.qtyInput) {
-        job.isLocked = true
-      }
-
-      if (nextJob?.status === 'CLOSED') {
-        job.isLocked = true
-      }
-
-      if (!nextJob) {
-        job.isLocked = false
-      }
+      job.isAllowedShortfall = true
 
       if (['PAUSED', 'CLOSED'].includes(job.status) && job.operation.isBatch) {
         job.isLocked = true
+      }
+
+      else if (job.seq > 1) {
+        const relatedJobs = jobs.value.filter(({ productionOrder }) =>
+          job.productionOrder.id === productionOrder.id
+        )
+
+        const prevJob = relatedJobs.find(({ seq }) => job.seq === seq + 1)
+        const nextJob = relatedJobs.find(({ seq }) => job.seq === seq - 1)
+
+        if (prevJob.status !== 'CLOSED') {
+          job.isAllowedShortfall = false
+        }
+
+        if (nextJob) {
+          if (nextJob.status === 'CLOSED') {
+            job.isLocked = true
+          }
+        } else {
+          job.isLocked = false
+        }
+      }
+      
+      else {
+        job.isLocked = false
       }
 
       return job
@@ -83,22 +92,12 @@ export const useProductionExecution = () => {
   }
   
   const createProductionRecord = (productionRecord) => {
-    const job = jobs.value.find(
-      ({ productionOrder, operation }) =>
-        productionRecord.productionOrderId === productionOrder.id &&
-        productionRecord.operation.id === operation.id
+    const relatedJobs = jobs.value.filter(({ productionOrder }) =>
+      productionRecord.productionOrderId === productionOrder.id
     )
 
-    const prevJob = jobs.value.find(
-      ({ productionOrder, seq }) =>
-        productionRecord.productionOrderId === productionOrder.id &&
-        job.seq === seq + 1
-    )
-
-    const nextJob = jobs.value.find(
-      ({ productionOrder, seq }) =>
-        productionRecord.productionOrderId === productionOrder.id &&
-        job.seq === seq - 1
+    const job = relatedJobs.find(({ operation }) =>
+      productionRecord.operation.id === operation.id
     )
 
     const keys = {
@@ -116,12 +115,35 @@ export const useProductionExecution = () => {
 
     job.status = qtyMade >= qtyDemand ? 'CLOSED' : 'IN_PROGRESS'
 
-    if (job.status === 'CLOSED' && job.seq > 1 && prevJob?.status !== 'CLOSED') {
-      job.status = 'PAUSED'
-    }
+    const prevJob = relatedJobs.find(({ seq }) => job.seq === seq + 1)
+    const nextJob = relatedJobs.find(({ seq }) => job.seq === seq - 1)
 
     if (nextJob) {
       nextJob.qtyInput = qtyMade
+    }
+
+    if (job.status === 'CLOSED') {
+      if (job.operation.isBatch) {
+        job.workstation = null
+      }
+
+      if (job.seq > 1) {
+        if (prevJob.status !== 'CLOSED') {
+          job.status = 'PAUSED'
+        }
+    
+        if (nextJob) {
+          const nextJobQtyMade = nextJob.qtyOutput - nextJob.qtyReject + nextJob.qtyRework
+          const nextJobQtyDemand = nextJob.qtyInput - nextJob.qtyShortfall
+
+          console.log('made', nextJobQtyMade)
+          console.log('demand', nextJobQtyDemand)
+    
+          if (nextJobQtyMade >= nextJobQtyDemand) {
+            nextJob.status = 'CLOSED'
+          }
+        }
+      }
     }
   }
 

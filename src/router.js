@@ -7,6 +7,7 @@ import ArchivedSalesOrdersView from './views/ArchivedSalesOrdersView.vue'
 import CategoriesView from './views/CategoriesView.vue'
 import ConfigurationsView from './views/ConfigurationsView.vue'
 import CreateOperationBatchReportView from './views/CreateOperationBatchReportView.vue'
+import CreateProductView from './views/CreateProductView.vue'
 import CreateSalesOrderView from './views/CreateSalesOrderView.vue'
 import CustomersView from './views/CustomersView.vue'
 import EquipmentsView from './views/EquipmentsView.vue'
@@ -23,6 +24,8 @@ import ReleasedProductionOrdersView from './views/ReleasedProductionOrdersView.v
 import ReportView from './views/ReportView.vue'
 import SalesOrdersView from './views/SalesOrdersView.vue'
 import SalesOrderView from './views/SalesOrderView.vue'
+import UpdateProductView from './views/UpdateProductView.vue'
+import WorkerReportView from './views/WorkerReportView.vue'
 import UsersView from './views/UsersView.vue'
 import WorkersView from './views/WorkersView.vue'
 import WorkstationsView from './views/WorkstationsView.vue'
@@ -100,6 +103,11 @@ const router = createRouter({
           redirect: '/production/execution/',
           children: [
             {
+              path: 'add-worker-report',
+              name: 'WorkerReport',
+              component: WorkerReportView
+            },
+            {
               path: ':operationSlug?',
               component: ProductionExecutionView,
               props: true
@@ -128,6 +136,15 @@ const router = createRouter({
               name: 'Product',
               component: ProductView,
               props: true
+            }, {
+              path: ':productId/edit',
+              name: 'UpdateProduct',
+              component: UpdateProductView,
+              props: true
+            }, {
+              path: 'add',
+              name: 'CreateProduct',
+              component: CreateProductView
             }
           ]
         }, {

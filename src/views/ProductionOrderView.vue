@@ -77,7 +77,7 @@ api.productionRecord
       </template>
     </CfAppViewHeader>
 
-    <CfHeader title="Production details"/>
+    <CfHeader title="Overview"/>
     <CfSummaryList :data="summary"/>
 
     <CfHeader title="Jobs"/>

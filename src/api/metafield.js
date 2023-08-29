@@ -9,9 +9,9 @@ export const createOne = async (data) => {
   }
 }
 
-export const getAll = async () => {
+export const getAll = async (params) => {
   try {
-    const { data: metafields } = await axios.get('/v1/metafields')
+    const { data: metafields } = await axios.get('/v1/metafields', { params })
     return metafields
   } catch (error) {
     throw Error(error.response.data.message)

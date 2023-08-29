@@ -40,12 +40,16 @@ const computedData = computed(() => {
 
     let actions = false
 
-    if (job.status === 'OPEN') {
+    if (job.status === 'OPEN' || job.status === 'PAUSED') {
       actions = ['Add record', 'Reassign']
     }
 
     if (job.status === 'IN_PROGRESS') {
-      actions = ['Add record', 'Reassign', 'Close']
+      actions = ['Add record', 'Reassign']
+
+      if (job.isAllowedShortfall) {
+        actions.push('Close')
+      }
     }
 
     if (job.status === 'CLOSED') {
@@ -80,7 +84,7 @@ const computedData = computed(() => {
       <td>{{ data.qty }}</td>
       <td>{{ data.timeEstimatedMins }}</td>
       <td><StatusBadge :data="data.status"/></td>
-      <td>{{ data.workstation.name }}</td>
+      <td>{{ data.workstation?.name }}</td>
     </template>
   </CfDataTable>
 </template>

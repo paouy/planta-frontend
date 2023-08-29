@@ -1,9 +1,11 @@
 <script setup>
-import { ref, computed, watchEffect } from 'vue'
+import { ref, computed } from 'vue'
+import { watchOnce } from '@vueuse/core'
 import { useOperationStore } from '../../operation/store.js'
 import { CfInput, CfSwitch, CfFilledButton } from 'vue-cf-ui'
-import WorkerSelect from '../../worker/components/WorkerSelect.vue'
-import EquipmentSelect from '../../equipment/components/EquipmentSelect.vue'
+import { EquipmentSelect } from '../../equipment/index.js'
+import { Metafield } from '../../metafield/index.js'
+import { WorkerSelect } from '../../worker/index.js'
 import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -12,6 +14,7 @@ const props = defineProps({ operationBatch: Object, jobs: Array })
 const { operations } = useOperationStore()
 
 const isLoading = ref(false)
+const metafields = ref([])
 const lineItems = ref([])
 const ctx = ref({
   id: null,
@@ -27,6 +30,7 @@ const ctx = ref({
   equipment: {
     id: null
   },
+  meta: null,
   productionRecords: []
 })
 
@@ -82,7 +86,34 @@ const invoke = async () => {
   }
 }
 
-watchEffect(() => {
+const setupMetafields = (data) => {
+  if (data.length) {
+    metafields.value = data
+    ctx.value.meta = {}
+
+    data.forEach(({ id, type }) => {
+      const meta = { value: null } 
+      
+      if (['DIMENSION', 'VOLUME', 'WEIGHT'].includes(type)) {
+        meta.uom = null
+      }
+
+      ctx.value.meta[id] = meta
+    })
+  }
+}
+
+watchOnce(() => props.operationBatch, () => {
+  ctx.value.id = props.operationBatch.id
+  ctx.value.operation.id = props.operationBatch.operationId
+  ctx.value.workstation.id = props.operationBatch.workstation.id
+
+  api.metafield
+    .getAll({ resource: `OPERATION:${props.operationBatch.operationId}` })
+    .then(setupMetafields)
+})
+
+watchOnce(() => props.jobs, () => {
   lineItems.value = props.jobs.map(job => {
     const qtyMade = job.qtyOutput - job.qtyReject + job.qtyRework
     
@@ -93,10 +124,6 @@ watchEffect(() => {
       requiresRework: false
     }
   })
-
-  ctx.value.id = props.operationBatch.id
-  ctx.value.operation.id = props.operationBatch.operationId
-  ctx.value.workstation.id = props.operationBatch.workstation.id
 })
 </script>
 
@@ -111,6 +138,12 @@ watchEffect(() => {
         v-model="ctx.equipment.id"
         :keys="['id']"
         :operation-id="operation?.id"
+      />
+      <Metafield
+        v-for="field in metafields"
+        v-model="ctx.meta[field.id]"
+        :key="field.id"
+        :data="field"
       />
     </fieldset>
     <table>

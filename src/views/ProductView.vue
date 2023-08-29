@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { CfAppView, CfAppViewHeader, CfBreadcrumbs, CfOutlinedButton, CfHeader, CfSummaryList, CfActionCard } from 'vue-cf-ui'
 import { AllocationsList } from '../features/allocation/index.js'
-import { DeleteProduct, UpdateProduct } from '../features/product/index.js'
+import { DeleteProduct } from '../features/product/index.js'
 import { ProductionOrdersByProductList } from '../features/productionOrder/index.js'
 import { CreateProductMaterial, DeleteProductMaterial, ProductMaterialsList, UpdateProductMaterial } from '../features/productMaterial/index.js'
 import api from '../api/index.js'
@@ -24,6 +24,7 @@ const product = ref({
     id: '',
     name: ''
   },
+  meta: null,
   qtyAvailable: null,
   qtyWip: null
 })
@@ -33,7 +34,7 @@ const productMaterials = ref([])
 const productMaterial = ref(null)
 
 const breadcrumbs = computed(() => [{ name: 'Products', path: '/inventory/products' }, { name: product.value.sku }])
-const productSummary = computed(() => {
+const productOverview = computed(() => {
   return [
     {
       label: 'Category',
@@ -49,6 +50,12 @@ const productSummary = computed(() => {
       value: `${product.value.qtyAvailable} ${product.value.uom}`
     }
   ]
+})
+const productMeta = computed(() => {
+  return Object.entries(product.value.meta).map(([_, meta]) => ({
+    label: meta.label,
+    value: `${meta.value} ${meta.uom || ''}`
+  }))
 })
 
 const productMaterialActions = {
@@ -90,14 +97,20 @@ api.allocation
     <CfBreadcrumbs :data="breadcrumbs"/>
     <CfAppViewHeader :title="product.name">
       <template #actions>
-        <CfOutlinedButton :disabled="!!product.qtyWip" @click="currentAction.product = 'EDIT'">
+        <CfOutlinedButton
+          :disabled="!!product.qtyWip"
+          :to="{ name: 'UpdateProduct', params: { productId: product.id } }"
+        >
           Edit product
         </CfOutlinedButton>
       </template>
     </CfAppViewHeader>
 
-    <CfHeader title="Product details"/>
-    <CfSummaryList :data="productSummary"/>
+    <CfHeader title="Overview"/>
+    <CfSummaryList :data="productOverview"/>
+
+    <CfHeader title="Other details" v-if="product.meta"/>
+    <CfSummaryList :data="productMeta" v-if="product.meta"/>
 
     <CfHeader title="Product materials" subtitle="Materials required to produce a single unit of the product.">
       <template #action>
@@ -130,12 +143,6 @@ api.allocation
     </CfActionCard>
   </CfAppView>
 
-  <UpdateProduct
-    :data="product"
-    @success="updatedProduct => product = updatedProduct"
-    @cancel="currentAction.product = null"
-    v-if="currentAction.product === 'EDIT'"
-  />
   <DeleteProduct
     :data="product"
     @success="router.push({ name: 'Products' })"

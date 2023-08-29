@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { CfAppView, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
-import { CreateProduct, IncrementProduct, ProductsList } from '../features/product/index.js'
+import { IncrementProduct, ProductsList } from '../features/product/index.js'
 import { CreateProductionOrder } from '../features/productionOrder/index.js'
 import api from '../api/index.js'
 
@@ -26,13 +26,6 @@ const onProductsListAction = ({ key, data }) => {
   product.value = data
 }
 
-const onCreateProduct = ({ id: productId }) => {
-  router.push({
-    name: 'Product',
-    params: { productId }
-  })
-}
-
 const onCreateProductionOrder = (data) => {
   const product = products.value.find(({ id }) => data.product.id === id)
   product.qtyWip += data.qty
@@ -50,7 +43,7 @@ onMounted(async () => products.value = await api.product.getAll())
   <CfAppView>
     <CfAppViewHeader surtitle="Inventory" title="Products">
       <template #actions>
-        <CfFilledButton @click="currentAction = 'CREATE'">
+        <CfFilledButton :to="{ name: 'CreateProduct' }">
           Add product
         </CfFilledButton>
       </template>
@@ -60,12 +53,6 @@ onMounted(async () => products.value = await api.product.getAll())
       @action="onProductsListAction"
     />
   </CfAppView>
-
-  <CreateProduct
-    @success="onCreateProduct"
-    @cancel="currentAction = null"
-    v-if="currentAction === 'CREATE'"
-  />
 
   <CreateProductionOrder
     :product="product"

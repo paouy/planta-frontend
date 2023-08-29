@@ -1,6 +1,6 @@
 import axios from '../axios.js'
 
-export const createOne = async (data) => {
+export const create = async (data) => {
   try {
     const { data: productionRecord } = await axios.post('/v1/production-records', data)
     return productionRecord

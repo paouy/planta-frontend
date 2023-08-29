@@ -6,17 +6,6 @@ import { CfAppView, CfAppViewHeader, CfActionCard, CfFilledButton } from 'vue-cf
   <CfAppView>
     <CfAppViewHeader surtitle="Settings" title="Configurations"/>
 
-    <CfActionCard title="Custom Data">
-      <template #body>
-        <p>Configure custom data fields for products and orders.</p>
-      </template>
-      <template #action>
-        <CfFilledButton :to="{ name: 'Metafields' }">
-          Configure custom data
-        </CfFilledButton>
-      </template>
-    </CfActionCard>
-
     <CfActionCard title="Operations">
       <template #body>
         <p>Set up the operations in your production.</p>
@@ -68,6 +57,17 @@ import { CfAppView, CfAppViewHeader, CfActionCard, CfFilledButton } from 'vue-cf
       <template #action>
         <CfFilledButton :to="{ name: 'Categories' }">
           Configure categories
+        </CfFilledButton>
+      </template>
+    </CfActionCard>
+
+    <CfActionCard title="Custom Data">
+      <template #body>
+        <p>Configure custom data fields for products and operations.</p>
+      </template>
+      <template #action>
+        <CfFilledButton :to="{ name: 'Metafields' }">
+          Configure custom data
         </CfFilledButton>
       </template>
     </CfActionCard>

@@ -1,12 +1,13 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { CfDialog, CfInput, CfSwitch, CfFilledButton } from 'vue-cf-ui'
+import { ref, computed, onMounted } from 'vue'
+import { CfDialog, CfInput, CfSwitch, CfSelect, CfFilledButton } from 'vue-cf-ui'
 import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
+const metafieldOptions = ref([])
 const ctx = ref({
   id: '',
   name: '',
@@ -15,6 +16,13 @@ const ctx = ref({
   allowsRework: true,
   isBatch: false,
   batchSizeParameter: null
+})
+
+const parameterOptions = computed(() => {
+  return [
+    { label: 'Total units', value: 'TOTAL_UNITS' },
+    ...metafieldOptions.value
+  ]
 })
 
 const invoke = async () => {
@@ -31,6 +39,13 @@ const invoke = async () => {
     isLoading.value = false
   }
 }
+
+api.metafield.getAll({ resource: 'PRODUCT' }).then(data => {
+  metafieldOptions.value = data.map(({ id, name }) => ({
+    label: name,
+    value: id
+  }))
+})
 
 onMounted(() => Object.assign(ctx.value, props.data))
 </script>
@@ -60,9 +75,10 @@ onMounted(() => Object.assign(ctx.value, props.data))
           v-model="ctx.isBatch"
           label="Run by batch"
         />
-        <CfInput
+        <CfSelect
           v-model="ctx.batchSizeParameter"
           label="Batch size parameter"
+          :options="parameterOptions"
           required
           v-if="ctx.isBatch"
         />

@@ -12,7 +12,8 @@ const ctx = computed(() => ({
   productionOrderId: props.job.productionOrder.id,
   operation: props.job.operation,
   type: 'SHORTFALL',
-  qty: props.job.qtyInput - (props.job.qtyOutput - props.job.qtyReject + props.job.qtyRework)
+  qty: props.job.qtyInput - (props.job.qtyOutput - props.job.qtyReject + props.job.qtyRework),
+  meta: null
 }))
 
 const normalizedJob = computed(() => `${props.job.productionOrder.publicId} — ${props.job.product.normalizedName}`)
@@ -23,7 +24,7 @@ const invoke = async () => {
   try {
     isLoading.value = true
 
-    const productionRecord = await api.productionRecord.createOne(ctx.value)
+    const productionRecord = await api.productionRecord.create(ctx.value)
 
     emit('success', productionRecord)
     emit('cancel')

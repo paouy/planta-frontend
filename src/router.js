@@ -25,6 +25,7 @@ import ReportView from './views/ReportView.vue'
 import SalesOrdersView from './views/SalesOrdersView.vue'
 import SalesOrderView from './views/SalesOrderView.vue'
 import UpdateProductView from './views/UpdateProductView.vue'
+import WorkerReportView from './views/WorkerReportView.vue'
 import UsersView from './views/UsersView.vue'
 import WorkersView from './views/WorkersView.vue'
 import WorkstationsView from './views/WorkstationsView.vue'
@@ -101,6 +102,11 @@ const router = createRouter({
           name: 'ProductionExecution',
           redirect: '/production/execution/',
           children: [
+            {
+              path: 'add-worker-report',
+              name: 'WorkerReport',
+              component: WorkerReportView
+            },
             {
               path: ':operationSlug?',
               component: ProductionExecutionView,

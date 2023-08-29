@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { CfAppView, CfAppViewHeader } from 'vue-cf-ui'
+import { CfAppView, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
 import { AssignJob, UnassignedJobsCallout } from '../features/job/index.js'
 import { useProductionExecution, ProductionExecutionFilters, ProductionExecutionList } from '../features/misc/index.js'
 import { useOperationStore } from '../features/operation/index.js'
@@ -71,7 +71,13 @@ onMounted(async () => {
 
 <template>
   <CfAppView>
-    <CfAppViewHeader surtitle="Production" title="Execution"/>
+    <CfAppViewHeader surtitle="Production" title="Execution">
+      <template #actions>
+        <CfFilledButton :to="{ name: 'WorkerReport' }">
+          Add worker report
+        </CfFilledButton>
+      </template>
+    </CfAppViewHeader>
     <ProductionExecutionFilters
       v-model:operation="operation"
       v-model:workstation="workstation"

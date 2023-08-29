@@ -24,7 +24,7 @@ const invoke = async () => {
   try {
     isLoading.value = true
 
-    const productionRecord = await api.productionRecord.createOne(ctx.value)
+    const productionRecord = await api.productionRecord.create(ctx.value)
 
     emit('success', productionRecord)
     emit('cancel')

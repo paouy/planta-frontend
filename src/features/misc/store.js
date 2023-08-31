@@ -9,7 +9,7 @@ const isInitializing = ref(false)
 export const useStore = () => {
   const setOrganizatioName = (data) => {
     organizationName.value = data
-    title.value = `${data} — Planta OS`
+    title.value = `${data} — Planta`
   }
 
   const startInitialization = () => {
@@ -22,7 +22,7 @@ export const useStore = () => {
   }
 
   const reset = () => {
-    title.value = 'Planta OS'
+    title.value = 'Planta'
     organizationName.value = null
     isInitialized.value = false
     isInitializing.value = false

@@ -1,6 +1,6 @@
 # planta-frontend
 
-Frontend for Planta OS
+Frontend for Planta
 
 ## Environment Variables
 

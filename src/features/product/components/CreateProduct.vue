@@ -10,6 +10,7 @@ const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
 const metafields = ref([])
+const productMeta = ref({})
 const ctx = ref({
   sku: '',
   name: '',
@@ -23,10 +24,12 @@ const invoke = async () => {
   try {
     isLoading.value = true
 
-    if (metafields.value.length) {
+    if (Object.values(productMeta.value).some(({ value }) => value !== null)) {
+      ctx.value.meta = {}
+
       metafields.value.forEach(({ id }) => {
-        if (!ctx.value.meta[id].value) {
-          delete ctx.value.meta[id]
+        if (productMeta.value[id].value) {
+          ctx.value.meta[id] = productMeta.value[id]
         }
       })
     }
@@ -34,7 +37,6 @@ const invoke = async () => {
     const product = await api.product.createOne(ctx.value)
 
     emit('success', product)
-    emit('cancel')
   } catch (error) {
     alert(error)
   } finally {
@@ -45,7 +47,6 @@ const invoke = async () => {
 const setupMetafields = (data) => {
   if (data.length) {
     metafields.value = data
-    ctx.value.meta = {}
 
     data.forEach(({ id, type }) => {
       const meta = { value: null } 
@@ -54,7 +55,7 @@ const setupMetafields = (data) => {
         meta.uom = null
       }
 
-      ctx.value.meta[id] = meta
+      productMeta.value[id] = meta
     })
   }
 }
@@ -91,7 +92,7 @@ api.metafield
     <fieldset v-if="metafields.length">
       <Metafield
         v-for="field in metafields"
-        v-model="ctx.meta[field.id]"
+        v-model="productMeta[field.id]"
         :key="field.id"
         :data="field"
       />

@@ -28,6 +28,10 @@ const attributes = computed(() => {
 
   props.data.attributes.forEach(({ type, value }) => attributes[type.toLowerCase()] = value)
 
+  if (requiresUom.value) {
+    attributes.step = 'any'
+  }
+
   return { ...attributes, type }
 })
 
@@ -58,7 +62,7 @@ const computedValue = computed({
       <CfSelect
         v-model="computedUom"
         :options="uomOptions[props.data.type]"
-        required
+        :required="!!computedValue"
         v-if="requiresUom"
       />
     </div>

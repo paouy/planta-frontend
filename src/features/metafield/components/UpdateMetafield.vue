@@ -43,6 +43,8 @@ onBeforeMount(() => {
   if (props.data.resource !== 'PRODUCT') {
     resource.value = 'OPERATION'
     operationId.value = props.data.resource.slice(10)
+  } else {
+    resource.value = 'PRODUCT'
   }
 
   props.data.attributes.forEach(attribute => {

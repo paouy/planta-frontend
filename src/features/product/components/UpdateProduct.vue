@@ -12,6 +12,7 @@ const props = defineProps({ data: Object })
 
 const isLoading = ref(false)
 const metafields = ref([])
+const productMeta = ref({})
 const ctx = ref({
   id: '',
   sku: '',
@@ -26,10 +27,12 @@ const invoke = async () => {
   try {
     isLoading.value = true
 
-    if (metafields.value.length) {
+    if (Object.values(productMeta.value).some(({ value }) => value !== null)) {
+      ctx.value.meta = {}
+
       metafields.value.forEach(({ id }) => {
-        if (!ctx.value.meta[id].value) {
-          delete ctx.value.meta[id]
+        if (productMeta.value[id].value) {
+          ctx.value.meta[id] = productMeta.value[id]
         }
       })
     }
@@ -49,19 +52,17 @@ const setupMetafields = (data) => {
   if (data.length) {
     metafields.value = data
 
-    if (!props.data.meta) {
-      ctx.value.meta = {}
-    }
-
     data.forEach(({ id, type }) => {
-      if (!ctx.value.meta[id]) {
+      if (!productMeta.value[id]) {
         const meta = { value: null } 
       
         if (['DIMENSION', 'VOLUME', 'WEIGHT'].includes(type)) {
           meta.uom = null
         }
 
-        ctx.value.meta[id] = meta
+        productMeta.value[id] = meta
+      } else {
+        delete productMeta.value[id].label
       }
     })
   }
@@ -71,7 +72,10 @@ api.metafield
   .getAll({ resource: 'PRODUCT' })
   .then(setupMetafields)
 
-watchOnce(() => props.data, () => Object.assign(ctx.value, props.data))
+watchOnce(() => props.data, ({ meta, ...data }) => {
+  Object.assign(ctx.value, data)
+  productMeta.value = meta
+})
 </script>
 
 <template>
@@ -101,7 +105,7 @@ watchOnce(() => props.data, () => Object.assign(ctx.value, props.data))
     <fieldset v-if="metafields.length">
       <Metafield
         v-for="field in metafields"
-        v-model="ctx.meta[field.id]"
+        v-model="productMeta[field.id]"
         :key="field.id"
         :data="field"
       />
@@ -109,7 +113,7 @@ watchOnce(() => props.data, () => Object.assign(ctx.value, props.data))
     <hr>
     <footer>
       <CfFilledButton type="submit" :loading="isLoading">
-        Add
+        Save
       </CfFilledButton>
       <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
         Cancel

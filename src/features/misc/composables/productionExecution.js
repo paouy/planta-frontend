@@ -7,8 +7,9 @@ const workstation = ref(null)
 const operation = ref({
   id: '',
   name: '',
+  hasEquipment: null,
   isBatch: null,
-  hasEquipment: null
+  batchSizeParameter: null
 })
 
 const showAllJobsFilterFn = (job) => showAllJobs.value || job.seq === 1 ? true : Boolean(job.qtyInput)
@@ -78,6 +79,21 @@ const currentOperationBatches = computed(() => {
   return operationBatches.value
     .filter(operationBatch => operationBatch.operationId === operation.value.id)
     .filter(operationBatch => workstation.value ? operationBatch.workstation.id === workstation.value.id : true)
+    .map(operationBatch => {
+      const operationBatchJobs = currentJobs.value.filter(job => operationBatch.id === job.operationBatchId)
+      let sizeValue = 0
+      let sizeUom
+
+      operationBatchJobs.forEach(job => {
+        sizeValue += job.size.value
+        sizeUom = job.size.uom
+      })
+
+      return {
+        ...operationBatch,
+        size: `${sizeValue} ${sizeUom}`
+      }
+    })
 })
 
 export const useProductionExecution = () => {
@@ -171,6 +187,20 @@ export const useProductionExecution = () => {
     operationBatches.value = operationBatchesArray
   }
 
+  const reset = () => {
+    jobs.value = []
+    operationBatches.value = []
+    showAllJobs.value = false
+    workstation.value = null
+    operation.value = {
+      id: '',
+      name: '',
+      hasEquipment: null,
+      isBatch: null,
+      batchSizeParameter: null
+    }
+  }
+
   return {
     operation,
     workstation,
@@ -179,6 +209,7 @@ export const useProductionExecution = () => {
     currentJobs,
     currentOperationBatches,
     initialize,
+    reset,
     updateJob,
     createProductionRecord,
     createOperationBatch,

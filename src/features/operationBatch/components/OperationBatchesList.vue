@@ -21,6 +21,9 @@ const columns = [
     label: 'Schedule',
     key: 'schedule'
   }, {
+    label: 'Batch Size',
+    key: 'size'
+  }, {
     label: 'Job Count',
     key: 'jobCount'
   }, {
@@ -69,6 +72,7 @@ const computedData = computed(() => {
     <template v-slot:row="{ data }">
       <td>{{ data.publicId }}</td>
       <td>{{ data.schedule }}</td>
+      <td>{{ data.size }}</td>
       <td>{{ data.jobCount }}</td>
       <td><StatusBadge :data="data.status"/></td>
       <td>{{ data.workstation.name }}</td>

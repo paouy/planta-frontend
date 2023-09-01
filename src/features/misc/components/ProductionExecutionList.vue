@@ -34,7 +34,7 @@ const columns = [
 ]
 
 const computedData = computed(() => {
-  return props.data.map((job, index) => {
+  return props.data.map(job => {
     const qtyMade = job.qtyOutput - job.qtyReject + job.qtyRework
     const qty = `${qtyMade.toLocaleString()}/${job.qtyInput.toLocaleString()}`
 

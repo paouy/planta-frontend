@@ -7,6 +7,7 @@ import ArchivedSalesOrdersView from './views/ArchivedSalesOrdersView.vue'
 import CategoriesView from './views/CategoriesView.vue'
 import ConfigurationsView from './views/ConfigurationsView.vue'
 import CreateOperationBatchReportView from './views/CreateOperationBatchReportView.vue'
+import CreateProductionRecordsView from './views/CreateProductionRecordsView.vue'
 import CreateProductView from './views/CreateProductView.vue'
 import CreateSalesOrderView from './views/CreateSalesOrderView.vue'
 import CustomersView from './views/CustomersView.vue'
@@ -25,7 +26,6 @@ import ReportView from './views/ReportView.vue'
 import SalesOrdersView from './views/SalesOrdersView.vue'
 import SalesOrderView from './views/SalesOrderView.vue'
 import UpdateProductView from './views/UpdateProductView.vue'
-import WorkerReportView from './views/WorkerReportView.vue'
 import UsersView from './views/UsersView.vue'
 import WorkersView from './views/WorkersView.vue'
 import WorkstationsView from './views/WorkstationsView.vue'
@@ -103,9 +103,9 @@ const router = createRouter({
           redirect: '/production/execution/',
           children: [
             {
-              path: 'add-worker-report',
-              name: 'WorkerReport',
-              component: WorkerReportView
+              path: 'add-records',
+              name: 'CreateProductionRecords',
+              component: CreateProductionRecordsView
             },
             {
               path: ':operationSlug?',

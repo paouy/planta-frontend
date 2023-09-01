@@ -15,6 +15,10 @@ const props = defineProps({
     type: Array,
     default: () => ['id', 'name']
   },
+  isBatch: {
+    type: Boolean,
+    default: true
+  },
   disabled: Boolean,
   required: {
     type: Boolean,
@@ -25,20 +29,22 @@ const props = defineProps({
 const { operations } = useOperationStore()
 
 const options = computed(() => {
-  return operations.value.map(operation => {
-    let value = {}
+  return operations.value
+    .filter(operation => props.isBatch ? true : operation.isBatch === false)
+    .map(operation => {
+      let value = {}
 
-    if (props.keys.length > 1) {
-      props.keys.forEach(key => value[key] = operation[key])
-    } else {
-      value = operation[props.keys.at(0)]
-    } 
+      if (props.keys.length > 1) {
+        props.keys.forEach(key => value[key] = operation[key])
+      } else {
+        value = operation[props.keys.at(0)]
+      } 
 
-    return {
-      label: operation.name,
-      value
-    }
-  })
+      return {
+        label: operation.name,
+        value
+      }
+    })
 })
 
 const computedValue = computed({

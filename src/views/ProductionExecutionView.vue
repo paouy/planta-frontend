@@ -75,8 +75,8 @@ onBeforeUnmount(() => productionExecution.reset())
   <CfAppView>
     <CfAppViewHeader surtitle="Production" title="Execution">
       <template #actions>
-        <CfFilledButton :to="{ name: 'WorkerReport' }">
-          Add worker report
+        <CfFilledButton :to="{ name: 'CreateProductionRecords' }">
+          Add multiple records
         </CfFilledButton>
       </template>
     </CfAppViewHeader>

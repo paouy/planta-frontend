@@ -1,20 +1,20 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { CfInput, CfSelect, CfFilledButton, CfOutlinedButton } from 'vue-cf-ui'
 import { EquipmentSelect } from '../../equipment/index.js'
+import { OperationSelect } from '../../operation/index.js'
 import { WorkerSelect } from '../../worker/index.js'
-import { WorkstationSelect } from '../../workstation/index.js'
 import api from '../../../api/index.js'
 
-const emit = defineEmits(['dismiss'])
+const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
 const jobOptions = ref([])
-const workerId = ref(null)
+const operation = ref(null)
 const lineItems = ref([
   {
-    productionOrder: null,
-    workstation: null,
+    job: null,
+    worker: null,
     equipment: null,
     qtyOutput: null,
     qtyReject: null,
@@ -24,20 +24,48 @@ const lineItems = ref([
   }
 ])
 
-const addLineItem = () => {
-  lineItems.value.push({
-    productionOrder: null,
-    workstation: null,
-    equipment: null,
-    qtyOutput: null,
-    qtyReject: null,
-    qtyRework: null,
-    timeTakenMins: null,
-    meta: null
-  })
-}
+const filteredJobOptions = computed(() => {
+  const selectedJobIds = lineItems.value
+    .filter(({ job }) => job !== null)
+    .map(({ job }) => job.id)
+
+  const options = jobOptions.value
+    .filter(({ value }) => operation.value?.id === value.operationId)
+    .map(option => ({ ...option, disabled: selectedJobIds.includes(option.value.id) }))
+
+  return options
+})
+
+const isAddLineItemAllowed = computed(() => {
+  const hasOptions = filteredJobOptions.value.some(option => !option.disabled)
+  const hasEmptyLineItem = lineItems.value.some(({ job }) => job === null)
+
+  return hasOptions && !hasEmptyLineItem
+})
+
+const addLineItem = () => lineItems.value.push({
+  job: null,
+  worker: null,
+  equipment: null,
+  qtyOutput: null,
+  qtyReject: null,
+  qtyRework: null,
+  timeTakenMins: null,
+  meta: null
+})
 
 const removeLineItem = (index) => lineItems.value.splice(index, 1)
+
+const clearLineItems = () => lineItems.value = [{
+  job: null,
+  worker: null,
+  equipment: null,
+  qtyOutput: null,
+  qtyReject: null,
+  qtyRework: null,
+  timeTakenMins: null,
+  meta: null
+}]
 
 const invoke = async () => {
   try {
@@ -45,18 +73,13 @@ const invoke = async () => {
 
     const ctx = []
 
-    lineItems.value.forEach(async (lineItem) => {
-      const { productionOrder, qtyOutput, qtyReject, qtyRework, ...data } = lineItem
-
-      await api.job.updateOne({
-        id: productionOrder.jobId,
-        workstation: data.workstation
-      })
+    lineItems.value.forEach(lineItem => {
+      const { job, qtyOutput, qtyReject, qtyRework, ...data } = lineItem
 
       ctx.push({
-        productionOrderId: productionOrder.id,
-        operation: { id: productionOrder.operationId },
-        worker: { id: workerId.value },
+        productionOrderId: job.productionOrderId,
+        operation: { id: job.operationId },
+        workstation: { id: job.workstationId },
         type: 'OUTPUT',
         qty: qtyOutput + qtyReject,
         ...data
@@ -64,20 +87,20 @@ const invoke = async () => {
 
       if (qtyReject) {
         ctx.push({
-          productionOrderId: productionOrder.id,
-          operation: { id: productionOrder.operationId },
-          worker: { id: workerId.value },
+          productionOrderId: job.productionOrderId,
+          operation: { id: job.operationId },
+          workstation: { id: job.workstationId },
           type: 'REJECT',
           qty: qtyReject,
           ...data
         })
       }
 
-      if (qtyRework) {
+      if (qtyRework && operation.value?.allowsRework) {
         ctx.push({
-          productionOrderId: productionOrder.id,
-          operation: { id: productionOrder.operationId },
-          worker: { id: workerId.value },
+          productionOrderId: job.productionOrderId,
+          operation: { id: job.operationId },
+          workstation: { id: job.workstationId },
           type: 'REWORK',
           qty: qtyRework,
           ...data
@@ -87,7 +110,7 @@ const invoke = async () => {
 
     await api.productionRecord.create(ctx)
 
-    emit('dismiss')
+    emit('success', operation.value)
   } catch (error) {
     alert(error)
   } finally {
@@ -97,29 +120,39 @@ const invoke = async () => {
 
 api.job.getAll().then(data => {
   jobOptions.value = data
-    .filter(({ operation }) => !operation.isBatch)
-    .map(({ id, productionOrder, product, operation }) => ({
+    .filter(job => {
+      const qtyMade = job.qtyOutput - job.qtyReject + job.qtyRework
+      const qtyDemand = job.qtyInput - job.qtyShortfall
+
+      return !job.operation.isBatch && job.workstation && qtyDemand > qtyMade
+    })
+    .filter(({ operation, workstation }) => !operation.isBatch && workstation !== null)
+    .map(({ id, productionOrder, product, operation, workstation, qtyInput }) => ({
       label: `${operation.name} — ${productionOrder.publicId} — ${product.normalizedName}`,
       value: {
-        id: productionOrder.id,
+        id,
+        productionOrderId: productionOrder.id,
         operationId: operation.id,
-        jobId: id
+        workstationId: workstation.id,
+        qtyInput
       }
     }))
 })
 </script>
 
 <template>
-  <form class="createWorkerReport" @submit.prevent="invoke">
+  <form class="createProductionRecords" @submit.prevent="invoke">
     <fieldset>
       <CfInput
         label="Date"
         :value="new Date().toLocaleDateString('en-CA')"
         disabled
       />
-      <WorkerSelect
-        v-model="workerId"
-        :keys="['id']"
+      <OperationSelect
+        v-model="operation"
+        :keys="['id', 'name', 'allowsRework']"
+        :is-batch="false"
+        @change="clearLineItems"
       />
     </fieldset>
     <table>
@@ -127,25 +160,22 @@ api.job.getAll().then(data => {
         <col v-for="n in 7">
       </colgroup>
       <tbody>
-        <tr v-for="(_, index) in lineItems" :key="index">
+        <tr v-for="(_, index) in lineItems" :key="operation?.id + String(index)">
           <td>
             <CfSelect
-              v-model="lineItems[index].productionOrder"
+              v-model="lineItems[index].job"
               label="Job"
-              :options="jobOptions"
+              :options="filteredJobOptions"
               required
             />
           </td>
           <td>
-            <WorkstationSelect
-              :operation-id="lineItems[index].productionOrder?.operationId"
-              v-model="lineItems[index].workstation"
-            />
+            <WorkerSelect v-model="lineItems[index].worker"/>
           </td>
           <td>
             <EquipmentSelect
-              :operation-id="lineItems[index].productionOrder?.operationId"
               v-model="lineItems[index].equipment"
+              :operation-id="operation?.id"
               :required="false"
             />
           </td>
@@ -155,6 +185,7 @@ api.job.getAll().then(data => {
               label="Output"
               type="number"
               min="0"
+              :max="lineItems[index].job?.qtyInput"
             />
           </td>
           <td>
@@ -171,6 +202,7 @@ api.job.getAll().then(data => {
               label="Rework"
               type="number"
               min="0"
+              v-if="operation?.allowsRework"
             />
           </td>
           <td>
@@ -185,7 +217,10 @@ api.job.getAll().then(data => {
         </tr>
       </tbody>
     </table>
-    <CfOutlinedButton @click="addLineItem">
+    <CfOutlinedButton
+      :disabled="!isAddLineItemAllowed"
+      @click="addLineItem"
+    >
       Add job
     </CfOutlinedButton>
     <hr>
@@ -193,7 +228,7 @@ api.job.getAll().then(data => {
       <CfFilledButton type="submit" :loading="isLoading">
         Save
       </CfFilledButton>
-      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('dismiss')">
+      <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
         Cancel
       </CfFilledButton>
     </footer>
@@ -201,7 +236,7 @@ api.job.getAll().then(data => {
 </template>
 
 <style lang="scss">
-.createWorkerReport {
+.createProductionRecords {
   fieldset {
     display: grid;
     gap: 1rem;
@@ -255,7 +290,7 @@ api.job.getAll().then(data => {
 }
 
 @media (min-width: 880px) {
-  .createWorkerReport {
+  .createProductionRecords {
     table {
       table-layout: fixed;
     }

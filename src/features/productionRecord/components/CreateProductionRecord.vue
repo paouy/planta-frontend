@@ -4,7 +4,6 @@ import { CfDialog, CfInput, CfSelect, CfFilledButton } from 'vue-cf-ui'
 import { EquipmentSelect } from '../../equipment/index.js'
 import { Metafield } from '../../metafield/index.js'
 import { WorkerSelect } from '../../worker/index.js'
-import { WorkstationSelect } from '../../workstation/index.js'
 import api from '../../../api'
 
 const emit = defineEmits(['success', 'cancel'])
@@ -102,11 +101,6 @@ api.metafield
           label="Job"
           :value="normalizedJob"
           disabled
-        />
-        <WorkstationSelect
-          v-model="ctx.workstation"
-          :operation-id="props.job.operation.id"
-          required
         />
         <CfSelect
           v-model="ctx.type"

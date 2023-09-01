@@ -39,17 +39,17 @@ const invoke = async () => {
     <template #body>
       <form id="updateUser" @submit.prevent="invoke">
         <CfInput
-          v-model="ctx.firstName"
+          v-model.trim="ctx.firstName"
           label="First name"
           required
         />
         <CfInput
-          v-model="ctx.lastName"
+          v-model.trim="ctx.lastName"
           label="Last name"
           required
         />
         <CfSwitch
-          v-model="ctx.isAdmin"
+          v-model.trim="ctx.isAdmin"
           label="Administrator role"
         />
         <CfSwitch

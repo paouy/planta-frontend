@@ -51,7 +51,7 @@ const computedValue = computed({
     <label>{{ props.data.name }}</label>
     <div class="metafield-widget">
       <component
-        v-model="computedValue"
+        v-model.trim="computedValue"
         :is="formControl"
         :type="attributes.type"
         :min="attributes.min"

@@ -52,7 +52,7 @@ api.metafield.getAll({ resource: 'PRODUCT' }).then(data => {
     <template #body>
       <form id="createOperation" @submit.prevent="invoke">
         <CfInput
-          v-model="ctx.name"
+          v-model.trim="ctx.name"
           label="Name"
           required
         />

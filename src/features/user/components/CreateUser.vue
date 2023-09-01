@@ -35,24 +35,24 @@ const invoke = async () => {
     <template #body>
       <form id="createUser" @submit.prevent="invoke">
         <CfInput
-          v-model="ctx.firstName"
+          v-model.trim="ctx.firstName"
           label="First name"
           required
         />
         <CfInput
-          v-model="ctx.lastName"
+          v-model.trim="ctx.lastName"
           label="Last name"
           required
         />
         <CfInput
-          v-model="ctx.username"
+          v-model.trim="ctx.username"
           label="Username"
           helper="Must be at least 3 characters (letters and numbers only)"
           pattern="[a-zA-Z0-9]{3,}"
           required
         />
         <CfInput
-          v-model="ctx.password"
+          v-model.trim="ctx.password"
           label="Temporary password"
           helper="Must be at least 14 characters"
           minlength="14"

@@ -39,7 +39,7 @@ onMounted(() => Object.assign(ctx.value, props.data))
       <form id="updateWorkstation" @submit.prevent="invoke">
         <OperationSelect v-model="ctx.operation"/>
         <CfInput
-          v-model="ctx.name"
+          v-model.trim="ctx.name"
           label="Name"
           required
         />

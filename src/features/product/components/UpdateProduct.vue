@@ -86,17 +86,17 @@ watchOnce(() => props.data, ({ meta, ...data }) => {
         type="products"
       />
       <CfInput
-        v-model="ctx.sku"
+        v-model.trim="ctx.sku"
         label="SKU"
         required
       />
       <CfInput
-        v-model="ctx.name"
+        v-model.trim="ctx.name"
         label="Name"
         required
       />
       <CfInput
-        v-model="ctx.uom"
+        v-model.trim="ctx.uom"
         label="UOM"
         required
       />

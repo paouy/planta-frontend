@@ -36,7 +36,7 @@ const invoke = async () => {
     <template #body>
       <form id="createCategory" @submit.prevent="invoke">
         <CfInput
-          v-model="ctx.name"
+          v-model.trim="ctx.name"
           label="Name"
           required
         />

@@ -76,7 +76,7 @@ const invoke = async () => {
     <template #body>
       <form id="createMetafield" @submit.prevent="invoke">
         <CfInput
-          v-model="ctx.name"
+          v-model.trim="ctx.name"
           label="Name"
           required
         />

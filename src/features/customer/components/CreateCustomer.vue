@@ -32,12 +32,12 @@ const invoke = async () => {
     <template #body>
       <form id="createCustomer" @submit.prevent="invoke">
         <CfInput
-          v-model="ctx.name"
+          v-model.trim="ctx.name"
           label="Name"
           required
         />
         <CfInput
-          v-model="ctx.shortName"
+          v-model.trim="ctx.shortName"
           label="Short name"
           required
         />

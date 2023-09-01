@@ -98,7 +98,7 @@ api.product.getAll().then(data => {
         required
       />
       <CfInput
-        v-model="ctx.publicId"
+        v-model.trim="ctx.publicId"
         label="ID"
         :helper="`Last ID: ${lastPublicId || 'None'}`"
         required

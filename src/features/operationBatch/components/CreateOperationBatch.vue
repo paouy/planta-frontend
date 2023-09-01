@@ -38,7 +38,7 @@ const invoke = async () => {
     <template #body>
       <form id="createOperationBatch" @submit.prevent="invoke">
         <CfInput
-          v-model="ctx.publicId"
+          v-model.trim="ctx.publicId"
           label="ID"
           required
         />

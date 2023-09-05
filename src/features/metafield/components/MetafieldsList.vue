@@ -49,7 +49,7 @@ const data = computed(() => {
     <template v-slot:row="{ data }">
       <td>{{ data.name }}</td>
       <td>{{ data.normalizedResource }}</td>
-      <td>{{ data.type.toLowerCase() }}</td>
+      <td class="capitalize">{{ data.type }}</td>
     </template>
   </CfDataTable>
 </template>

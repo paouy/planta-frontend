@@ -20,5 +20,10 @@ const columns = [
     :data="props.data"
     :row-actions="['Edit', 'Remove']"
     @row-action="$event => emit('action', $event)"
-  />
+  >
+    <template v-slot:row="{ data }">
+      <td>{{ data.name }}</td>
+      <td class="capitalize">{{ data.type }}</td>
+    </template>
+  </CfDataTable>
 </template>

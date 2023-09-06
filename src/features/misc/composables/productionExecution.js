@@ -156,9 +156,6 @@ export const useProductionExecution = () => {
         if (nextJob) {
           const nextJobQtyMade = nextJob.qtyOutput - nextJob.qtyReject + nextJob.qtyRework
           const nextJobQtyDemand = nextJob.qtyInput - nextJob.qtyShortfall
-
-          console.log('made', nextJobQtyMade)
-          console.log('demand', nextJobQtyDemand)
     
           if (nextJobQtyMade >= nextJobQtyDemand) {
             nextJob.status = 'CLOSED'

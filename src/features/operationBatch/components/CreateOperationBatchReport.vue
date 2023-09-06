@@ -80,7 +80,7 @@ const invoke = async () => {
     emit('success')
     emit('cancel')
   } catch (error) {
-    console.log(error)
+    alert(error)
   } finally {
     isLoading.value = false
   }

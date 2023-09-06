@@ -88,14 +88,11 @@ const currentOperationBatches = computed(() => {
       }
 
       const operationBatchJobs = currentJobs.value.filter(job => operationBatch.id === job.operationBatchId)
+      const sizeUom = operationBatchJobs[0].size.uom
 
       let sizeValue = 0
-      let sizeUom
 
-      operationBatchJobs.forEach(job => {
-        sizeValue += job.size.value
-        sizeUom = job.size.uom
-      })
+      operationBatchJobs.forEach(job => sizeValue += job.size.value)
 
       return {
         ...operationBatch,

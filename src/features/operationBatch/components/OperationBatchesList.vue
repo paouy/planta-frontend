@@ -21,11 +21,11 @@ const columns = [
     label: 'Schedule',
     key: 'schedule'
   }, {
-    label: 'Batch Size',
-    key: 'size'
-  }, {
     label: 'Job Count',
     key: 'jobCount'
+  }, {
+    label: 'Batch Size',
+    key: 'size'
   }, {
     label: 'Status',
     key: 'status'
@@ -72,8 +72,8 @@ const computedData = computed(() => {
     <template v-slot:row="{ data }">
       <td>{{ data.publicId }}</td>
       <td>{{ data.schedule }}</td>
-      <td>{{ data.size }}</td>
       <td>{{ data.jobCount }}</td>
+      <td>{{ data.size }}</td>
       <td><StatusBadge :data="data.status"/></td>
       <td>{{ data.workstation.name }}</td>
     </template>

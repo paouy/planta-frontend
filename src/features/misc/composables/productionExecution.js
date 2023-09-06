@@ -81,6 +81,14 @@ const currentOperationBatches = computed(() => {
     .filter(operationBatch => workstation.value ? operationBatch.workstation.id === workstation.value.id : true)
     .map(operationBatch => {
       const operationBatchJobs = currentJobs.value.filter(job => operationBatch.id === job.operationBatchId)
+
+      if (!operationBatchJobs.length) {
+        return {
+          ...operationBatch,
+          size: null
+        }
+      }
+
       let sizeValue = 0
       let sizeUom
 

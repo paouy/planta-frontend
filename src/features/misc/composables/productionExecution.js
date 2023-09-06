@@ -80,14 +80,14 @@ const currentOperationBatches = computed(() => {
     .filter(operationBatch => operationBatch.operationId === operation.value.id)
     .filter(operationBatch => workstation.value ? operationBatch.workstation.id === workstation.value.id : true)
     .map(operationBatch => {
-      const operationBatchJobs = currentJobs.value.filter(job => operationBatch.id === job.operationBatchId)
-
-      if (!operationBatchJobs.length) {
+      if (!operationBatch.jobCount) {
         return {
           ...operationBatch,
           size: null
         }
       }
+
+      const operationBatchJobs = currentJobs.value.filter(job => operationBatch.id === job.operationBatchId)
 
       let sizeValue = 0
       let sizeUom

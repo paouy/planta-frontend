@@ -5,21 +5,22 @@ import { OperationSelect } from '../../operation/index.js'
 import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
+const props = defineProps({
+  resource: String,
+  lastPosition: Number
+})
+
 const typeOptions = ['Text', 'Number', 'Date', 'Dimension', 'Volume', 'Weight']
   .map(type => ({ label: type, value: type.toUpperCase() }))
-const resourceOptions = [
-  { label: 'Product', value: 'PRODUCT' },
-  { label: 'Operation', value: 'OPERATION' }
-]
 
 const isLoading = ref(false)
 const ctx = ref({
   name: '',
   type: '',
-  resource: '',
-  attributes: []
+  resource: props.resource,
+  attributes: [],
+  position: (props.lastPosition || 0) + 1,
 })
-const resource = ref('')
 const operationId = ref('')
 const attributes = ref({
   'MIN': '',
@@ -33,9 +34,9 @@ const invoke = async () => {
   try {
     isLoading.value = true
 
-    ctx.value.resource = resource.value === 'OPERATION'
-      ? `OPERATION:${operationId.value}`
-      : 'PRODUCT'
+    if (ctx.value.resource === 'OPERATION') {
+      ctx.value.resource = `OPERATION:${operationId.value}`
+    }
 
     if (ctx.value.type === 'TEXT') {
       if (showTagsInput.value && attributes.value.OPTIONS.length) {
@@ -80,16 +81,10 @@ const invoke = async () => {
           label="Name"
           required
         />
-        <CfSelect
-          v-model="resource"
-          label="Resource"
-          :options="resourceOptions"
-          required
-        />
         <OperationSelect
           v-model="operationId"
           :keys="['id']"
-          v-if="resource === 'OPERATION'"
+          v-if="props.resource === 'OPERATION'"
         />
         <CfSelect
           v-model="ctx.type"

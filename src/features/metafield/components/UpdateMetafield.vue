@@ -6,12 +6,9 @@ import api from '../../../api/index.js'
 
 const emit = defineEmits(['success', 'cancel'])
 const props = defineProps({ data: Object })
+
 const typeOptions = ['Text', 'Number', 'Date', 'Dimension', 'Volume', 'Weight']
   .map(type => ({ label: type, value: type.toUpperCase() }))
-const resourceOptions = [
-  { label: 'Product', value: 'PRODUCT' },
-  { label: 'Operation', value: 'OPERATION' }
-]
 
 const isLoading = ref(false)
 const ctx = ref({
@@ -21,7 +18,6 @@ const ctx = ref({
   resource: '',
   attributes: []
 })
-const resource = ref('')
 const operationId = ref('')
 const attributes = ref({
   'MIN': '',
@@ -36,15 +32,14 @@ onBeforeMount(() => {
     id: props.data.id,
     name: props.data.name,
     type: props.data.type,
-    resource: props.data.resource,
     attributes: []
   }
 
-  if (props.data.resource !== 'PRODUCT') {
-    resource.value = 'OPERATION'
-    operationId.value = props.data.resource.slice(10)
+  if (props.data.resource === 'PRODUCT') {
+    ctx.value.resource = 'PRODUCT'
   } else {
-    resource.value = 'PRODUCT'
+    ctx.value.resource = 'OPERATION'
+    operationId.value = props.data.resource.slice(10)
   }
 
   props.data.attributes.forEach(attribute => {
@@ -60,9 +55,9 @@ const invoke = async () => {
   try {
     isLoading.value = true
 
-    ctx.value.resource = resource.value === 'OPERATION'
-      ? `OPERATION:${operationId.value}`
-      : 'PRODUCT'
+    if (ctx.value.resource === 'OPERATION') {
+      ctx.value.resource = `OPERATION:${operationId.value}`
+    }
 
     if (ctx.value.type === 'TEXT') {
       if (showTagsInput.value && attributes.value.OPTIONS.length) {
@@ -107,16 +102,10 @@ const invoke = async () => {
           label="Name"
           required
         />
-        <CfSelect
-          v-model="resource"
-          label="Resource"
-          :options="resourceOptions"
-          required
-        />
         <OperationSelect
           v-model="operationId"
           :keys="['id']"
-          v-if="resource === 'OPERATION'"
+          v-if="props.data?.resource !== 'PRODUCT'"
         />
         <CfSelect
           v-model="ctx.type"

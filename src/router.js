@@ -23,6 +23,7 @@ import ProductsView from './views/ProductsView.vue'
 import ProductView from './views/ProductView.vue'
 import ReleasedProductionOrdersView from './views/ReleasedProductionOrdersView.vue'
 import ReportView from './views/ReportView.vue'
+import ResourceMetafieldsView from './views/ResourceMetafieldsView.vue'
 import SalesOrdersView from './views/SalesOrdersView.vue'
 import SalesOrderView from './views/SalesOrderView.vue'
 import UpdateProductView from './views/UpdateProductView.vue'
@@ -182,6 +183,11 @@ const router = createRouter({
               path: 'custom-data',
               name: 'Metafields',
               component: MetafieldsView
+            }, {
+              path: 'custom-data/:resource',
+              name: 'ResourceMetafields',
+              component: ResourceMetafieldsView,
+              props: true
             }, {
               path: 'operations',
               name: 'Operations',

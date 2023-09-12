@@ -29,7 +29,7 @@ const onOperationsListAction = ({ key, data }) => {
     const index = operations.value.findIndex(({ id }) => data.id === id)
     const { id, seq } = operations.value[index - 1]
 
-    api.operation.updateOne({ id, seq: seq + 1})
+    api.operation.updateOne({ id, seq: seq + 1 })
     api.operation.updateOne({ id: data.id, seq: data.seq - 1 })
     
     return operationStore.moveUp(index)
@@ -39,7 +39,7 @@ const onOperationsListAction = ({ key, data }) => {
     const index = operations.value.findIndex(({ id }) => data.id === id)
     const { id, seq } = operations.value[index + 1]
     
-    api.operation.updateOne({ id, seq: seq - 1})
+    api.operation.updateOne({ id, seq: seq - 1 })
     api.operation.updateOne({ id: data.id, seq: data.seq + 1 })
 
     return operationStore.moveDown(index)

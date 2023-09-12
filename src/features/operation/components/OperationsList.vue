@@ -24,12 +24,16 @@ const computedData = computed(() => {
 
     let actions = ['Move up', 'Move down', 'Edit', 'Remove']
 
-    if (index === 0) {
+    if (props.data.length > 1 && index === 0) {
       actions = ['Move down', 'Edit', 'Remove']
     }
-
-    if (index === props.data.length - 1) {
+    
+    if (props.data.length > 1 && index === props.data.length - 1) {
       actions = ['Move up', 'Edit', 'Remove']
+    }
+    
+    if (props.data.length === 1) {
+      actions = ['Edit', 'Remove']
     }
 
     return {

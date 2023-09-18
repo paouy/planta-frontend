@@ -51,7 +51,7 @@ const maxQty = computed(() => {
 
   return ctx.value.type === 'OUTPUT'
     ? props.job.qtyInput - qtyMade
-    : production
+    : qtyMade
 })
 
 const invoke = async () => {

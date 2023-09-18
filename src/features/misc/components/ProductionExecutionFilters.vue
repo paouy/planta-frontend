@@ -43,7 +43,7 @@ const list = computed({
   <div class="productionExecutionFilters">
     <OperationSelect
       v-model="operation"
-      :keys="['id', 'name', 'hasEquipment', 'isBatch', 'batchSizeParameter']"
+      :keys="['id', 'name', 'hasEquipment', 'isBatch']"
       @input="workstation = null"
     />
     <CfSelect

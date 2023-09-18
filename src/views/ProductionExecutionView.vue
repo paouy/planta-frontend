@@ -54,11 +54,11 @@ watch(operation, ({ name }) => router.push(`/production/execution/${toSlug(name)
 onMounted(async () => {
     const { operations } = useOperationStore()
 
-    const { id, name, hasEquipment, isBatch, batchSizeParameter } = Boolean(props.operationSlug)
+    const { id, name, hasEquipment, isBatch } = Boolean(props.operationSlug)
       ? operations.value.find(({ name }) => props.operationSlug === toSlug(name))
       : operations.value[0]
 
-    operation.value = { id, name, hasEquipment, isBatch, batchSizeParameter }
+    operation.value = { id, name, hasEquipment, isBatch }
 
     const [jobs, operationBatches] = await Promise.all([
       api.job.getAll(),

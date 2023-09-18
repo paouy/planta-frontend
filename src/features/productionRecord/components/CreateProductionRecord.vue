@@ -46,7 +46,13 @@ const ctx = ref({
 
 const dialogTitle = computed(() => `Add ${props.job.operation.name.toLowerCase()} record`)
 const normalizedJob = computed(()=> `${props.job.productionOrder.publicId} — ${props.job.product.normalizedName}`)
-const maxQty = computed(() => props.job.qtyInput - (props.job.qtyOutput - props.job.qtyReject + props.job.qtyRework))
+const maxQty = computed(() => {
+  const qtyMade = (props.job.qtyOutput - props.job.qtyReject + props.job.qtyRework)
+
+  return ctx.value.type === 'OUTPUT'
+    ? props.job.qtyInput - qtyMade
+    : production
+})
 
 const invoke = async () => {
   try {

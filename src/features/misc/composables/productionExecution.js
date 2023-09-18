@@ -8,8 +8,7 @@ const operation = ref({
   id: '',
   name: '',
   hasEquipment: null,
-  isBatch: null,
-  batchSizeParameter: null
+  isBatch: null
 })
 
 const showAllJobsFilterFn = (job) => showAllJobs.value || job.seq === 1 ? true : Boolean(job.qtyInput)
@@ -88,11 +87,11 @@ const currentOperationBatches = computed(() => {
       }
 
       const operationBatchJobs = currentJobs.value.filter(job => operationBatch.id === job.operationBatchId)
-      const sizeUom = operationBatchJobs[0].size.uom
+      const sizeUom = operationBatchJobs[0].operation.batchSize.uom
 
       let sizeValue = 0
 
-      operationBatchJobs.forEach(job => sizeValue += job.size.value)
+      operationBatchJobs.forEach(job => sizeValue += (job.operation.batchSize.multiplier * job.qtyInput))
 
       return {
         ...operationBatch,
@@ -141,6 +140,7 @@ export const useProductionExecution = () => {
 
     if (nextJob) {
       nextJob.qtyInput = qtyMade
+      nextJob.timeEstimatedMins = nextJob.operation.timePerCycleMins * (nextJob.operation.isBatch ? 1 : qtyMade)
     }
 
     if (job.status === 'CLOSED') {
@@ -198,8 +198,7 @@ export const useProductionExecution = () => {
       id: '',
       name: '',
       hasEquipment: null,
-      isBatch: null,
-      batchSizeParameter: null
+      isBatch: null
     }
   }
 

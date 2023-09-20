@@ -138,6 +138,7 @@ const onRemove = (type, id) => {
     width: 32rem;
     position: absolute;
     top: 2.8rem;
+    z-index: 10;
 
     p {
       font-size: 0.875rem;

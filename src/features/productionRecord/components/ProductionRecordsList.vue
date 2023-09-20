@@ -1,5 +1,7 @@
 <script setup>
+import { ref } from 'vue'
 import { CfDataTable } from 'vue-cf-ui'
+import ProductionRecordDialog from './ProductionRecordDialog.vue'
 
 const props = defineProps({ data: Array })
 
@@ -22,12 +24,17 @@ const columns = [
     width: '30%'
   }
 ]
+
+const productionRecord = ref(null)
 </script>
 
 <template>
   <CfDataTable
     :columns="columns"
     :data="props.data"
+    force-row-menu
+    :row-actions="['View']"
+    @row-action="({ data }) => productionRecord = data"
   >
     <template v-slot:row="{ data }">
       <td>{{ new Date(data.timestamp).toLocaleDateString('en-CA') }}</td>
@@ -37,4 +44,10 @@ const columns = [
       <td>{{ data.worker?.name }}</td>
     </template>
   </CfDataTable>
+
+  <ProductionRecordDialog
+    :data="productionRecord"
+    @close="productionRecord = null"
+    v-if="productionRecord"
+  />
 </template>

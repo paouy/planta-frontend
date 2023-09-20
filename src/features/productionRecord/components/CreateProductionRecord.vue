@@ -13,7 +13,7 @@ const productionRecordTypeOptions = computed(() => {
   const allOptions = [
     { label: 'Output', value: 'OUTPUT' },
     { label: 'Reject', value: 'REJECT' },
-    { label: 'Rework', value: 'REWORK' }
+    { label: 'Rework', value: 'REWORK', disabled: props.job.qtyReject < 1 }
   ]
 
   const options = {
@@ -47,11 +47,15 @@ const ctx = ref({
 const dialogTitle = computed(() => `Add ${props.job.operation.name.toLowerCase()} record`)
 const normalizedJob = computed(()=> `${props.job.productionOrder.publicId} — ${props.job.product.normalizedName}`)
 const maxQty = computed(() => {
-  const qtyMade = (props.job.qtyOutput - props.job.qtyReject + props.job.qtyRework)
+  const qtyMade = props.job.qtyOutput - props.job.qtyReject + props.job.qtyRework
 
-  return ctx.value.type === 'OUTPUT'
-    ? props.job.qtyInput - qtyMade
-    : qtyMade
+  const qty = {
+    'OUTPUT': props.job.qtyInput - qtyMade,
+    'REJECT': qtyMade,
+    'REWORK': props.job.qtyReject
+  }
+
+  return qty[ctx.value.type]
 })
 
 const invoke = async () => {
@@ -108,6 +112,11 @@ api.metafield
           :value="normalizedJob"
           disabled
         />
+        <CfInput
+          label="Workstation"
+          :value="props.job.workstation.name"
+          disabled
+        />
         <CfSelect
           v-model="ctx.type"
           label="Type"
@@ -126,10 +135,11 @@ api.metafield
         <CfInput
           v-model.number="ctx.qty"
           label="Quantity"
+          :helper="ctx.type ? `Maximum of ${maxQty.toLocaleString()}` : null"
           type="number"
           step="any"
-          :max="maxQty"
           min="1"
+          :max="maxQty"
           required
         />
         <CfInput

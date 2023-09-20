@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { CfInput, CfSelect, CfFilledButton, CfOutlinedButton } from 'vue-cf-ui'
 import { EquipmentSelect } from '../../equipment/index.js'
+import { Metafield } from '../../metafield/index.js'
 import { OperationSelect } from '../../operation/index.js'
 import { WorkerSelect } from '../../worker/index.js'
 import api from '../../../api/index.js'
@@ -10,6 +11,7 @@ const emit = defineEmits(['success', 'cancel'])
 
 const isLoading = ref(false)
 const jobOptions = ref([])
+const metafields = ref([])
 const operation = ref(null)
 const lineItems = ref([
   {
@@ -20,7 +22,7 @@ const lineItems = ref([
     qtyReject: null,
     qtyRework: null,
     timeTakenMins: null,
-    meta: null
+    meta: {}
   }
 ])
 
@@ -34,6 +36,16 @@ const filteredJobOptions = computed(() => {
     .map(option => ({ ...option, disabled: selectedJobIds.includes(option.value.id) }))
 
   return options
+})
+
+const filteredMetafields = computed(() => {
+  const fields = metafields.value.filter(({ resource }) => resource.includes(operation.value?.id))
+
+  return fields
+})
+
+const tableColumnCount = computed(() => {
+  return 6 + (operation.value?.allowsRework ? 1 : 0) + filteredMetafields.value.length
 })
 
 const isAddLineItemAllowed = computed(() => {
@@ -51,7 +63,7 @@ const addLineItem = () => lineItems.value.push({
   qtyReject: null,
   qtyRework: null,
   timeTakenMins: null,
-  meta: null
+  meta: {}
 })
 
 const removeLineItem = (index) => lineItems.value.splice(index, 1)
@@ -64,7 +76,7 @@ const clearLineItems = () => lineItems.value = [{
   qtyReject: null,
   qtyRework: null,
   timeTakenMins: null,
-  meta: null
+  meta: {}
 }]
 
 const invoke = async () => {
@@ -74,7 +86,11 @@ const invoke = async () => {
     const ctx = []
 
     lineItems.value.forEach(lineItem => {
-      const { job, qtyOutput, qtyReject, qtyRework, ...data } = lineItem
+      const { job, qtyOutput, qtyReject, qtyRework, meta, ...data } = lineItem
+
+      for (const [id, field] of Object.entries(meta)) {
+        if (!field.value) delete meta[id]
+      }
 
       ctx.push({
         productionOrderId: job.productionOrderId,
@@ -82,6 +98,7 @@ const invoke = async () => {
         workstation: { id: job.workstationId },
         type: 'OUTPUT',
         qty: qtyOutput + qtyReject,
+        meta: Object.keys(meta).length ? meta : null,
         ...data
       })
 
@@ -127,17 +144,24 @@ api.job.getAll().then(data => {
       return !job.operation.isBatch && job.workstation && qtyDemand > qtyMade
     })
     .filter(({ operation, workstation }) => !operation.isBatch && workstation !== null)
-    .map(({ id, productionOrder, product, operation, workstation, qtyInput }) => ({
-      label: `${operation.name} — ${productionOrder.publicId} — ${product.normalizedName}`,
-      value: {
-        id,
-        productionOrderId: productionOrder.id,
-        operationId: operation.id,
-        workstationId: workstation.id,
-        qtyInput
+    .map(job => {
+      const qtyMade = job.qtyOutput - job.qtyReject + job.qtyRework
+      const maxQty = job.qtyInput - qtyMade
+
+      return {
+        label: `${job.productionOrder.publicId} — ${job.product.normalizedName}`,
+        value: {
+          id: job.id,
+          productionOrderId: job.productionOrder.id,
+          operationId: job.operation.id,
+          workstationId: job.workstation.id,
+          maxQty
+        }
       }
-    }))
+    })
 })
+
+api.metafield.getAll({ resource: 'OPERATION' }).then(data => metafields.value = data)
 </script>
 
 <template>
@@ -157,7 +181,7 @@ api.job.getAll().then(data => {
     </fieldset>
     <table>
       <colgroup>
-        <col v-for="n in 7">
+        <col v-for="n in tableColumnCount">
       </colgroup>
       <tbody>
         <tr v-for="(_, index) in lineItems" :key="operation?.id + String(index)">
@@ -179,13 +203,20 @@ api.job.getAll().then(data => {
               :required="false"
             />
           </td>
+          <td v-for="field in filteredMetafields" :key="field.id">
+            <Metafield
+              v-model="lineItems[index].meta[field.id]"
+              :data="field"
+            />
+          </td>
           <td>
             <CfInput
               v-model="lineItems[index].qtyOutput"
               label="Output"
               type="number"
               min="0"
-              :max="lineItems[index].job?.qtyInput"
+              :max="lineItems[index].job?.maxQty"
+              required
             />
           </td>
           <td>
@@ -194,15 +225,18 @@ api.job.getAll().then(data => {
               label="Reject"
               type="number"
               min="0"
+              :max="lineItems[index].qtyOutput"
+              required
             />
           </td>
-          <td>
+          <td v-if="operation?.allowsRework">
             <CfInput
               v-model="lineItems[index].qtyRework"
               label="Rework"
               type="number"
               min="0"
-              v-if="operation?.allowsRework"
+              :max="lineItems[index].qtyReject"
+              required
             />
           </td>
           <td>
@@ -245,8 +279,17 @@ api.job.getAll().then(data => {
   }
 
   table {
-    width: 100%;
     margin-bottom: 1.5rem;
+    width: 100%;
+
+    td {
+      vertical-align: bottom;
+    }
+
+    tr {
+      display: grid;
+      gap: 0.5rem;
+    }
 
     button {
       span {
@@ -260,15 +303,6 @@ api.job.getAll().then(data => {
         }
       }
     }
-  }
-
-  td {
-    vertical-align: bottom;
-  }
-
-  tr {
-    display: grid;
-    gap: 0.5rem;
   }
 
   hr {
@@ -293,38 +327,38 @@ api.job.getAll().then(data => {
   .createProductionRecords {
     table {
       table-layout: fixed;
-    }
 
-    col {
-      &:nth-child(4),
-      &:nth-child(5),
-      &:nth-child(6) {
-        width: 12%;
+      col {
+        // &:nth-child(4),
+        // &:nth-child(5),
+        // &:nth-child(6) {
+        //   width: 12%;
+        // }
+
+        &:last-child {
+          width: 3.75rem;
+        }
       }
 
-      &:last-child {
-        width: 3.75rem;
-      }
-    }
+      tr {
+        display: table-row;
 
-    tr {
-      display: table-row;
-
-      &:hover,
-      &:focus-within {
-        background: var(--cf-gray-9);
-      }
-    }
-
-    td {
-      padding: 0.5rem;
-
-      &:first-child {
-        padding-left: 0;
+        &:hover,
+        &:focus-within {
+          background: var(--cf-gray-9);
+        }
       }
 
-      &:last-child {
-        padding-right: 0;
+      td {
+        padding: 0.5rem;
+
+        &:first-child {
+          padding-left: 0;
+        }
+
+        &:last-child {
+          padding-right: 0;
+        }
       }
     }
   }

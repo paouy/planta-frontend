@@ -33,41 +33,29 @@ const unassignedJobs = computed(() => {
 })
 
 const currentJobs = computed(() => {
-  const unassignedJobIds = unassignedJobs.value.map(({ id }) => id)
+  const unassignedJobIds = unassignedJobs.value.map(job => job.id)
 
   return filteredJobs.value
-    .filter(({ id }) => !unassignedJobIds.includes(id))
+    .filter(job => !unassignedJobIds.includes(job.id))
     .filter(job => workstation.value ? job.workstation.id === workstation.value.id : true)
     .map(job => {
-      job.isAllowedShortfall = true
+      const relatedJobs = jobs.value.filter(({ productionOrder }) => job.productionOrder.id === productionOrder.id)
+      const prevJob = relatedJobs.find(({ seq }) => job.seq === seq + 1)
+      const nextJob = relatedJobs.find(({ seq }) => job.seq === seq - 1)
 
-      if (['PAUSED', 'CLOSED'].includes(job.status) && job.operation.isBatch) {
+      job.isAllowedShortfall = prevJob?.status !== 'CLOSED' ? false : true
+      job.isLocked = false
+
+      if (job.status === 'IN_PROGRESS' && job.operation.isBatch) {
         job.isLocked = true
       }
 
-      else if (job.seq > 1) {
-        const relatedJobs = jobs.value.filter(({ productionOrder }) =>
-          job.productionOrder.id === productionOrder.id
-        )
-
-        const prevJob = relatedJobs.find(({ seq }) => job.seq === seq + 1)
-        const nextJob = relatedJobs.find(({ seq }) => job.seq === seq - 1)
-
-        if (prevJob.status !== 'CLOSED') {
-          job.isAllowedShortfall = false
-        }
-
-        if (nextJob) {
-          if (nextJob.status === 'CLOSED') {
-            job.isLocked = true
-          }
-        } else {
-          job.isLocked = false
-        }
+      if (job.status === 'PAUSED' && !job.operation.isBatch) {
+        job.isLocked = true
       }
-      
-      else {
-        job.isLocked = false
+
+      if (job.status === 'CLOSED' && nextJob?.status === 'CLOSED') {
+        job.isLocked = true
       }
 
       return job
@@ -95,19 +83,26 @@ const currentOperationBatches = computed(() => {
 
       return {
         ...operationBatch,
-        size: `${sizeValue} ${sizeUom}`
+        size: `${sizeValue.toFixed()} ${sizeUom}`
       }
     })
 })
 
 export const useProductionExecution = () => {
-  const updateJob = (data) => {
+  const updateJob = (job) => {
+    const { oldOperationBatchId, ...data } = job
     const index = jobs.value.findIndex(({ id }) => data.id === id)
+
     Object.assign(jobs.value[index], data)
 
     if (data.operationBatchId) {
       const operationBatch = operationBatches.value.find(({ id }) => data.operationBatchId === id)
       operationBatch.jobCount++
+    }
+
+    if (oldOperationBatchId) {
+      const operationBatch = operationBatches.value.find(({ id }) => oldOperationBatchId === id)
+      operationBatch.jobCount--
     }
   }
   

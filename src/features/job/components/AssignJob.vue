@@ -68,7 +68,7 @@ const invoke = async () => {
   try {
     isLoading.value = true
 
-    if (props.operation.isBatch) {
+    if (props.operation.isBatch && ctx.value.workstation !== null) {
       await api.operationBatchJob.createOne(ctx.value)
     }
 
@@ -81,7 +81,7 @@ const invoke = async () => {
       workstation: null
     }
 
-    if (!props.unassignedJobs.length) {
+    if (!!props.job || !props.unassignedJobs.length) {
       emit('cancel')
     }
   } catch (error) {
@@ -91,11 +91,31 @@ const invoke = async () => {
   }
 }
 
+const onUnassign = async () => {
+  ctx.value.workstation = null
+
+  if (props.job.operationBatchId) {
+    await api.operationBatchJob.deleteOne({
+      id: props.job.id,
+      operationBatchId: props.job.operationBatchId
+    })
+
+    ctx.value.operationBatchId = null
+    ctx.value.oldOperationBatchId = props.job.operationBatchId
+  }
+
+  invoke()
+}
+
 onMounted(() => {
   if (props.job) {
     ctx.value = {
       id: props.job.id,
       workstation: props.job.workstation
+    }
+
+    if (props.job.operationBatchId) {
+      ctx.value.operationBatchId = props.job.operationBatchId
     }
   }
 })
@@ -137,6 +157,9 @@ onMounted(() => {
     <template #footer>
       <CfFilledButton type="submit" form="assignJob" :loading="isLoading" :disabled="isSubmitDisabled">
         Save
+      </CfFilledButton>
+      <CfFilledButton color="gray" :disabled="isLoading" @click="onUnassign" v-if="props.job">
+        Unassign
       </CfFilledButton>
       <CfFilledButton color="gray" :disabled="isLoading" @click="emit('cancel')">
         Cancel

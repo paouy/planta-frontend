@@ -56,7 +56,11 @@ const computedData = computed(() => {
       actions = ['Add record']
     }
 
-    if (job.operationBatchId || job.isLocked) {
+    if (job.operation.isBatch) {
+      actions = ['Reassign']
+    }
+
+    if (job.isLocked) {
       actions = false
     }
 

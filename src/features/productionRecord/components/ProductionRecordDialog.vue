@@ -42,6 +42,7 @@ const dialogTitle = computed(() => {
           label="Worker"
           :value="props.data.worker.name"
           disabled
+          v-if="props.data.worker"
         />
         <CfInput
           label="Equipment"

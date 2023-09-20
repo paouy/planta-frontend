@@ -1,10 +1,13 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
-import { CfAppView, CfAppViewHeader } from 'vue-cf-ui'
-import { ReportFilters, ReportSummary, ReportTable } from '../features/misc/index.js'
+import { CfAppView, CfAppViewHeader, CfFilledButton } from 'vue-cf-ui'
+import { useReport, ReportFilters, ReportSummary, ReportTable } from '../features/misc/index.js'
 import DateRangeInput from '../components/DateRangeInput.vue'
 import api from '../api/index.js'
 
+const { saveAsCsv } = useReport()
+
+const isLoading = ref(false)
 const dateRange = ref(['', ''])
 const equipments = ref([])
 const operations = ref([])
@@ -25,6 +28,17 @@ const filteredProductionRecords = computed(() => {
     .filter(({ worker }) => workerIds.length ? workerIds.includes(worker.id) : true)
 })
 
+const exportReport = async () => {
+  try {
+    isLoading.value = true
+    await saveAsCsv(productionRecords.value)
+  } catch (error) {
+    alert(error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
 watch(dateRange, ([startDate, endDate]) => {
   if (startDate && endDate) {
     const from = Date.parse(`${startDate}T00:00:00+08:00`)
@@ -42,6 +56,9 @@ watch(dateRange, ([startDate, endDate]) => {
     <CfAppViewHeader title="Reports">
       <template #actions>
         <DateRangeInput v-model="dateRange"/>
+        <CfFilledButton :loading="isLoading" @click="exportReport">
+          Export
+        </CfFilledButton>
       </template>
     </CfAppViewHeader>
     <ReportSummary :production-records="filteredProductionRecords"/>

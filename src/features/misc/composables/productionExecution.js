@@ -43,7 +43,8 @@ const currentJobs = computed(() => {
       const prevJob = relatedJobs.find(({ seq }) => job.seq === seq + 1)
       const nextJob = relatedJobs.find(({ seq }) => job.seq === seq - 1)
 
-      job.isAllowedShortfall = prevJob?.status !== 'CLOSED' ? false : true
+      job.isAllowedShortfall = job.seq > 1 && prevJob.status !== 'CLOSED' ? false : true
+
       job.isLocked = false
 
       if (job.status === 'IN_PROGRESS' && job.operation.isBatch) {

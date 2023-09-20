@@ -89,7 +89,7 @@ const invoke = async () => {
       const { job, qtyOutput, qtyReject, qtyRework, meta, ...data } = lineItem
 
       for (const [id, field] of Object.entries(meta)) {
-        if (!field.value) delete meta[id]
+        if (field.value === '' || field.value === null) delete meta[id]
       }
 
       ctx.push({
@@ -109,6 +109,7 @@ const invoke = async () => {
           workstation: { id: job.workstationId },
           type: 'REJECT',
           qty: qtyReject,
+          meta: null,
           ...data
         })
       }
@@ -120,6 +121,7 @@ const invoke = async () => {
           workstation: { id: job.workstationId },
           type: 'REWORK',
           qty: qtyRework,
+          meta: null,
           ...data
         })
       }

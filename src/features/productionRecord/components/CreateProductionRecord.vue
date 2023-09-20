@@ -43,6 +43,7 @@ const ctx = ref({
   timeTakenMins: null,
   meta: null
 })
+const meta = ref(null)
 
 const dialogTitle = computed(() => `Add ${props.job.operation.name.toLowerCase()} record`)
 const normalizedJob = computed(()=> `${props.job.productionOrder.publicId} — ${props.job.product.normalizedName}`)
@@ -62,12 +63,12 @@ const invoke = async () => {
   try {
     isLoading.value = true
 
-    if (metafields.value.length) {
-      metafields.value.forEach(({ id }) => {
-        if (!ctx.value.meta[id].value) {
-          delete ctx.value.meta[id]
-        }
-      })
+    if (metafields.value.length && Object.values(meta.value).some(field => field.value !== '' && field.value !== null)) {
+      ctx.value.meta = {}
+
+      for (const [id, field] of Object.entries(meta.value)) {
+        if (field.value !== '' && field.value !== null) ctx.value.meta[id] = field
+      }
     }
 
     const productionRecord = await api.productionRecord.create(ctx.value)
@@ -84,16 +85,16 @@ const invoke = async () => {
 const setupMetafields = (data) => {
   if (data.length) {
     metafields.value = data
-    ctx.value.meta = {}
+    meta.value = {}
 
     data.forEach(({ id, type }) => {
-      const meta = { value: null } 
+      const metadata = { value: null } 
       
       if (['DIMENSION', 'VOLUME', 'WEIGHT'].includes(type)) {
-        meta.uom = null
+        metadata.uom = null
       }
 
-      ctx.value.meta[id] = meta
+      meta.value[id] = metadata
     })
   }
 }
@@ -148,11 +149,12 @@ api.metafield
           suffix="mins"
           type="number"
           step="any"
+          min="0"
           v-if="['OUTPUT', 'REWORK'].includes(ctx.type)"
         />
         <Metafield
           v-for="field in metafields"
-          v-model="ctx.meta[field.id]"
+          v-model="meta[field.id]"
           :key="field.id"
           :data="field"
         />

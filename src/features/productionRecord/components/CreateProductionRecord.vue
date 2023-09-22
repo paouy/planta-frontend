@@ -43,6 +43,7 @@ const ctx = ref({
   timeTakenMins: null,
   meta: null
 })
+const date = ref(new Date().toLocaleDateString('en-CA'))
 const meta = ref(null)
 
 const dialogTitle = computed(() => `Add ${props.job.operation.name.toLowerCase()} record`)
@@ -62,6 +63,10 @@ const maxQty = computed(() => {
 const invoke = async () => {
   try {
     isLoading.value = true
+
+    if (date.value !== new Date().toLocaleDateString('en-CA')) {
+      ctx.value.timestamp = Date.parse(`${date.value}T00:00:00+08:00`)
+    }
 
     if (metafields.value.length && Object.values(meta.value).some(field => field.value !== '' && field.value !== null)) {
       ctx.value.meta = {}
@@ -117,6 +122,13 @@ api.metafield
           label="Workstation"
           :value="props.job.workstation.name"
           disabled
+        />
+        <CfInput
+          v-model="date"
+          label="Date"
+          type="date"
+          :max="new Date().toLocaleDateString('en-CA')"
+          required
         />
         <CfSelect
           v-model="ctx.type"
